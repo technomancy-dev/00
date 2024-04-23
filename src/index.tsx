@@ -13,6 +13,12 @@ import { SESClient, SendRawEmailCommand } from "@aws-sdk/client-ses";
 import bcrypt from "bcrypt";
 import "dotenv/config";
 
+import monitor from "./monitor";
+import auth from "./auth/auth";
+import app from "./wrapper";
+
+// app.use("/public/*", serveStatic({ root: "./" }));
+
 const ses = new SESClient({
   apiVersion: "2010-12-01",
   region: "us-east-1",
@@ -31,12 +37,15 @@ const nanoid = customAlphabet(
   "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 );
 
-const app = new Hono();
+// const app = new Hono();
 
 app.get("/", async (c) => {
   const html = await render(<Template />);
   return c.html(html);
 });
+
+app.route("/monitor", monitor);
+app.route("/auth", auth);
 
 app.use("/api/*", (c, next) => {
   const { SECRET_SKELETON_KEY } = env(c);
@@ -80,7 +89,7 @@ app.get("/api-key", async (c) => {
 });
 
 const port = 3000;
-console.log(`Server is running on port ${port}`);
+console.log(`⛵  localhost:${port}`);
 
 serve({
   fetch: app.fetch,

@@ -1,19 +1,23 @@
 {
   "scripts": {
-    "dev": "tsx watch src/index.tsx"
+    "dev": "tsx watch src/index.tsx",
+    "db:serve": "./src/pocketbase/pocketbase serve"
   },
   "dependencies": {
     "@aws-sdk/client-ses": "^3.556.0",
     "@hono/node-server": "^1.11.0",
+    "@tailwindcss/forms": "^0.5.7",
     "bcrypt": "^5.1.1",
     "dotenv": "^16.4.5",
     "hono": "^4.2.6",
     "jsx-email": "^1.12.0",
     "nanoid": "^5.0.7",
-    "nodemailer": "^6.9.13"
+    "nodemailer": "^6.9.13",
+    "pocketbase": "^0.21.2"
   },
   "devDependencies": {
     "@types/node": "^20.11.17",
+    "daisyui": "^4.10.2",
     "tsx": "^4.7.1"
   }
 }
