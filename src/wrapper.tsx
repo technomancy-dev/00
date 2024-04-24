@@ -1,9 +1,18 @@
 /** @jsxImportSource hono/jsx */
 import { Hono } from "hono";
+import { getCookie } from "hono/cookie";
 import { jsxRenderer } from "hono/jsx-renderer";
 import { serveStatic } from "@hono/node-server/serve-static";
 
+import pb from "./db";
+
 const app = new Hono();
+
+app.use(async (c, next) => {
+  const auth_cookie = getCookie(c, "pb_auth");
+  pb.authStore.loadFromCookie(auth_cookie!);
+  await next();
+});
 
 app.get(
   "/public/*",

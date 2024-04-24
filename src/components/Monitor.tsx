@@ -1,8 +1,8 @@
 /** @jsx jsx */
 /** @jsxImportSource hono/jsx */
 
-const Monitor = () => {
-  return <h1>hey</h1>;
+const Monitor = ({ user }) => {
+  return <h1>hey {user.name}</h1>;
 };
 
 export default Monitor;
