@@ -1,23 +1,35 @@
 {
+  "name": "basic",
+  "type": "module",
   "scripts": {
-    "dev": "tsx watch src/index.tsx",
-    "db:serve": "./src/pocketbase/pocketbase serve"
+    "dev": "vite",
+    "build": "vite build --mode client && vite build",
+    "preview": "wrangler pages dev ./dist",
+    "deploy": "$npm_execpath run build && wrangler pages deploy ./dist",
+    "db:serve": "./app/pocketbase/pocketbase serve",
+    "postinstall": "patch-package"
   },
+  "private": true,
   "dependencies": {
     "@aws-sdk/client-ses": "^3.556.0",
-    "@hono/node-server": "^1.11.0",
-    "@tailwindcss/forms": "^0.5.7",
     "bcrypt": "^5.1.1",
     "dotenv": "^16.4.5",
-    "hono": "^4.2.6",
+    "hono": "^4.2.7",
+    "honox": "^0.1.15",
     "jsx-email": "^1.12.0",
-    "nanoid": "^5.0.7",
     "nodemailer": "^6.9.13",
-    "pocketbase": "^0.21.2"
+    "patch-package": "^8.0.0",
+    "pocketbase": "^0.21.2",
+    "ramda": "^0.29.1",
+    "zod": "^3.23.4"
   },
   "devDependencies": {
-    "@types/node": "^20.11.17",
+    "@cloudflare/workers-types": "^4.20240403.0",
+    "@hono/vite-cloudflare-pages": "^0.2.4",
+    "@hono/vite-dev-server": "^0.11.0",
+    "@types/react": "^18.2.79",
     "daisyui": "^4.10.2",
-    "tsx": "^4.7.1"
+    "vite": "^5.0.12",
+    "wrangler": "^3.47.0"
   }
 }

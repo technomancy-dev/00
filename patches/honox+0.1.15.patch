@@ -1,0 +1,41 @@
+diff --git a/node_modules/honox/dist/vite/inject-importing-islands.js b/node_modules/honox/dist/vite/inject-importing-islands.js
+index 78c7d0f..47a28aa 100644
+--- a/node_modules/honox/dist/vite/inject-importing-islands.js
++++ b/node_modules/honox/dist/vite/inject-importing-islands.js
+@@ -8,7 +8,7 @@ import { IMPORTING_ISLANDS_ID } from "../constants.js";
+ const generate = _generate.default ?? _generate;
+ async function injectImportingIslands() {
+   const isIslandRegex = new RegExp(/(\/islands\/|\_[a-zA-Z0-9[-]+\.island\.[tj]sx$)/);
+-  const fileRegex = new RegExp(/(routes|_renderer|_error|_404)\/.*\.[tj]sx$/);
++  const fileRegex = new RegExp(/(.|routes|_renderer|_error|_404)\/.*\.[tj]sx$/);
+   const cache = {};
+   const walkDependencyTree = async (baseFile, dependencyFile) => {
+     const depPath = dependencyFile ? path.join(path.dirname(baseFile), dependencyFile) + ".tsx" : baseFile;
+@@ -37,8 +37,10 @@ async function injectImportingIslands() {
+       }
+       const hasIslandsImport = (await walkDependencyTree(id)).flat().some((x) => isIslandRegex.test(normalizePath(x)));
+       if (!hasIslandsImport) {
++        
+         return;
+       }
++
+       const ast = parse(sourceCode, {
+         sourceType: "module",
+         plugins: ["jsx", "typescript"]
+diff --git a/node_modules/honox/dist/vite/island-components.js b/node_modules/honox/dist/vite/island-components.js
+index eb99b62..8998758 100644
+--- a/node_modules/honox/dist/vite/island-components.js
++++ b/node_modules/honox/dist/vite/island-components.js
+@@ -157,10 +157,11 @@ function getIslandComponentName(root, id, options) {
+     return path.resolve(id2).startsWith(islandDirectoryPath);
+   };
+   const matchIslandPath = options?.isIsland ?? defaultIsIsland;
++  
+   if (!matchIslandPath(id)) {    
+     return null;
+   }
+-  const match = id.match(/(\/islands\/.+?\.tsx$)|(\/routes\/.*\_[a-zA-Z0-9[-]+\.island\.tsx$)/);
++  const match = id.match(/(\/islands\/.+?\.tsx$)|(\/app\/.*\_[a-zA-Z0-9[-]+\.island\.tsx$)/);
+   if (!match) {    
+     return null;
+   }

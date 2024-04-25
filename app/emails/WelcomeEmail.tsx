@@ -1,5 +1,8 @@
-import { Html, Markdown, Tailwind } from "jsx-email";
+/** @jsxImportSource react */
+// @ts-nocheck
 import React from "react";
+
+import { Html, Markdown, Tailwind } from "jsx-email";
 
 export const Template = () => {
   return (
@@ -81,3 +84,5 @@ Made by the [technomancer](https://technomancy.dev)
     </Html>
   );
 };
+
+export default Template;

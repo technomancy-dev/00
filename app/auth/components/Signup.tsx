@@ -1,6 +1,6 @@
-/** @jsxImportSource hono/jsx */
+// @ts-nocheck
 
-const Signup = () => {
+const Signup = ({ errors }) => {
   return (
     <div className="h-full grid place-items-center">
       <div className="w-full max-w-md">
@@ -12,9 +12,19 @@ const Signup = () => {
           method="post"
           className="flex bg-base-300 flex-col w-full max-w-md mx-auto p-10 shadow gap-2"
         >
+          {errors?.form && (
+            <p>
+              There was an error submitting your form. <br /> {errors.form}
+            </p>
+          )}
           <label class="form-control w-full">
             <div class="label">
               <span class="label-text">What is your name?</span>
+              {errors?.name && (
+                <span class="label-text-alt text-error">
+                  {errors.name.join(" ")}
+                </span>
+              )}
             </div>
             <input
               type="text"
@@ -26,6 +36,11 @@ const Signup = () => {
           <label class="form-control w-full">
             <div class="label">
               <span class="label-text">What is your email?</span>
+              {errors?.email && (
+                <span class="label-text-alt text-error">
+                  {errors.email.join(" ")}
+                </span>
+              )}
             </div>
             <input
               type="text"
@@ -37,6 +52,11 @@ const Signup = () => {
           <label class="form-control w-full">
             <div class="label">
               <span class="label-text">Select a password</span>
+              {errors?.password && (
+                <span class="label-text-alt text-error">
+                  {errors.password.join(" ")}
+                </span>
+              )}
             </div>
             <input
               type="password"
@@ -47,6 +67,11 @@ const Signup = () => {
           <label class="form-control w-full">
             <div class="label">
               <span class="label-text">Confirm your password</span>
+              {errors?.passwordConfirm && (
+                <span class="label-text-alt text-error">
+                  {errors.passwordConfirm.join(" ")}
+                </span>
+              )}
             </div>
             <input
               type="password"
