@@ -2,8 +2,11 @@
 import { Style } from "hono/css";
 import { jsxRenderer } from "hono/jsx-renderer";
 import { Script } from "honox/server";
+import Navigation from "../navigation/_navigation.island";
+import pb from "../db";
 
 export default jsxRenderer(({ children, title }) => {
+  const user = pb.authStore?.model;
   return (
     <html lang="en">
       <head>
@@ -14,7 +17,10 @@ export default jsxRenderer(({ children, title }) => {
         <Script src="/app/client.ts" async />
         <Style />
       </head>
-      <body>{children}</body>
+      <body>
+        <Navigation user={user} />
+        {children}
+      </body>
     </html>
   );
 });

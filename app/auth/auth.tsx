@@ -1,12 +1,17 @@
 /** @jsxImportSource hono/jsx */
 import { Hono } from "hono";
-import { setCookie } from "hono/cookie";
+import { deleteCookie, setCookie } from "hono/cookie";
 import { map } from "ramda";
 
 import pb from "../db";
 import { z } from "zod";
 
 import Signup from "./components/Signup";
+import Signin from "./components/Signin";
+
+const flatten_db_errors = (error) => {
+  return map((item) => [item.message], error.originalError.data.data);
+};
 
 const User = z.object({
   name: z.string().min(2, { message: "Must be at least 2 characters." }),
@@ -19,10 +24,27 @@ const User = z.object({
     .min(10, { message: "Must be 10 or more characters long" }),
 });
 
+const SigninSchema = z.object({
+  email: z.string().email(),
+  password: z
+    .string()
+    .min(10, { message: "Must be 10 or more characters long" }),
+});
+
 const app = new Hono();
+
+app.post("/logout", async (c) => {
+  pb.authStore.clear();
+  deleteCookie(c, "pb_auth");
+  return c.redirect("/");
+});
 
 app.get("/sign-up", async (c) => {
   return c.render(<Signup />);
+});
+
+app.get("/sign-in", async (c) => {
+  return c.render(<Signin />);
 });
 
 app.post("/sign-up", async (c) => {
@@ -39,10 +61,6 @@ app.post("/sign-up", async (c) => {
     return c.render(<Signup errors={errors} />);
   }
 
-  const flatten_db_errors = (error) => {
-    return map((item) => [item.message], error.originalError.data.data);
-  };
-
   const res = await pb
     .collection("users")
     .create({
@@ -55,7 +73,7 @@ app.post("/sign-up", async (c) => {
       const errors = {
         ...flatten_db_errors(error),
       };
-      return { errors };
+      return { errors: error };
     });
 
   if (res.errors) {
@@ -68,7 +86,41 @@ app.post("/sign-up", async (c) => {
 
   if (pb.authStore.isValid) {
     setCookie(c, "pb_auth", pb.authStore.exportToCookie());
-    return c.redirect("/keys");
+    return c.redirect("/dashboard/keys");
+  }
+
+  return c.redirect("/");
+});
+
+app.post("/sign-in", async (c) => {
+  const { email, password } = await c.req.parseBody();
+  const { data, success, error } = SigninSchema.safeParse({
+    email,
+    password,
+  });
+
+  if (success === false) {
+    const errors = error.flatten().fieldErrors;
+    return c.render(<Signin errors={errors} />);
+  }
+
+  const login = await pb
+    .collection("users")
+    .authWithPassword(email as string, password as string)
+    .catch((error) => {
+      const errors = {
+        ...flatten_db_errors(error),
+      };
+      return { errors };
+    });
+
+  if (login.errors) {
+    return c.render(<Signup errors={login.errors} />);
+  }
+
+  if (pb.authStore.isValid) {
+    setCookie(c, "pb_auth", pb.authStore.exportToCookie());
+    return c.redirect("/monitor");
   }
 
   return c.redirect("/");

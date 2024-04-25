@@ -1,6 +1,4 @@
 // @ts-nocheck
-
-import Counter from "../../islands/counter";
 import ClickToCopy from "./_clickToCopy.island";
 
 const KeyForm = ({ secret, hash, aws_key, aws_secret, edit }) => {

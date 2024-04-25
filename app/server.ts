@@ -11,6 +11,7 @@ import "dotenv/config";
 
 // ROUTES
 import auth from "../app/auth/auth";
+import keys from "../app/keys";
 
 const base = new Hono();
 
@@ -34,11 +35,15 @@ base.use("/api/*", (c, next) => {
 });
 
 const app = createApp({ app: base });
-app.route("/auth", auth);
+const dashboard = createApp();
+
+dashboard.route("/auth", auth);
+dashboard.route("/keys", keys);
+
+app.route("/dashboard", dashboard);
 
 // app.route("/monitor", monitor);
 
-// app.route("/keys", keys);
 // app.route("/api", api);
 
 showRoutes(app);

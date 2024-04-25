@@ -1,6 +1,6 @@
 // @ts-nocheck
 
-const Signup = ({ errors }) => {
+const Signin = ({ errors }) => {
   return (
     <div className="h-full grid place-items-center">
       <div className="w-full max-w-md">
@@ -14,22 +14,6 @@ const Signup = ({ errors }) => {
               There was an error submitting your form. <br /> {errors.form}
             </p>
           )}
-          <label class="form-control w-full">
-            <div class="label">
-              <span class="label-text">What is your name?</span>
-              {errors?.name && (
-                <span class="label-text-alt text-error">
-                  {errors.name.join(" ")}
-                </span>
-              )}
-            </div>
-            <input
-              type="text"
-              placeholder="Bruce Wayne"
-              name="name"
-              class="input input-bordered w-full"
-            />
-          </label>
           <label class="form-control w-full">
             <div class="label">
               <span class="label-text">What is your email?</span>
@@ -61,21 +45,6 @@ const Signup = ({ errors }) => {
               class="input input-bordered w-full"
             />
           </label>
-          <label class="form-control w-full">
-            <div class="label">
-              <span class="label-text">Confirm your password</span>
-              {errors?.passwordConfirm && (
-                <span class="label-text-alt text-error">
-                  {errors.passwordConfirm.join(" ")}
-                </span>
-              )}
-            </div>
-            <input
-              type="password"
-              name="passwordConfirm"
-              class="input input-bordered w-full"
-            />
-          </label>
           <button class="btn btn-primary mt-4">Register</button>
         </form>
       </div>
@@ -83,4 +52,4 @@ const Signup = ({ errors }) => {
   );
 };
 
-export default Signup;
+export default Signin;

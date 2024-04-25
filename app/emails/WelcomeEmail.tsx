@@ -1,8 +1,8 @@
-/** @jsxImportSource react */
 // @ts-nocheck
+/** @jsxImportSource react */
 import React from "react";
 
-import { Html, Markdown, Tailwind } from "jsx-email";
+import { Html, Markdown, Tailwind, Button } from "jsx-email";
 
 export const Template = () => {
   return (
@@ -17,7 +17,13 @@ export const Template = () => {
         }}
       >
         <div className="bg-white text-slate-700">
-          <div className="font-sans p-16 bg-white max-w-lg mx-auto">
+          <div className="font-sans pt-0 p-16 bg-white max-w-lg mx-auto">
+            <Button
+              href="/dashboard/auth/sign-in"
+              className="border-solid rounded py-1 px-2 border-black text-black hover:bg-black hover:text-white"
+            >
+              Sign in
+            </Button>
             <Markdown
               markdownCustomStyles={{
                 h1: { fontWeight: "bold" },
@@ -68,13 +74,12 @@ Markdown is pretty great, it powers this page, and it should power your emails.
 
 > I think that markdown is pretty cool. - Levi
 
-You can send your emails in markdown and they will look just like this page. 
+You can send your emails in markdown and they will look just like this. 
 
 
 Sponsored by [Fido](https://google.com) which is the reason this library/micro-service exists. 
 
-
-This is part of 42.
+One of many.  
 Made by the [technomancer](https://technomancy.dev)
           `}</Markdown>
           </div>
