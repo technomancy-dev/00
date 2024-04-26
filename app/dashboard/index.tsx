@@ -5,10 +5,11 @@ import pb from "../db";
 
 const dashboard = new Hono();
 
-dashboard.use("*", async (c) => {
+dashboard.use("/*", async (c, next) => {
   if (!pb.authStore.isValid) {
     return c.redirect("/");
   }
+  await next();
 });
 
 dashboard.get("/", async (c) => {

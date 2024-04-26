@@ -1,11 +1,14 @@
 /** @jsxImportSource hono/jsx */
 import { Hono } from "hono";
+import { reject, anyPass, isEmpty, isNil } from "ramda";
 import pb from "../db";
 import KeyForm from "./components/KeyForm";
 import generate_key_and_hash from "../lib/generate_key";
 import crypto from "../lib/crypto";
 
 const app = new Hono();
+
+const omitNullable = reject(anyPass([isEmpty, isNil]));
 
 app.get("/", async (c) => {
   const user = pb.authStore?.model;
@@ -59,17 +62,32 @@ app.post("/edit", async (c) => {
   if (!user) {
     return c.json({ message: "Shouldn't be possible" });
   }
-  const [key_id, key_hash] = hash.split("_");
 
   const res = await pb
     .collection("application_keys")
-    .create({ user: user.id, key_hash, key_id, aws_secret, aws_key })
+    .getFirstListItem("")
     .catch(console.error);
 
-  console.log({ key_id, key_hash });
-  if (res) {
+  const [key_id, key_hash] = hash?.split("_") ?? [];
+
+  const aws_key_encrypted = aws_key ? crypto.encrypt(aws_key) : null;
+  const aws_secret_encrypted = aws_secret ? crypto.encrypt(aws_secret) : null;
+
+  const update = omitNullable({
+    aws_key: aws_key_encrypted,
+    aws_secret: aws_secret_encrypted,
+    key_id,
+    key_hash,
+  });
+
+  const update_res = await pb
+    .collection("application_keys")
+    .update(res.id, update);
+
+  if (update_res) {
     return c.redirect("/dashboard");
   }
+
   return c.json({ message: "Something went wrong check the DB logs." });
 });
 

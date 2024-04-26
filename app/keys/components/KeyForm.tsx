@@ -23,7 +23,7 @@ const KeyForm = ({ secret, hash, aws_key, aws_secret, edit }) => {
           </div>
         )}
         <form
-          action=""
+          action={edit ? "keys/edit" : ""}
           method="post"
           className="flex bg-base-300 flex-col w-full max-w-md mx-auto p-10 shadow gap-2"
         >

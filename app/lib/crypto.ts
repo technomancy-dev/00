@@ -5,7 +5,7 @@ const algorithm = "aes-256-cbc";
 const key = process.env.CRYPTO_KEY!;
 const iv = process.env.CRYPTO_IV!;
 
-const encrypt = (text) => {
+export const encrypt = (text) => {
   const cipher = crypto.createCipheriv(
     algorithm,
     Buffer.from(key),
@@ -16,7 +16,7 @@ const encrypt = (text) => {
   return encrypted;
 };
 
-const decrypt = (encrypted) => {
+export const decrypt = (encrypted) => {
   const decipher = crypto.createDecipheriv(
     algorithm,
     Buffer.from(key),

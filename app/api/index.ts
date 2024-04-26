@@ -1,13 +1,10 @@
 import { Hono } from "hono";
 import { getCookie } from "hono/cookie";
 import { bearerAuth } from "hono/bearer-auth";
-import { jwt } from "hono/jwt";
-import { env } from "hono/adapter";
 
 import pb from "../db";
 import pbadmin from "../admin_db";
 import generate_key_and_hash from "../lib/generate_key";
-import { env } from "hono/adapter";
 import email from "../emails/route";
 import bcrypt from "bcrypt";
 
@@ -33,6 +30,9 @@ app.use("/*", async (c, next) => {
         .collection("application_keys")
         .getFirstListItem(`key_id="${id}"`, {})
         .catch(console.log);
+
+      c.set("aws_key", record.aws_key);
+      c.set("aws_secret", record.aws_secret);
 
       if (!record?.key_hash) {
         return false;
