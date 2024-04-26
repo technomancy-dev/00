@@ -5,6 +5,8 @@ const nanoid = customAlphabet(
   "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 );
 
+export const noid = nanoid;
+
 const generate_key_and_hash = () => {
   const id = nanoid(6);
   const password = nanoid(36);
