@@ -40,10 +40,16 @@ app.post("/logout", async (c) => {
 });
 
 app.get("/sign-up", async (c) => {
+  if (pb.authStore.isValid) {
+    return c.redirect("/dashboard");
+  }
   return c.render(<Signup />);
 });
 
 app.get("/sign-in", async (c) => {
+  if (pb.authStore.isValid) {
+    return c.redirect("/dashboard");
+  }
   return c.render(<Signin />);
 });
 
@@ -120,7 +126,7 @@ app.post("/sign-in", async (c) => {
 
   if (pb.authStore.isValid) {
     setCookie(c, "pb_auth", pb.authStore.exportToCookie());
-    return c.redirect("/monitor");
+    return c.redirect("/dashboard");
   }
 
   return c.redirect("/");

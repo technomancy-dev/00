@@ -1,6 +1,4 @@
 /** @jsxImportSource react */
-
-import { css } from "hono/css";
 import { createRoute } from "honox/factory";
 
 import { render } from "jsx-email";

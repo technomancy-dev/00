@@ -45,8 +45,11 @@ const Signin = ({ errors }) => {
               class="input input-bordered w-full"
             />
           </label>
-          <button class="btn btn-primary mt-4">Register</button>
+          <button class="btn btn-primary mt-4">Sign In</button>
         </form>
+        <a href="sign-up" class="btn btn-ghost w-full btn-secondary mt-4">
+          Register
+        </a>
       </div>
     </div>
   );

@@ -19,7 +19,7 @@ export const Template = () => {
         <div className="bg-white text-slate-700">
           <div className="font-sans pt-0 p-16 bg-white max-w-lg mx-auto">
             <Button
-              href="/dashboard/auth/sign-in"
+              href="/auth/sign-in"
               className="border-solid rounded py-1 px-2 border-black text-black hover:bg-black hover:text-white"
             >
               Sign in

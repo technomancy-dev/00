@@ -78,6 +78,9 @@ const Signup = ({ errors }) => {
           </label>
           <button class="btn btn-primary mt-4">Register</button>
         </form>
+        <a href="sign-in" class="btn btn-ghost w-full btn-secondary mt-4">
+          Sign In
+        </a>
       </div>
     </div>
   );

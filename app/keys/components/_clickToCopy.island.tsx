@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useState } from "hono/jsx";
 
 import { CopyOutline } from "./CopyIcon";

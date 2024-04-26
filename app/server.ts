@@ -5,13 +5,15 @@ import { env } from "hono/adapter";
 import { bearerAuth } from "hono/bearer-auth";
 import bcrypt from "bcrypt";
 import { getCookie } from "hono/cookie";
+import { jwt } from "hono/jwt";
 
 import pb from "./db";
 import "dotenv/config";
 
 // ROUTES
-import auth from "../app/auth/auth";
-import keys from "../app/keys";
+import api from "./api";
+import dashboard from "./dashboard";
+import auth from "./auth/auth";
 
 const base = new Hono();
 
@@ -22,29 +24,23 @@ base.use("/*", async (c, next) => {
   await next();
 });
 
-base.use("/api/*", (c, next) => {
-  const { SECRET_SKELETON_KEY } = env(c);
-  return bearerAuth({
-    verifyToken: async (token, c) => {
-      const pass = token.split("_")[1];
-      const hash = (SECRET_SKELETON_KEY || "").split("_")[1];
+// base.use("/api/*", (c, next) => {
+//   const { SECRET_SKELETON_KEY } = env(c);
+//   return bearerAuth({
+//     verifyToken: async (token, c) => {
+//       const pass = token.split("_")[1];
+//       const hash = (SECRET_SKELETON_KEY || "").split("_")[1];
 
-      return bcrypt.compareSync(pass, hash);
-    },
-  })(c, next);
-});
+//       return bcrypt.compareSync(pass, hash);
+//     },
+//   })(c, next);
+// });
 
 const app = createApp({ app: base });
-const dashboard = createApp();
 
-dashboard.route("/auth", auth);
-dashboard.route("/keys", keys);
-
+app.route("/api", api);
 app.route("/dashboard", dashboard);
-
-// app.route("/monitor", monitor);
-
-// app.route("/api", api);
+app.route("/auth", auth);
 
 showRoutes(app);
 
