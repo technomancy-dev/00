@@ -5,6 +5,7 @@ import { jwt } from "hono/jwt";
 import { env } from "hono/adapter";
 
 import pb from "../db";
+import pbadmin from "../admin_db";
 import generate_key_and_hash from "../lib/generate_key";
 import { env } from "hono/adapter";
 import email from "../emails/route";

@@ -8,9 +8,6 @@ import crypto from "../lib/crypto";
 const app = new Hono();
 
 app.get("/", async (c) => {
-  if (!pb.authStore.isValid) {
-    return c.redirect("/");
-  }
   const user = pb.authStore?.model;
 
   const record = await pb
