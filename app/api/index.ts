@@ -33,6 +33,7 @@ app.use("/*", async (c, next) => {
 
       c.set("aws_key", record.aws_key);
       c.set("aws_secret", record.aws_secret);
+      c.set("user", record.user);
 
       if (!record?.key_hash) {
         return false;

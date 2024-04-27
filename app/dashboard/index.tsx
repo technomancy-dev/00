@@ -13,9 +13,32 @@ dashboard.use("/*", async (c, next) => {
 });
 
 dashboard.get("/", async (c) => {
-  const records = [];
-  return c.render(<Dashboard records={[]} />);
+  const { limit, offset } = c.req.query();
+  let limitSafe = limit ? parseInt(limit) : 50;
+  let offsetSafe = offset ? parseInt(offset) : 1;
+
+  const {
+    items: records,
+    totalPages,
+    page,
+  } = await pb
+    .collection("emails")
+    .getList(offsetSafe, limitSafe, {
+      fields: "status,to,from,created",
+      sort: "-created",
+    });
+
+  return c.render(
+    <Dashboard
+      records={records}
+      firstPage={page === 1}
+      lastPage={totalPages === page}
+      limit={limitSafe}
+      offset={offsetSafe}
+    />
+  );
 });
+
 dashboard.route("/keys", keys);
 
 export default dashboard;

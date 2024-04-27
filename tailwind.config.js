@@ -5,7 +5,18 @@ module.exports = {
     extend: {},
   },
   daisyui: {
-    themes: ["lofi", "black", "cmyk"],
+    themes: [
+      "lofi",
+      {
+        black: {
+          ...require("daisyui/src/theming/themes")["black"],
+          warning: "#f4bf50",
+          success: "#2cd4bf",
+          error: "#fb6f85",
+        },
+      },
+      "cmyk",
+    ],
     darkTheme: "black",
   },
   plugins: [require("daisyui")],

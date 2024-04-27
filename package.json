@@ -13,6 +13,7 @@
   "dependencies": {
     "@aws-sdk/client-ses": "^3.556.0",
     "bcrypt": "^5.1.1",
+    "date-fns": "^3.6.0",
     "dotenv": "^16.4.5",
     "hono": "^4.2.7",
     "honox": "^0.1.15",
@@ -21,6 +22,7 @@
     "patch-package": "^8.0.0",
     "pocketbase": "^0.21.2",
     "ramda": "^0.29.1",
+    "sns-payload-validator": "^2.1.0",
     "zod": "^3.23.4"
   },
   "devDependencies": {

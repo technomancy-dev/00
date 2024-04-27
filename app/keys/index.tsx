@@ -1,4 +1,3 @@
-/** @jsxImportSource hono/jsx */
 import { Hono } from "hono";
 import { reject, anyPass, isEmpty, isNil } from "ramda";
 import pb from "../db";

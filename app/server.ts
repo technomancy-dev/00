@@ -7,6 +7,7 @@ import pb from "./db";
 import "dotenv/config";
 
 // ROUTES
+import aws from "./aws/aws";
 import api from "./api";
 import dashboard from "./dashboard";
 import auth from "./auth/auth";
@@ -23,6 +24,7 @@ base.use("/*", async (c, next) => {
 const app = createApp({ app: base });
 
 // ROUTES
+app.route("/aws", aws);
 app.route("/api", api);
 app.route("/dashboard", dashboard);
 app.route("/auth", auth);

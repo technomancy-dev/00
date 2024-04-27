@@ -22,6 +22,7 @@ export default defineConfig(({ mode }) => {
           "dotenv",
           "nodemailer",
           "@aws-sdk/client-ses",
+          "sns-payload-validator",
         ],
       },
       plugins: [

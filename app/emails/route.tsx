@@ -4,6 +4,9 @@ import nodemailer from "nodemailer";
 import { SESClient, SendRawEmailCommand } from "@aws-sdk/client-ses";
 import "dotenv/config";
 import { decrypt } from "../lib/crypto";
+import pb from "../db";
+import pbadmin from "../admin_db";
+import { STATUS } from "../aws/aws";
 
 const app = new Hono();
 
@@ -32,11 +35,23 @@ app.use(async (c, next) => {
     SES: { ses, aws: { SendRawEmailCommand } },
   });
 
+  // let transporter = nodemailer.createTransport({
+  //   host: "smtp.ethereal.email",
+  //   port: 587,
+  //   secure: false, // true for 465, false for other ports
+  //   auth: {
+  //     user: "theresia.carroll22@ethereal.email", // generated ethereal user
+  //     pass: "d8FugFKg1qf4G82Etf", // generated ethereal password
+  //   },
+  // });
+
   c.set("mail", transporter);
   await next();
 });
 
 app.post("/send", async (c) => {
+  const user = c.get("user");
+
   const post = await c.req.json();
   let html = post.html;
   if (post.markdown) {
@@ -51,6 +66,18 @@ app.post("/send", async (c) => {
       subject: post.subject, // Subject line
       text: "Hello world?", // plain text body
       html: html, // html body
+      ses: {
+        // If using Amazon SNS, it needs this field
+        ConfigurationSetName: "default",
+      },
+    });
+
+    pbadmin.collection("emails").create({
+      aws_message_id: info.response,
+      from: post.from, // sender address
+      to: Array.isArray(post.to) ? post.to.join(",") : post.to, // list of receivers
+      sent_by: user,
+      status: STATUS.Pending,
     });
   } catch (error) {
     throw new HTTPException(401, { message: error });
