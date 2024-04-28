@@ -1,18 +1,35 @@
 import path from "path";
-import pages from "@hono/vite-cloudflare-pages";
 import honox from "honox/vite";
 import client from "honox/vite/client";
 import { defineConfig } from "vite";
+import { resolve } from "path";
+import nodeServerPlugin from "./vite-node-server-plugin";
 
 const root = "./";
 
 export default defineConfig(({ mode }) => {
   if (mode === "client") {
     return {
-      plugins: [client()],
+      build: {
+        manifest: true,
+        rollupOptions: {
+          input: {
+            styles: "/output.css",
+            client: "/app/client.ts",
+          },
+          output: {
+            entryFileNames: "static/[name].[hash].js",
+            chunkFileNames: "static/chunks/[name].[hash].js",
+            assetFileNames: "static/assets/[name].[ext]",
+          },
+        },
+      },
     };
   } else {
     return {
+      build: {
+        target: "esnext",
+      },
       ssr: {
         external: [
           "react",
@@ -38,7 +55,7 @@ export default defineConfig(({ mode }) => {
             },
           },
         }),
-        pages(),
+        nodeServerPlugin(),
       ],
     };
   }
