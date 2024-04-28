@@ -1,0 +1,44 @@
+# fly.toml app configuration file generated for double-zero on 2024-04-28T15:56:06+02:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'double-zero'
+primary_region = 'mad'
+
+[build]
+
+[processes]
+app = "start"
+db = "db:start"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['app']
+  
+
+[[services]]  
+  http_checks = []
+  internal_port = 8090
+  protocol = "tcp"
+  script_checks = []
+  processes = ["db"] # this service only applies to the web process
+  [[services.ports]]
+    handlers = ["http"]
+    port = 8090
+    force_https = true  # optional
+
+[mounts]
+  source = "pb_data" # name of the volume
+  destination = "/pb/pb_data"
+  processes = ['db']
+
+[[vm]]
+  memory = '1gb'
+  cpu_kind = 'shared'
+  cpus = 1
+  processes = ['db']
