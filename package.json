@@ -8,7 +8,8 @@
     "preview": "wrangler pages dev ./dist",
     "deploy": "$npm_execpath run build && wrangler pages deploy ./dist",
     "db:serve": "./app/pocketbase/pocketbase serve",
-    "postinstall": "patch-package"
+    "postinstall": "patch-package",
+    "generate_encryption_keys": "node ./app/lib/encryption-key-gen.js"
   },
   "private": true,
   "dependencies": {
