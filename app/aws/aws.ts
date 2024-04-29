@@ -34,6 +34,14 @@ app.post("/sns", async (c) => {
   const body = await c.req.json();
   try {
     const valid = await validator.validate(body);
+
+    if (valid.Type === "SubscriptionConfirmation") {
+      const subscribeUrl = valid.SubscribeURL!;
+      fetch(subscribeUrl)
+        .then((_) => console.log("Subscription confirmed"))
+        .catch(console.error);
+      return c.json({ success: true });
+    }
     const sns = JSON.parse(valid.Message) as SNS;
 
     const update = { status: EVENTS_TO_STATUS[sns.eventType] };
