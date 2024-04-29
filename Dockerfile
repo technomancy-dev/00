@@ -69,6 +69,6 @@ COPY --from=build /app/app/pocketbase/pb_migrations /pb/pb_migrations
 
 # Start the server by default, this can be overwritten at runtime
 EXPOSE 8080
-EXPOSE 8090
+
 ENTRYPOINT ["npm", "run"]
 CMD ["start"]

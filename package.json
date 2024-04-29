@@ -8,7 +8,6 @@
     "preview": "wrangler pages dev ./dist",
     "deploy": "$npm_execpath run build && wrangler pages deploy ./dist",
     "db:serve": "./app/pocketbase/pocketbase serve",
-    "db:start": "/pb/pocketbase serve",
     "postinstall": "patch-package"
   },
   "private": true,

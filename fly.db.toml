@@ -1,0 +1,13 @@
+app = 'double-zero-db'
+primary_region = 'mad'
+
+[build]
+  
+[mounts]
+  source = "pb_data" # name of the volume
+  destination = "/pb/pb_data"
+
+[[vm]]
+  memory = '1gb'
+  cpu_kind = 'shared'
+  cpus = 1

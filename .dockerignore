@@ -1,0 +1,5 @@
+.env
+node_modules
+**/pb_data/*
+.DS_Store
+/dist

@@ -4,13 +4,14 @@ import { deleteCookie, setCookie } from "hono/cookie";
 import { map } from "ramda";
 
 import pb from "../db";
+
 import { z } from "zod";
 
 import Signup from "./components/Signup";
 import Signin from "./components/Signin";
 
 const flatten_db_errors = (error) => {
-  return map((item) => [item.message], error.originalError.data.data);
+  return map((item) => [item.message], error?.originalError?.data?.data);
 };
 
 const User = z.object({
@@ -79,7 +80,7 @@ app.post("/sign-up", async (c) => {
       const errors = {
         ...flatten_db_errors(error),
       };
-      return { errors: error };
+      return { errors };
     });
 
   if (res.errors) {
