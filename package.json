@@ -2,12 +2,14 @@
   "name": "basic",
   "type": "module",
   "scripts": {
+    "start": "node dist/server.mjs",
     "dev": "vite",
     "build": "vite build --mode client && vite build",
     "preview": "wrangler pages dev ./dist",
     "deploy": "$npm_execpath run build && wrangler pages deploy ./dist",
     "db:serve": "./app/pocketbase/pocketbase serve",
-    "postinstall": "patch-package"
+    "postinstall": "patch-package",
+    "generate_encryption_keys": "node ./app/lib/encryption-key-gen.js"
   },
   "private": true,
   "dependencies": {
@@ -28,6 +30,7 @@
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20240403.0",
+    "@flydotio/dockerfile": "^0.5.6",
     "@hono/vite-cloudflare-pages": "^0.2.4",
     "@hono/vite-dev-server": "^0.11.0",
     "@types/react": "^18.2.79",

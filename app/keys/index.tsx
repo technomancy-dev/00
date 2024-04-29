@@ -90,4 +90,8 @@ app.post("/edit", async (c) => {
   return c.json({ message: "Something went wrong check the DB logs." });
 });
 
+app.get("/new-key", async (c) => {
+  return c.json(generate_key_and_hash());
+});
+
 export default app;
