@@ -3,11 +3,10 @@ import { useState } from "hono/jsx";
 import ClickToCopy from "./_clickToCopy.island";
 
 const RegenerateApiKey = ({ children, clipboard }) => {
-  const [regenerated, set_regenerated] = useState(false);
   const [new_key, set_new_key] = useState(null);
 
   const regenerate = async () => {
-    const response = await fetch("/api/new-key").catch(console.log);
+    const response = await fetch("/dashboard/keys/new-key").catch(console.log);
     const key_and_hash = await response.json();
     set_new_key(key_and_hash);
   };
