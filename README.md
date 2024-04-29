@@ -74,7 +74,7 @@ Congrats! You are done with the config on the 00 side of things.
 
 You can create your first user by visiting [The sign up page](http://localhost:5173/auth/sign-up)
 
-After that you will be given your API key, and asked for your AWS access and secret keys. Your API key will be hashed, so save it since there is no way to ever see it again (even in the database admin) but you can always generate a new one. Your AWS keys will be encrypted which is nice incase your leak your database.
+After that you will be given your API key, and asked for your AWS access and secret keys. Your API key will be hashed, so save it since there is no way to ever see it again (even in the database admin) but you can always generate a new one. Your AWS keys will be encrypted which is nice incase you leak your database.
 
 ## AWS setup.
 
