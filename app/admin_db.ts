@@ -1,6 +1,6 @@
 // https://github.com/pocketbase/pocketbase/issues/3118#issuecomment-1701180778
 import PocketBase from "pocketbase";
-import "dotenv";
+import "dotenv/config";
 
 const pb = new PocketBase(
   import.meta.env.PROD ? process.env.PRODUCTION_DB_URL : "http://127.0.0.1:8090"
@@ -15,8 +15,9 @@ await pb.admins
       "-----------------------------------------------------------------------------"
     );
     console.error(
-      "  Admin Authentication failed. Have you created the system admin user yet?"
+      "Admin Authentication failed. Have you created the system admin user yet?"
     );
+    console.error(`${e.name}: ${e.message}`);
     console.log(
       "-----------------------------------------------------------------------------"
     );
