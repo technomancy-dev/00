@@ -96,7 +96,3 @@ Add a subscription to the topic, select HTTPS for protocol, the endpoint should 
 00 will take care of confirming the subscription.
 
 Now you are ready to deploy this if you haven't at this point! You will need to make a new subscription with your production url if you made one with ngrok in the last few steps.
-
-## Simple monitoring
-
-##
