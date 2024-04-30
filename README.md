@@ -1,3 +1,6 @@
+> 🚨 This is EXTREMELY alpha 🚨\
+> The docs are incomplete, the code needs much better error handling, and changes need to be made to limit sign ups. If you want to use this before these issues are solved take caution.
+
 # Double Zero is an email monitoring micro-service for the people!
 
 Amazon SES is a cost effective way to send a lot of emails, but it has a horrible user experience for most applications.
