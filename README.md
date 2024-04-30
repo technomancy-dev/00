@@ -5,7 +5,7 @@
 
 Amazon SES is a cost effective way to send a lot of emails, but it has a horrible user experience for most applications.
 
-Sending could be a simple API enpoint to send html or markdown to, and a simple dashboard for monitoring email status.
+Sending could be a simple API endpoint to send html or markdown to, and a simple dashboard for monitoring email status.
 
 Instead you need to send through an SMTP setup, and monitoring in the AWS dashboard is horrible, and arguably not even really possible resulting in you needing to make an endpoint and dashboard for SNS events.
 
@@ -91,7 +91,7 @@ Now make a "configuration set" I called mine default, I don't think it matters.
 
 Add an "event destination" to your config set, pick the events you care about, select Amazon SNS, pick a name, make a topic.
 
-Add a subscription to the topic, select HTTPS for protocol, the endpoint should be where you host this, or some exposed enpoint for local testing (like with ngrok) `https://yourdomain.com/aws/sns`
+Add a subscription to the topic, select HTTPS for protocol, the endpoint should be where you host this, or some exposed endpoint for local testing (like with ngrok) `https://yourdomain.com/aws/sns`
 
 00 will take care of confirming the subscription.
 
