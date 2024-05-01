@@ -52,12 +52,15 @@ app.post("/sns", async (c) => {
       .getFirstListItem(`aws_message_id="${sns.mail.messageId}"`)
       .catch(logger.format_error);
 
-    await pbadmin
-      .collection("emails")
-      .update(record.id, update)
-      .catch(logger.format_error);
+    if (record) {
+      await pbadmin
+        .collection("emails")
+        .update(record.id, update)
+        .catch(logger.format_error);
+      return c.json({ success: true });
+    }
 
-    return c.json({ success: true });
+    return c.json({ success: false });
   } catch (e) {
     console.error(e);
     return c.json({ success: false, error: e });
