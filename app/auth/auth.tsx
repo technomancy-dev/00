@@ -9,6 +9,7 @@ import { z } from "zod";
 
 import Signup from "./components/Signup";
 import Signin from "./components/Signin";
+import logger from "../logger";
 
 const flatten_db_errors = (error) => {
   return map((item) => [item.message], error?.originalError?.data?.data);
@@ -77,6 +78,7 @@ app.post("/sign-up", async (c) => {
       name,
     })
     .catch((error) => {
+      logger.format_error(error);
       const errors = {
         ...flatten_db_errors(error),
       };
@@ -89,7 +91,8 @@ app.post("/sign-up", async (c) => {
 
   const login = await pb
     .collection("users")
-    .authWithPassword(email as string, password as string);
+    .authWithPassword(email as string, password as string)
+    .catch(logger.format_error);
 
   if (pb.authStore.isValid) {
     setCookie(c, "pb_auth", pb.authStore.exportToCookie());
@@ -115,6 +118,7 @@ app.post("/sign-in", async (c) => {
     .collection("users")
     .authWithPassword(email as string, password as string)
     .catch((error) => {
+      logger.format_error(error);
       const errors = {
         ...flatten_db_errors(error),
       };

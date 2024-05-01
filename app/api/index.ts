@@ -9,6 +9,7 @@ import email from "../emails/route";
 import bcrypt from "bcrypt";
 
 import "dotenv/config";
+import logger from "../logger";
 
 const app = new Hono();
 
@@ -21,7 +22,7 @@ app.use("/*", async (c, next) => {
       const record = await pbadmin
         .collection("application_keys")
         .getFirstListItem(`key_id="${id}"`)
-        .catch(console.error);
+        .catch(logger.format_error);
 
       c.set("aws_key", record.aws_key);
       c.set("aws_secret", record.aws_secret);

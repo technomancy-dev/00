@@ -2,6 +2,7 @@ import { Hono } from "hono";
 import Dashboard from "./components/Dashboard";
 import keys from "../keys";
 import pb from "../db";
+import logger from "../logger";
 
 const dashboard = new Hono();
 
@@ -26,7 +27,8 @@ dashboard.get("/", async (c) => {
     .getList(offsetSafe, limitSafe, {
       fields: "status,to,from,created",
       sort: "-created",
-    });
+    })
+    .catch(logger.format_error);
 
   return c.render(
     <Dashboard

@@ -1,6 +1,7 @@
 import { Hono } from "hono";
 import Validator from "sns-payload-validator";
 import pbadmin from "../admin_db";
+import logger from "../logger";
 
 const validator = new Validator();
 const app = new Hono();
@@ -48,9 +49,13 @@ app.post("/sns", async (c) => {
 
     const record = await pbadmin
       .collection("emails")
-      .getFirstListItem(`aws_message_id="${sns.mail.messageId}"`);
+      .getFirstListItem(`aws_message_id="${sns.mail.messageId}"`)
+      .catch(logger.format_error);
 
-    await pbadmin.collection("emails").update(record.id, update);
+    await pbadmin
+      .collection("emails")
+      .update(record.id, update)
+      .catch(logger.format_error);
 
     return c.json({ success: true });
   } catch (e) {

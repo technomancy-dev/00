@@ -4,6 +4,7 @@ import pb from "../db";
 import KeyForm from "./components/KeyForm";
 import generate_key_and_hash from "../lib/generate_key";
 import crypto from "../lib/crypto";
+import logger from "../logger";
 
 const app = new Hono();
 
@@ -15,7 +16,7 @@ app.get("/", async (c) => {
   const record = await pb
     .collection("application_keys")
     .getFirstListItem(`user="${user?.id}"`)
-    .catch(console.error);
+    .catch(logger.format_error);
 
   const { key, hash } = generate_key_and_hash();
   if (record) {
@@ -46,7 +47,7 @@ app.post("/", async (c) => {
       aws_secret: aws_secret_encrypted,
       aws_key: aws_key_encrypted,
     })
-    .catch(console.error);
+    .catch(logger.format_error);
 
   if (res) {
     return c.redirect("/dashboard");
@@ -65,7 +66,7 @@ app.post("/edit", async (c) => {
   const res = await pb
     .collection("application_keys")
     .getFirstListItem("")
-    .catch(console.error);
+    .catch(logger.format_error);
 
   const [key_id, key_hash] = hash?.split("_") ?? [];
 
@@ -81,7 +82,8 @@ app.post("/edit", async (c) => {
 
   const update_res = await pb
     .collection("application_keys")
-    .update(res.id, update);
+    .update(res.id, update)
+    .catch(logger.format_error);
 
   if (update_res) {
     return c.redirect("/dashboard");
