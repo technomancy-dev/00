@@ -34,6 +34,7 @@
     "@hono/vite-cloudflare-pages": "^0.2.4",
     "@hono/vite-dev-server": "^0.11.0",
     "@types/react": "^18.2.79",
+    "chalk": "^5.3.0",
     "daisyui": "^4.10.2",
     "vite": "^5.0.12",
     "wrangler": "^3.47.0"

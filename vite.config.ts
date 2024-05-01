@@ -40,6 +40,8 @@ export default defineConfig(({ mode }) => {
           "nodemailer",
           "@aws-sdk/client-ses",
           "sns-payload-validator",
+          "pino",
+          "pino-pretty",
         ],
       },
       plugins: [
