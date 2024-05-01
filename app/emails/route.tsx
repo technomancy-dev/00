@@ -54,8 +54,12 @@ app.post("/send", async (c) => {
 
   const post = await c.req.json();
   let html = post.html;
+  let plaintext = post.plaintext;
   if (post.markdown) {
     html = await render(<Markdown markdown={post.markdown} />);
+    plaintext = await render(<Markdown markdown={post.markdown} />, {
+      plaintext: true,
+    });
   }
   const mail = c.get("mail");
 
