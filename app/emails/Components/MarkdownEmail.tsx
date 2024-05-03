@@ -1,5 +1,8 @@
-import { Html, Markdown, Tailwind } from "jsx-email";
+// @ts-nocheck
+/** @jsxImportSource react */
 import React from "react";
+
+import { Html, Markdown, Tailwind } from "jsx-email";
 
 export const Template = ({ markdown }) => {
   return (
@@ -36,8 +39,9 @@ export const Template = ({ markdown }) => {
             </Markdown>
           </div>
         </div>
-        {/* OR */}
       </Tailwind>
     </Html>
   );
 };
+
+export default Template;

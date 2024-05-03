@@ -7,7 +7,7 @@ import api from "../api";
 import dashboard from "../dashboard";
 import auth from "../auth/auth";
 import { render } from "jsx-email";
-import Template from "../emails/WelcomeEmail";
+import Template from "../emails/Components/WelcomeEmail";
 
 const app = new Hono();
 

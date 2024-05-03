@@ -15,7 +15,7 @@ dashboard.use("/*", async (c, next) => {
 
 dashboard.get("/", async (c) => {
   const { limit, offset } = c.req.query();
-  let limitSafe = limit ? parseInt(limit) : 50;
+  let limitSafe = limit ? parseInt(limit) : 8;
   let offsetSafe = offset ? parseInt(offset) : 1;
 
   const {
