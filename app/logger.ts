@@ -10,10 +10,13 @@ export const format_error = (e: Error) => {
   console.error(chalk.redBright(e.message));
   console.log("     ");
   // @ts-ignore
-  console.error(chalk.bgRed(e?.originalError.cause));
-  console.log("     ");
-  // @ts-ignore
-  console.error(e?.originalError.cause);
+  if (e?.originalError.cause) {
+    // @ts-ignore
+    console.error(chalk.bgRed(e?.originalError.cause));
+    console.log("     ");
+    // @ts-ignore
+    console.error(e?.originalError.cause);
+  }
   horizontal_rule("red", e.message.length);
   console.error(e);
 };

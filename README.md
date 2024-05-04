@@ -73,11 +73,13 @@ Open up http://localhost:5173/ and you should see the following.
 
 Congrats! You are done with the config on the 00 side of things.
 
-> Warning, the following will change soon to restrict random users from signing up. There will likely be an invite, or admin approval process, for now you should just disable sign ups after you have created the users you want. This can be done by locking the create rule for users in pocketbase, making it an admin only action. You should only care about this in production as it doesn't matter locally.
-
 You can create your first user by visiting [The sign up page](http://localhost:5173/auth/sign-up)
 
 After that you will be given your API key, and asked for your AWS access and secret keys. Your API key will be hashed, so save it since there is no way to ever see it again (even in the database admin) but you can always generate a new one. Your AWS keys will be encrypted which is nice incase you leak your database.
+
+After creating your first user, you may want to prevent anyone from making more. You can easily do this with the pocketbase admin UI. Simply navigate to the Users collection, click the gear to edit the collection, click API rules, then click the lock next to the create rule to make creating users an admin only action.
+
+![lock user creation](guides/images/lock_user_creation.png)
 
 ## AWS setup.
 
