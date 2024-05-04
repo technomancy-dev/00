@@ -25,7 +25,7 @@ COPY ./app/pocketbase/pb_migrations /pb/pb_migrations
 
 
 # Start the server by default, this can be overwritten at runtime
-EXPOSE 8090
+EXPOSE 8080
 
-CMD ["/pb/pocketbase", "serve", "--http=fly-local-6pn:8090"]
+CMD ["/pb/pocketbase", "serve", "--http=0.0.0.0:8080"]
 

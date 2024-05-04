@@ -7,7 +7,7 @@ FROM node:${NODE_VERSION}-slim as base
 LABEL fly_launch_runtime="Node.js"
 
 # Node.js app lives here
-WORKDIR /app
+WORKDIR /build
 
 # Set production environment
 ENV NODE_ENV="production"
@@ -39,8 +39,10 @@ RUN unzip /tmp/pb.zip -d /pb/
 
 
 # Install node modules
-COPY --link package-lock.json package.json ./
+COPY --link package-lock.json package.json patches ./
+COPY ./patches ./patches
 RUN npm ci --include=dev
+RUN npm run postinstall
 
 # Copy application code
 COPY --link . .
@@ -61,9 +63,9 @@ RUN npm prune --prod
 FROM base
 
 # Copy built application
-COPY --from=build /app /app
-COPY --from=build /pb /pb
-COPY --from=build /app/app/pocketbase/pb_migrations /pb/pb_migrations
+COPY --from=build /build /
+# COPY --from=build /pb /pb
+# COPY --from=build /app/app/pocketbase/pb_migrations /pb/pb_migrations
 # COPY --from=build /app/pocketbase/pb_hooks /pb/pb_hooks
 
 
