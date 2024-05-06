@@ -6,8 +6,8 @@ export const create_mailer = (
   aws_key_encrypted: string,
   aws_secret_encrypted: string
 ) => {
-  const aws_key = decrypt(aws_key_encrypted);
-  const aws_secret = decrypt(aws_secret_encrypted);
+  const aws_key = aws_key_encrypted;
+  const aws_secret = aws_secret_encrypted;
 
   const ses = new SESClient({
     apiVersion: "2010-12-01",

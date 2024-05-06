@@ -4,10 +4,33 @@ import client from "honox/vite/client";
 import { defineConfig } from "vite";
 import { resolve } from "path";
 import nodeServerPlugin from "./vite-node-server-plugin";
+import emailServerPlugin from "./vite-email-server-plugin";
+import devServer from "@hono/vite-dev-server";
 
 const root = "./";
 
 export default defineConfig(({ mode }) => {
+  if (mode === "email-queue") {
+    return {
+      ssr: {
+        external: [
+          "react",
+          "react-dom",
+          "jsx-email",
+          "bcrypt",
+          "dotenv",
+          "nodemailer",
+          "@aws-sdk/client-ses",
+          "sns-payload-validator",
+          "pino",
+          "pino-pretty",
+          "mail-time",
+          "redis",
+        ],
+      },
+      plugins: [emailServerPlugin()],
+    };
+  }
   if (mode === "client") {
     return {
       build: {
@@ -42,6 +65,8 @@ export default defineConfig(({ mode }) => {
           "sns-payload-validator",
           "pino",
           "pino-pretty",
+          "mail-time",
+          "redis",
         ],
       },
       plugins: [

@@ -3,6 +3,7 @@ export type Info = {
 };
 
 export type Email = {
+  uuid: string;
   envelope: {
     to: string;
     from: string | string[];

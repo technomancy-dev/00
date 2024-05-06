@@ -1,6 +1,8 @@
 > 🚨 This is EXTREMELY alpha 🚨\
 > The docs are incomplete, the code needs much better error handling, and changes need to be made to limit sign ups. If you want to use this before these issues are solved take caution.
 
+> IF THINGS ARE NO LONGER WORKING PLEASE RE-READ THE GUIDE THINGS HAVE LIKELY CHANGED.
+
 # Double Zero is an email monitoring micro-service for the people!
 
 Amazon SES is a cost effective way to send a lot of emails, but it has a horrible user experience for most applications.
@@ -36,13 +38,9 @@ You will need a system admin, this is used to authenitcate you from your API key
 Next, lets make an `.env` file and store the system admin credentials there, along with a few other needed items.
 
 ```
-# Keys used to encrypt your AWS data
-# You can generate these using:
-# npm run generate_encryption_keys
-# or make your own random 32 and 16 byte strings.
-
-CRYPTO_KEY=""
-CRYPTO_IV=""
+# AWS KEYS NEEDED IF USING SEND API
+AWS_SECRET_KEY=""
+AWS_ACCESS_KEY=""
 
 # Admin cedentials you just made. 
 ADMIN_EMAIL=""
@@ -75,7 +73,9 @@ Congrats! You are done with the config on the 00 side of things.
 
 You can create your first user by visiting [The sign up page](http://localhost:5173/auth/sign-up)
 
-After that you will be given your API key, and asked for your AWS access and secret keys. Your API key will be hashed, so save it since there is no way to ever see it again (even in the database admin) but you can always generate a new one. Your AWS keys will be encrypted which is nice incase you leak your database.
+> The section below has changed, your keys are env variables now, we just need your AWS Account ID
+
+After that you will be given your API key, ~~and asked for your AWS access and secret keys.~~ Your API key will be hashed, so save it since there is no way to ever see it again (even in the database admin) but you can always generate a new one. ~~Your AWS keys will be encrypted which is nice incase you leak your database.~~
 
 After creating your first user, you may want to prevent anyone from making more. You can easily do this with the pocketbase admin UI. Simply navigate to the Users collection, click the gear to edit the collection, click API rules, then click the lock next to the create rule to make creating users an admin only action.
 

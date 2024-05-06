@@ -6,9 +6,14 @@
 app = 'double-zero'
 primary_region = 'mad'
 
+[processes]
+web = "start"
+email = "email:start"
+
 [build]
 
 [http_service]
+  processes = ["web"]
   internal_port = 8080
   force_https = true
   auto_stop_machines = true

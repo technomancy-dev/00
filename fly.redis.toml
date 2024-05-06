@@ -1,0 +1,10 @@
+app = "double-zero-redis"
+
+[mounts]
+  destination = "/data"
+  source = "redis_server"
+
+# Use the Docker image instead of building from source
+
+[build]
+  image = "flyio/redis:6.2.6"

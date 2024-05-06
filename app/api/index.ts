@@ -1,10 +1,7 @@
 import { Hono } from "hono";
-import { getCookie } from "hono/cookie";
 import { bearerAuth } from "hono/bearer-auth";
 
-import pb from "../db";
 import pbadmin from "../admin_db";
-import generate_key_and_hash from "../lib/generate_key";
 import email from "../emails/route";
 import bcrypt from "bcrypt";
 
@@ -24,9 +21,12 @@ app.use("/*", async (c, next) => {
         .getFirstListItem(`key_id="${id}"`)
         .catch(logger.format_error);
 
-      c.set("aws_key", record.aws_key);
-      c.set("aws_secret", record.aws_secret);
       c.set("user", record.user);
+      if (!record) {
+        logger.error(
+          "No record found. Check your Admin credentials, and ensure you are using a valid API key."
+        );
+      }
 
       if (!record?.key_hash) {
         return false;

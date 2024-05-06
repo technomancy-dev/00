@@ -4,6 +4,9 @@
   "scripts": {
     "start": "node dist/server.mjs",
     "dev": "vite",
+    "email:dev": "vite-node ./app/mail-job.ts",
+    "email:server": "vite build --mode email-queue && node dist/mail.mjs",
+    "email:start": "node dist/mail.mjs",
     "build": "vite build --mode client && vite build",
     "preview": "wrangler pages dev ./dist",
     "deploy": "$npm_execpath run build && wrangler pages deploy ./dist",
@@ -21,11 +24,14 @@
     "hono": "^4.2.7",
     "honox": "^0.1.15",
     "jsx-email": "^1.12.0",
+    "mail-time": "^3.0.0",
     "nodemailer": "^6.9.13",
     "patch-package": "^8.0.0",
     "pocketbase": "^0.21.2",
     "ramda": "^0.29.1",
+    "redis": "^4.6.13",
     "sns-payload-validator": "^2.1.0",
+    "vite-node": "^1.6.0",
     "zod": "^3.23.4"
   },
   "devDependencies": {
