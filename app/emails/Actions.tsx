@@ -10,8 +10,7 @@ const send = factory.createHandlers(async (c) => {
 
   const email = await email_controller.render_email(json);
   const queue_response = await email_controller.send({ email });
-
-  const db_response = await email_controller.save_admin({
+  await email_controller.save_admin({
     email: queue_response,
     user,
   });

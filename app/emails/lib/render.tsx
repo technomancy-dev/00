@@ -38,8 +38,6 @@ export const render_email = async (request: any) => {
     },
     html,
     plaintext,
-    info: {
-      response: null,
-    },
+    info: "",
   };
 };

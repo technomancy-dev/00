@@ -6,13 +6,11 @@ import "dotenv/config";
 
 let aws_key = process.env.AWS_ACCESS_KEY!;
 let aws_secret = process.env.AWS_SECRET_KEY!;
-const mailer = create_mailer(aws_key, aws_secret);
+let aws_region = process.env.AWS_REGION!;
+const mailer = create_mailer(aws_key, aws_secret, aws_region);
 
 mailer.options = {
-  pool: false,
   direct: true,
-  name: "mail.example.com",
-  from: "no-reply@example.com",
 };
 
 const redisClient = await createClient({

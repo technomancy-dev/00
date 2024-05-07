@@ -1,7 +1,9 @@
 import { HTTPException } from "hono/http-exception";
 
-import { EVENTS_TO_STATUS, STATUS } from "../aws/aws";
+import { STATUS } from "../aws/aws";
 import pbadmin from "../admin_db";
+
+// @ts-ignore
 import { mailQueue } from "../mail-queue";
 import { Email } from "./lib/types";
 
@@ -31,7 +33,13 @@ const save_admin = ({ email, user }: { email: Email; user: User }) => {
     .catch(console.error);
 };
 
-const create_aws = ({ email, user }: { email: Email; user: User }) => {
+const create_email_with_aws_id = ({
+  email,
+  user,
+}: {
+  email: Email;
+  user: User;
+}) => {
   return pbadmin
     .collection("emails")
     .create({
@@ -71,6 +79,7 @@ const link_email_to_aws = async ({
 
 const send = async ({ email }: { email: Email }) => {
   try {
+    //  @ts-ignore
     const info = await mailQueue.sendMail({
       from: email.envelope.from, // sender address
       to: email.envelope.to, // list of receivers
@@ -95,7 +104,7 @@ const Email = {
   create_mailer,
   render_email,
   link_email_to_aws,
-  create_aws,
+  create_email_with_aws_id,
 };
 
 export default Email;

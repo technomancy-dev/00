@@ -1,17 +1,17 @@
 import { SESClient, SendRawEmailCommand } from "@aws-sdk/client-ses";
-import { decrypt } from "../../lib/crypto";
 import nodemailer from "nodemailer";
 
 export const create_mailer = (
   aws_key_encrypted: string,
-  aws_secret_encrypted: string
+  aws_secret_encrypted: string,
+  region: string
 ) => {
   const aws_key = aws_key_encrypted;
   const aws_secret = aws_secret_encrypted;
 
   const ses = new SESClient({
     apiVersion: "2010-12-01",
-    region: "us-east-1",
+    region: region,
     credentials: {
       accessKeyId: aws_key,
       secretAccessKey: aws_secret,

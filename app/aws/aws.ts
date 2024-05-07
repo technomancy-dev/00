@@ -86,7 +86,7 @@ app.post("/sns", async (c) => {
         status: EVENTS_TO_STATUS[sns.eventType],
       };
 
-      Email.create_aws({ email, user: keys.user });
+      Email.create_email_with_aws_id({ email, user: keys.user });
       return c.json({ success: true });
     }
     const update = { status: EVENTS_TO_STATUS[sns.eventType] };

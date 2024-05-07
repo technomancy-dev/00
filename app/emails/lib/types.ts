@@ -1,9 +1,8 @@
-export type Info = {
-  response: string | null;
-};
+export type Info = string | null;
 
 export type Email = {
-  uuid: string;
+  uuid?: string;
+  status?: string;
   envelope: {
     to: string;
     from: string | string[];
