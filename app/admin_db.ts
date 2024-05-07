@@ -14,7 +14,7 @@ await pb.admins
   .catch((e) => {
     logger.break();
     logger.error(
-      "Admin Authentication failed. Have you created the system admin user yet?"
+      "Admin Authentication failed. Have you created the system admin user yet? Is your database running and healthy?"
     );
     logger.error(`${e.name}: ${e.message}`);
     logger.break();
