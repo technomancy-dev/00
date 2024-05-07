@@ -7,7 +7,7 @@
     "email:dev": "vite-node ./app/mail-job.ts",
     "email:server": "vite build --mode email-queue && node dist/mail.mjs",
     "email:start": "node dist/mail.mjs",
-    "build": "vite build --mode client && vite build",
+    "build": "vite build --mode client && vite build --mode email-queue && vite build",
     "preview": "wrangler pages dev ./dist",
     "deploy": "$npm_execpath run build && wrangler pages deploy ./dist",
     "db:serve": "./app/pocketbase/pocketbase serve",

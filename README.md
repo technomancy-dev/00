@@ -47,8 +47,8 @@ ADMIN_EMAIL=""
 ADMIN_PASSWORD=""
 
 # where your production db can be reached
-# only needed once deployed. 
 PRODUCTION_DB_URL="" 
+REDIS_URL=""
 ```
 
 Once those are all set, you can run `npm run dev` which should result in the following output.

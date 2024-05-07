@@ -21,7 +21,6 @@ app.use("/*", async (c, next) => {
         .getFirstListItem(`key_id="${id}"`)
         .catch(logger.format_error);
 
-      c.set("user", record.user);
       if (!record) {
         logger.error(
           "No record found. Check your Admin credentials, and ensure you are using a valid API key."
@@ -32,7 +31,9 @@ app.use("/*", async (c, next) => {
         return false;
       }
 
-      return bcrypt.compareSync(pass, record.key_hash);
+      const match = bcrypt.compareSync(pass, record.key_hash);
+      c.set("user", record.user);
+      return match;
     },
   })(c, next);
 });
