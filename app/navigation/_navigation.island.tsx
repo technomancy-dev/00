@@ -39,17 +39,29 @@ export default function Navigation({ user }) {
               </>
             )}
             {user && (
-              <li>
-                <form
-                  class="w-full flex h-full"
-                  action="/auth/logout"
-                  method="post"
-                >
-                  <button class="w-full h-full" type="submit">
-                    Logout
-                  </button>
-                </form>
-              </li>
+              <>
+                <li className="flex w-full items-center">
+                  <a className="w-full btn text-center" href="/dashboard">
+                    Home
+                  </a>
+                </li>
+                <li className="flex w-full items-center">
+                  <a className="w-full btn text-center" href="/dashboard/keys">
+                    Edit Keys
+                  </a>
+                </li>
+                <li>
+                  <form
+                    class="w-full flex h-full"
+                    action="/auth/logout"
+                    method="post"
+                  >
+                    <button class="w-full h-full" type="submit">
+                      Logout
+                    </button>
+                  </form>
+                </li>
+              </>
             )}
           </ul>
         </div>

@@ -2,7 +2,7 @@
 import ClickToCopy from "./_clickToCopy.island";
 import Regenerate from "./_regenerateApiKey.island";
 
-const KeyForm = ({ secret, hash, aws_key, aws_secret, edit }) => {
+const KeyForm = ({ secret, hash, edit }) => {
   return (
     <div className="h-full grid place-items-center">
       <div className="w-full max-w-md">
@@ -43,39 +43,13 @@ const KeyForm = ({ secret, hash, aws_key, aws_secret, edit }) => {
           )}
           <label class="form-control w-full">
             <div class="label">
-              <span class="label-text">What is your aws access key?</span>
+              <span class="label-text">What is your AWS account ID?</span>
             </div>
             <input
-              value={aws_key}
-              type="password"
-              name="aws_key"
+              type="text"
+              name="aws_account_id"
               class="input input-bordered w-full"
             />
-            {edit && (
-              <div class="label">
-                <span class="label-text-alt text-base-content/50">
-                  This will overwrite your saved key.
-                </span>
-              </div>
-            )}
-          </label>
-          <label class="form-control w-full">
-            <div class="label">
-              <span class="label-text">What is your aws access secret?</span>
-            </div>
-            <input
-              value={aws_secret}
-              type="password"
-              name="aws_secret"
-              class="input input-bordered w-full"
-            />
-            {edit && (
-              <div class="label">
-                <span class="label-text-alt text-base-content/50">
-                  This will overwrite your saved key.
-                </span>
-              </div>
-            )}
           </label>
 
           <button class="btn btn-primary mt-4">

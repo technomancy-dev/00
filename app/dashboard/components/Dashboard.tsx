@@ -11,12 +11,6 @@ const COLOR_BY_STATUS = {
 const Dashboard = ({ records, limit, offset, firstPage, lastPage }) => {
   return (
     <div class="max-w-5xl mx-auto">
-      <div class="w-full my-10 flex justify-between">
-        <div>{/* Upgrade to pro */}</div>
-        <a class="btn btn-primary" href="/dashboard/keys">
-          Edit Keys
-        </a>
-      </div>
       <div class="overflow-x-auto">
         <div class="flex gap-4 items-center justify-end">
           <a
@@ -59,6 +53,14 @@ const Dashboard = ({ records, limit, offset, firstPage, lastPage }) => {
           </tbody>
         </table>
       </div>
+      {/* <div class="w-full my-10 flex justify-between"> */}
+      {/* <a class="btn btn-ghost text-xs" href="https://double-zero.fly.dev/pro"> */}
+      {/* Go Pro */}
+      {/* </a> */}
+      {/* <a class="btn btn-primary" href="/dashboard/keys">
+          Edit Keys
+        </a> */}
+      {/* </div> */}
     </div>
   );
 };
