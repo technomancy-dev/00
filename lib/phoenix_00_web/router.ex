@@ -68,6 +68,13 @@ defmodule Phoenix00Web.Router do
       on_mount: [{Phoenix00Web.UserAuth, :ensure_authenticated}] do
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
+
+      live "/emails", EmailLive.Index, :index
+      # live "/emails/new", EmailLive.Index, :new
+      # live "/emails/:id/edit", EmailLive.Index, :edit
+
+      live "/emails/:id", EmailLive.Show, :show
+      # live "/emails/:id/show/edit", EmailLive.Show, :edit
     end
   end
 
@@ -81,5 +88,12 @@ defmodule Phoenix00Web.Router do
       live "/users/confirm/:token", UserConfirmationLive, :edit
       live "/users/confirm", UserConfirmationInstructionsLive, :new
     end
+  end
+
+  scope "/api", Phoenix00Web do
+    pipe_through [:api]
+
+    post "/emails/send", EmailController, :send
+    # get "/emails/send", EmailController, :index
   end
 end

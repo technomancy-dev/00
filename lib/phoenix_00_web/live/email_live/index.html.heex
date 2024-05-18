@@ -1,0 +1,47 @@
+<.header>
+  Listing Emails
+  <!-- <:actions>
+    <.link patch={~p"/emails/new"}>
+      <.button>New Email</.button>
+    </.link>
+  </:actions> -->
+</.header>
+
+<.table
+  id="emails"
+  rows={@streams.emails}
+  row_click={fn {_id, email} -> JS.navigate(~p"/emails/#{email}") end}
+>
+  <:col :let={{_id, email}}  label="Status">
+    <span data-status={email.status} class="text-gray-500 data-[status='pending']:text-green-500">
+      <%= email.status %>
+    </span>
+  </:col>
+  <:col :let={{_id, email}} label="To"><%= email.to %></:col>
+  <:col :let={{_id, email}} label="From"><%= email.from %></:col>  
+  <:action :let={{_id, email}}>
+    <div class="sr-only">
+      <.link navigate={~p"/emails/#{email}"}>Show</.link>
+    </div>
+    <!-- <.link patch={~p"/emails/#{email}/edit"}>Edit</.link> -->
+  </:action>
+  <:action :let={{id, email}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: email.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal :if={@live_action in [:new, :edit]} id="email-modal" show on_cancel={JS.patch(~p"/emails")}>
+  <.live_component
+    module={Phoenix00Web.EmailLive.FormComponent}
+    id={@email.id || :new}
+    title={@page_title}
+    action={@live_action}
+    email={@email}
+    patch={~p"/emails"}
+  />
+</.modal>
