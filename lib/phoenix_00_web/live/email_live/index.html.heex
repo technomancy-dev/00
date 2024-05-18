@@ -19,6 +19,7 @@
   </:col>
   <:col :let={{_id, email}} label="To"><%= email.to %></:col>
   <:col :let={{_id, email}} label="From"><%= email.from %></:col>  
+  <:col :let={{_id, email}} label="Sent"><%= email.inserted_at %></:col>  
   <:action :let={{_id, email}}>
     <div class="sr-only">
       <.link navigate={~p"/emails/#{email}"}>Show</.link>
