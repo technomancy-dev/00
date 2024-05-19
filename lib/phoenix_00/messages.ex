@@ -20,8 +20,8 @@ defmodule Phoenix00.Messages do
       [%Email{}, ...]
 
   """
-  def list_emails do
-    Repo.all(Email)
+  def list_emails(limit \\ 10, off \\ 0) do
+    Email |> limit(^limit) |> offset(^off) |> Repo.all()
   end
 
   @doc """

@@ -8,9 +8,10 @@ defmodule Phoenix00.Accounts.UserNotifier do
     email =
       new()
       |> to(recipient)
-      |> from({"Phoenix00", "contact@example.com"})
+      |> from({"Phoenix00", System.get_env("SYSTEM_EMAIL")})
       |> subject(subject)
       |> text_body(body)
+      |> put_provider_option(:configuration_set_name, "default")
 
     with {:ok, _metadata} <- Mailer.deliver(email) do
       {:ok, email}
