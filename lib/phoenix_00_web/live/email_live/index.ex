@@ -6,7 +6,7 @@ defmodule Phoenix00Web.EmailLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, stream(socket, :emails, [])}
+    {:ok, stream(socket, :emails, [], page: 0, max_page: 1)}
   end
 
   @impl true
@@ -27,11 +27,15 @@ defmodule Phoenix00Web.EmailLive.Index do
   end
 
   defp apply_action(socket, :index, params) do
+    page = params["page"] || "0"
+
     socket
     |> assign(:page_title, "Listing Emails")
+    |> assign(:page, page |> String.to_integer())
+    |> assign(:max_page, div(Messages.email_count(), 10))
     |> stream(
       :emails,
-      Messages.list_emails(10, 10 * (params["page"] || "0" |> String.to_integer())),
+      Messages.list_emails(10, 10 * (page |> String.to_integer())),
       reset: true
     )
   end

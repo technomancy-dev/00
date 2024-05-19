@@ -7,6 +7,9 @@
   </:actions> -->
 </.header>
 
+<.link class="" patch={~p"/emails?page=#{max(0, @page - 1)}"}>Previous</.link>
+<span>Page: <%= @page %></span>
+<.link patch={~p"/emails?page=#{min(@max_page, @page + 1)}"}>Next</.link>
 <.table
   id="emails"
   rows={@streams.emails}

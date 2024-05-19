@@ -24,6 +24,10 @@ defmodule Phoenix00.Messages do
     Email |> limit(^limit) |> offset(^off) |> Repo.all()
   end
 
+  def email_count() do
+    Repo.aggregate(Email, :count, :id)
+  end
+
   @doc """
   Gets a single email.
 
