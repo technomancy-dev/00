@@ -94,6 +94,7 @@ defmodule Phoenix00Web.Router do
     pipe_through [:api]
 
     post "/emails/send", EmailController, :send
+    post "/aws/sns", EmailController, :recieve_sns
     # get "/emails/send", EmailController, :index
   end
 end

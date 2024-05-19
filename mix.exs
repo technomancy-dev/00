@@ -53,6 +53,8 @@ defmodule Phoenix00.MixProject do
        depth: 1},
       {:swoosh, "~> 1.5"},
       {:gen_smtp, "~> 1.0"},
+      {:ex_aws, "~> 2.0"},
+      {:ex_aws_sns, "~> 2.0"},
       {:hackney, "~> 1.20"},
       {:finch, "~> 0.13"},
       {:telemetry_metrics, "~> 1.0"},

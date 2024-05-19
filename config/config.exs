@@ -34,8 +34,8 @@ config :phoenix_00, Phoenix00Web.Endpoint,
 config :phoenix_00, Phoenix00.Mailer,
   adapter: Swoosh.Adapters.AmazonSES,
   region: System.get_env("AWS_REGION"),
-  access_key: System.get_env("AWS_ACCESS_KEY"),
-  secret: System.get_env("AWS_SECRET_KEY")
+  access_key: System.get_env("AWS_ACCESS_KEY_ID"),
+  secret: System.get_env("AWS_SECRET_ACCESS_KEY")
 
 # Configure esbuild (the version is required)
 config :esbuild,

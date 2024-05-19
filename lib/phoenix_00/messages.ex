@@ -40,6 +40,10 @@ defmodule Phoenix00.Messages do
   """
   def get_email!(id), do: Repo.get!(Email, id)
 
+  def get_email_by_aws_id(aws_message_id) do
+    Repo.get_by(Email, aws_message_id: aws_message_id)
+  end
+
   @doc """
   Creates a email.
 
@@ -64,28 +68,52 @@ defmodule Phoenix00.Messages do
       ) do
     email = UserEmail.welcome(to, from, subject, body, text)
 
-    with {:ok, mail} <- Mailer.deliver(email) do
-      IO.inspect("YUUUUP")
-      IO.inspect(mail)
-
-      record =
-        %Email{}
-        |> Email.changeset(
-          Map.merge(email_req, %{
-            "aws_message_id" => mail[:id],
-            "status" => "pending",
-            "email_id" => mail[:request_id]
-          })
-        )
-
-      with {:ok, response} <- Repo.insert(record) do
-        IO.inspect(response)
-      else
-        {:error, reason} -> IO.inspect(reason)
-      end
+    with {:ok, mail} <- Mailer.deliver(email),
+         {:ok} <-
+           Repo.insert(merge_aws_with_email(email_req, mail)) do
+      :ok
     else
-      {:error, reason} -> {:error, reason}
+      _ -> :error
     end
+  end
+
+  def recieve_sns(sns) do
+    with :ok <- ExAws.SNS.verify_message(sns) do
+      handle_sns(sns)
+    end
+  end
+
+  def handle_sns(%{
+        "Type" => "SubscriptionConfirmation",
+        "TopicArn" => topic_arn,
+        "Token" => token
+      }) do
+    ExAws.SNS.confirm_subscription(topic_arn, token, false) |> ExAws.request()
+  end
+
+  def handle_sns(%{
+        "Type" => "Notification",
+        "Message" => message
+      }) do
+    with {:ok, jason} <- Jason.decode(message),
+         {:ok, _response} <-
+           get_email_by_aws_id(jason["mail"]["messageId"])
+           |> update_email(%{
+             status: get_status_from_event_type(jason["eventType"])
+           }) do
+      {:ok, %{success: true}}
+    end
+  end
+
+  def merge_aws_with_email(aws, email) do
+    %Email{}
+    |> Email.changeset(
+      Map.merge(aws, %{
+        "aws_message_id" => email[:id],
+        "status" => "pending",
+        "email_id" => email[:request_id]
+      })
+    )
   end
 
   @doc """
@@ -133,5 +161,14 @@ defmodule Phoenix00.Messages do
   """
   def change_email(%Email{} = email, attrs \\ %{}) do
     Email.changeset(email, attrs)
+  end
+
+  defp get_status_from_event_type(event_type) do
+    case event_type do
+      "Bounce" -> "bounced"
+      "Complain" -> "complained"
+      "Send" -> "sent"
+      "Pending" -> "pending"
+    end
   end
 end

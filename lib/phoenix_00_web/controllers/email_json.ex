@@ -5,11 +5,15 @@ defmodule Phoenix00Web.EmailJSON do
     %{data: data(email)}
   end
 
+  def index(json) do
+    %{data: data(json)}
+  end
+
   def send(%{email: email}) do
     %{data: data(email)}
   end
 
-  defp data(email) do
-    email
+  defp data(_json) do
+    %{success: true}
   end
 end
