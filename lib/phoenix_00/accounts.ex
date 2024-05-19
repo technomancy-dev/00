@@ -4,7 +4,7 @@ defmodule Phoenix00.Accounts do
   """
 
   import Ecto.Query, warn: false
-  alias Phoenix00.Accounts
+  # alias Phoenix00.Accounts
   alias Phoenix00.Repo
 
   alias Phoenix00.Accounts.{User, UserToken, UserNotifier}
@@ -364,8 +364,8 @@ defmodule Phoenix00.Accounts do
     encoded_token
   end
 
-  def ensure_user_exists() do
-    Repo.all(User) |> length()
+  def user_exists?() do
+    Repo.exists?(User)
   end
 
   @doc """

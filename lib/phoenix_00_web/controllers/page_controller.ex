@@ -5,12 +5,12 @@ defmodule Phoenix00Web.PageController do
   def home(conn, _params) do
     # The home page is often custom made,
     # so skip the default app layout.
-    case Accounts.ensure_user_exists() do
-      n when n > 0 ->
+    case Accounts.user_exists?() do
+      true ->
         conn
         |> redirect(to: ~p"/users/log_in")
 
-      0 ->
+      false ->
         redirect(conn, to: ~p"/users/register")
     end
   end

@@ -45,11 +45,11 @@ defmodule Phoenix00Web.UserRegistrationLive do
   def mount(_params, _session, socket) do
     changeset = Accounts.change_user_registration(%User{})
 
-    case Accounts.ensure_user_exists() do
-      n when n > 0 ->
+    case Accounts.user_exists?() do
+      true ->
         {:ok, push_redirect(socket, to: ~p"/users/log_in")}
 
-      0 ->
+      false ->
         socket =
           socket
           |> assign(trigger_submit: false, check_errors: false)
