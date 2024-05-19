@@ -505,4 +505,13 @@ defmodule Phoenix00.AccountsTest do
       refute inspect(%User{password: "123456"}) =~ "password: \"123456\""
     end
   end
+
+  describe "create_user_api_token/1 and fetch_user_by_api_token/1" do
+    test "creates and fetches by token" do
+      user = user_fixture()
+      token = Accounts.create_user_api_token(user)
+      assert Accounts.fetch_user_by_api_token(token) == {:ok, user}
+      assert Accounts.fetch_user_by_api_token("invalid") == :error
+    end
+  end
 end

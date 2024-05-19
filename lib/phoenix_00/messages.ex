@@ -96,10 +96,22 @@ defmodule Phoenix00.Messages do
         "Message" => message
       }) do
     with {:ok, jason} <- Jason.decode(message),
-         {:ok, _response} <-
-           get_email_by_aws_id(jason["mail"]["messageId"])
+         {:ok, _response} <- handle_notification_message(jason) do
+      {:ok, %{success: true}}
+    end
+  end
+
+  def handle_notification_message(%{"eventType" => "Send"} = message) do
+    IO.inspect("IT'S SEND")
+    IO.inspect(message)
+    {:ok, %{}}
+  end
+
+  def handle_notification_message(message) do
+    with {:ok, _} <-
+           get_email_by_aws_id(message["mail"]["messageId"])
            |> update_email(%{
-             status: get_status_from_event_type(jason["eventType"])
+             status: get_status_from_event_type(message["eventType"])
            }) do
       {:ok, %{success: true}}
     end

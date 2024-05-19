@@ -12,6 +12,16 @@ defmodule Phoenix00Web.UserSettingsLive do
 
     <div class="space-y-12 divide-y">
       <div>
+        <.simple_form for={@token_form} id="token_form" phx-submit="generate_api_key">
+          <:actions>
+            <.button phx-disable-with="Changing...">Create Token</.button>
+          </:actions>
+        </.simple_form>
+        <div :if={@token} class="alert alert-danger">
+          <p><%= @token %></p>
+        </div>
+      </div>
+      <div>
         <.simple_form
           for={@email_form}
           id="email_form"
@@ -98,6 +108,8 @@ defmodule Phoenix00Web.UserSettingsLive do
       |> assign(:current_email, user.email)
       |> assign(:email_form, to_form(email_changeset))
       |> assign(:password_form, to_form(password_changeset))
+      |> assign(:token_form, to_form(%{}))
+      |> assign(:token, false)
       |> assign(:trigger_submit, false)
 
     {:ok, socket}
@@ -162,6 +174,18 @@ defmodule Phoenix00Web.UserSettingsLive do
 
       {:error, changeset} ->
         {:noreply, assign(socket, password_form: to_form(changeset))}
+    end
+  end
+
+  def handle_event("generate_api_key", _params, socket) do
+    user = socket.assigns.current_user
+
+    case Accounts.fetch_new_api_token(user) do
+      {:ok, token} ->
+        {:noreply, assign(socket, token: token)}
+
+      {:error} ->
+        {:noreply, socket}
     end
   end
 end

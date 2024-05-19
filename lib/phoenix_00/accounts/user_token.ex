@@ -8,6 +8,7 @@ defmodule Phoenix00.Accounts.UserToken do
 
   # It is very important to keep the reset password token expiry short,
   # since someone with access to the email may take over the account.
+  @api_token_validity_in_days 365
   @reset_password_validity_in_days 1
   @confirm_validity_in_days 7
   @change_email_validity_in_days 7
@@ -126,6 +127,7 @@ defmodule Phoenix00.Accounts.UserToken do
     end
   end
 
+  defp days_for_context("api-token"), do: @api_token_validity_in_days
   defp days_for_context("confirm"), do: @confirm_validity_in_days
   defp days_for_context("reset_password"), do: @reset_password_validity_in_days
 

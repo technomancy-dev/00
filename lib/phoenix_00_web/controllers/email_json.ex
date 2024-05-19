@@ -1,5 +1,5 @@
 defmodule Phoenix00Web.EmailJSON do
-  alias Phoenix00.Messages.Email
+  # alias Phoenix00.Messages.Email
 
   def index(%{email: email}) do
     %{data: data(email)}

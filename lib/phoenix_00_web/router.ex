@@ -15,6 +15,11 @@ defmodule Phoenix00Web.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug :fetch_api_user
+  end
+
+  pipeline :aws do
+    plug :accepts, ["json"]
   end
 
   scope "/", Phoenix00Web do
@@ -94,7 +99,11 @@ defmodule Phoenix00Web.Router do
     pipe_through [:api]
 
     post "/emails/send", EmailController, :send
-    post "/aws/sns", EmailController, :recieve_sns
-    # get "/emails/send", EmailController, :index
+  end
+
+  scope "/aws", Phoenix00Web do
+    pipe_through [:aws]
+
+    post "/sns", EmailController, :recieve_sns
   end
 end
