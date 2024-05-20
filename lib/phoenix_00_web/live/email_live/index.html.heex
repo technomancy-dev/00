@@ -1,15 +1,17 @@
 <.header>
   Listing Emails
-  <!-- <:actions>
-    <.link patch={~p"/emails/new"}>
+  <:actions>
+    <!-- <.link patch={~p"/emails/new"}>
       <.button>New Email</.button>
-    </.link>
-  </:actions> -->
+    </.link> -->
+
+    <.link class="" patch={~p"/emails?page=#{max(0, @page - 1)}"}><.button>Previous</.button></.link>
+    <span>Page: <%= @page %></span>
+    <.link patch={~p"/emails?page=#{min(@max_page, @page + 1)}"}><.button>Next</.button></.link>
+  </:actions>
 </.header>
 
-<.link class="" patch={~p"/emails?page=#{max(0, @page - 1)}"}>Previous</.link>
-<span>Page: <%= @page %></span>
-<.link patch={~p"/emails?page=#{min(@max_page, @page + 1)}"}>Next</.link>
+
 <.table
   id="emails"
   rows={@streams.emails}
