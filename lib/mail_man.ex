@@ -1,7 +1,7 @@
-defmodule Phoenix00.UserEmail do
+defmodule Phoenix00.MailMan do
   import Swoosh.Email
 
-  def welcome(to, from, subject, body, text) do
+  def letter(to, from, subject, body, text) do
     new()
     |> to({nil, to})
     |> from({nil, from})
