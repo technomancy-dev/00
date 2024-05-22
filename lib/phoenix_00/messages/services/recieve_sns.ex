@@ -24,8 +24,6 @@ defmodule Phoenix00.Messages.Services.RecieveSns do
         "Type" => "Notification",
         "Message" => message
       }) do
-    IO.inspect("HANDLE SNS")
-
     with {:ok, jason} <- Jason.decode(message),
          {:ok, _response} <- handle_notification_message(jason) do
       {:ok, %{success: true}}

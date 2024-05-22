@@ -19,12 +19,7 @@ defmodule Phoenix00.Messages.EmailRepo do
   end
 
   def create_email(attrs \\ %{}) do
-    IO.inspect("MAKING EMAIL")
-
-    IO.inspect(attrs)
-
     change_email(%Email{}, attrs)
-    |> IO.inspect()
     |> Repo.insert()
   end
 
