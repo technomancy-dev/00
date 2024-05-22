@@ -4,8 +4,8 @@ defmodule Phoenix00.Messages.EmailRepo do
   alias Phoenix00.Repo
   alias Phoenix00.Messages.Email
 
-  def list_emails(lim \\ 10, off \\ 0) do
-    Email |> limit(^lim) |> offset(^off) |> Repo.all()
+  def list_emails(lim \\ 10, off \\ 0, order \\ [desc: :updated_at]) do
+    Email |> limit(^lim) |> offset(^off) |> order_by(^order) |> Repo.all()
   end
 
   def get_email!(id), do: Repo.get!(Email, id)
