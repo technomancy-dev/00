@@ -49,9 +49,10 @@ defmodule Phoenix00.Messages.Services.RecieveSns do
   defp get_status_from_event_type(event_type) do
     case event_type do
       "Bounce" -> "bounced"
-      "Complain" -> "complained"
+      "Complaint" -> "complained"
       "Send" -> "sent"
       "Pending" -> "pending"
+      "Delivery" -> "delivered"
     end
   end
 

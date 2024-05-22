@@ -1,24 +1,21 @@
 <header class="px-4 sm:px-6 lg:px-8">
-  <div class="flex items-center justify-between border-b border-zinc-100 py-3 text-sm">
+  <div class="flex items-center justify-between border-b border-base-200 py-3 text-sm">
     <div class="flex items-center gap-4">
       <a class="font-black" href="/">
         00
       </a>
-      <p class="bg-brand/5 text-brand rounded-full px-2 font-medium leading-6">
+      <p class="text-success rounded-full px-2 font-medium leading-6">
         v1.0.0rc
       </p>
     </div>
-    <div class="flex items-center gap-4 font-semibold leading-6 text-zinc-900">
+    <div class="flex items-center gap-4 font-semibold leading-6">
       <ul class="relative z-10 flex items-center gap-4 px-4 sm:px-6 lg:px-8 justify-end">
         <%= if @current_user do %>
-          <li class="text-[0.8125rem] leading-6 text-zinc-900">
+          <li class="text-[0.8125rem] leading-6">
             <%= @current_user.email %>
           </li>
           <li>
-            <.link
-              href={~p"/users/settings"}
-              class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
-            >
+            <.link href={~p"/users/settings"} class="text-[0.8125rem] leading-6 font-semibold">
               Settings
             </.link>
           </li>
@@ -26,25 +23,19 @@
             <.link
               href={~p"/users/log_out"}
               method="delete"
-              class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
+              class="text-[0.8125rem] leading-6 font-semibold"
             >
               Log out
             </.link>
           </li>
         <% else %>
           <li>
-            <.link
-              href={~p"/users/register"}
-              class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
-            >
+            <.link href={~p"/users/register"} class="text-[0.8125rem] leading-6 font-semibold">
               Register
             </.link>
           </li>
           <li>
-            <.link
-              href={~p"/users/log_in"}
-              class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
-            >
+            <.link href={~p"/users/log_in"} class="text-[0.8125rem] leading-6 font-semibold">
               Log in
             </.link>
           </li>

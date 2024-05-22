@@ -1,36 +1,49 @@
-<.header>
-  Listing Emails
+<.header class="pb-8">
+  <p>Listing Emails</p>
   <:actions>
     <!-- <.link patch={~p"/emails/new"}>
       <.button>New Email</.button>
     </.link> -->
-
-    <.link class="" patch={~p"/emails?page=#{max(0, @page - 1)}"}><.button>Previous</.button></.link>
-    <span>Page: <%= @page %></span>
-    <.link patch={~p"/emails?page=#{min(@max_page, @page + 1)}"}><.button>Next</.button></.link>
+    <div class="join">
+      <.link
+        class="join-item btn flex place-items-center"
+        patch={~p"/emails?page=#{max(0, @page - 1)}"}
+      >
+        Previous
+      </.link>
+      <div class="join-item bg-base-200 flex place-items-center p-2"><%= @page + 1 %></div>
+      <.link
+        class="join-item btn flex place-items-center"
+        patch={~p"/emails?page=#{min(@max_page, @page + 1)}"}
+      >
+        Next
+      </.link>
+    </div>
   </:actions>
 </.header>
-
 
 <.table
   id="emails"
   rows={@streams.emails}
   row_click={fn {_id, email} -> JS.navigate(~p"/emails/#{email}") end}
 >
-  <:col :let={{_id, email}}  label="Status">
-    <span data-status={email.status} class="text-gray-500 data-[status='pending']:text-green-500">
+  <:col :let={{_id, email}} label="Status">
+    <span
+      data-status={email.status}
+      class="text-gray-500 data-[status='delivered']:text-success data-[status='bounced']:text-warning data-[status='complained']:text-error"
+    >
       <%= email.status %>
     </span>
   </:col>
   <:col :let={{_id, email}} label="To"><%= email.to %></:col>
-  <:col :let={{_id, email}} label="From"><%= email.from %></:col>  
-  <:col :let={{_id, email}} label="Sent"><%= email.inserted_at %></:col>  
-  <:action :let={{_id, email}}>
+  <:col :let={{_id, email}} label="From"><%= email.from %></:col>
+  <:col :let={{_id, email}} label="Sent"><%= email.inserted_at %></:col>
+  <%!-- <:action :let={{_id, email}}>
     <div class="sr-only">
       <.link navigate={~p"/emails/#{email}"}>Show</.link>
     </div>
     <!-- <.link patch={~p"/emails/#{email}/edit"}>Edit</.link> -->
-  </:action>
+  </:action> --%>
   <:action :let={{id, email}}>
     <.link
       phx-click={JS.push("delete", value: %{id: email.id}) |> hide("##{id}")}
@@ -41,7 +54,12 @@
   </:action>
 </.table>
 
-<.modal :if={@live_action in [:new, :edit]} id="email-modal" show on_cancel={JS.patch(~p"/emails")}>
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id="email-modal"
+  show
+  on_cancel={JS.patch(~p"/emails")}
+>
   <.live_component
     module={Phoenix00Web.EmailLive.FormComponent}
     id={@email.id || :new}
