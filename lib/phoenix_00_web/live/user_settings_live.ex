@@ -7,23 +7,41 @@ defmodule Phoenix00Web.UserSettingsLive do
     ~H"""
     <.header class="text-center">
       Account Settings
-      <:subtitle>Manage your account email address and password settings</:subtitle>
+      <:subtitle>Manage your account email address, API keys, and password settings</:subtitle>
     </.header>
 
-    <div class="space-y-12 divide-y">
+    <div class="space-y-12 divide-base-200">
       <div>
-        <.simple_form for={@token_form} id="token_form" phx-submit="generate_api_key">
+        <p class="text-center">
+          Before you can get started you will need an API key.
+        </p>
+        <p class="w-full text-center">You have  existing API keys</p>
+        <ul
+          :for={{_key, %{id: id, created_at: created_at}} <- @streams.api_keys}
+          class="w-full text-center"
+        >
+          <li phx-click="delete_api_key" phx-value-id={id} class="m-2">
+            Key <%= id %> created at <%= created_at %>
+          </li>
+        </ul>
+        <.simple_form
+          for={@token_form}
+          class="max-w-lg mx-auto"
+          id="token_form"
+          phx-submit="generate_api_key"
+        >
           <:actions>
-            <.button phx-disable-with="Changing...">Create Token</.button>
+            <.button class="btn-wide" phx-disable-with="Changing...">Create New Key</.button>
           </:actions>
         </.simple_form>
-        <div :if={@token} class="alert alert-danger">
+        <div :if={@token} class="">
           <p><%= @token %></p>
         </div>
       </div>
-      <div>
+      <div class="mx-auto">
         <.simple_form
           for={@email_form}
+          class="max-w-lg mx-auto"
           id="email_form"
           phx-submit="update_email"
           phx-change="validate_email"
@@ -47,6 +65,7 @@ defmodule Phoenix00Web.UserSettingsLive do
         <.simple_form
           for={@password_form}
           id="password_form"
+          class="max-w-lg mx-auto"
           action={~p"/users/log_in?_action=password_updated"}
           method="post"
           phx-change="validate_password"
@@ -113,6 +132,35 @@ defmodule Phoenix00Web.UserSettingsLive do
       |> assign(:trigger_submit, false)
 
     {:ok, socket}
+    # {:ok, stream(socket, :api_keys, [])}
+  end
+
+  def handle_params(params, _url, socket) do
+    IO.inspect(socket.assigns.live_action)
+    {:noreply, apply_action(socket, socket.assigns.live_action, params)}
+  end
+
+  defp apply_action(socket, :edit, _params) do
+    user = socket.assigns.current_user
+    user_api_keys = Accounts.fetch_user_api_tokens(user)
+
+    tokens =
+      Enum.map(user_api_keys, fn key ->
+        %{id: key.id, created_at: key.inserted_at}
+      end)
+
+    IO.inspect(tokens)
+
+    socket
+    |> stream(:api_keys, tokens, reset: true)
+  end
+
+  def handle_event("delete_api_key", %{"id" => id}, socket) do
+    key = Accounts.fetch_user_api_key_by_id(id)
+    Accounts.delete_api_key(key)
+
+    IO.inspect(key)
+    {:noreply, stream_delete(socket, :api_keys, %{id: key.id, created_at: key.inserted_at})}
   end
 
   def handle_event("validate_email", params, socket) do

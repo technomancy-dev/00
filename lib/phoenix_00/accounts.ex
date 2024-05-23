@@ -380,8 +380,20 @@ defmodule Phoenix00.Accounts do
     end
   end
 
+  def fetch_user_api_tokens(user) do
+    Repo.all(UserToken.by_user_and_contexts_query(user, ["api-token"]))
+  end
+
   def fetch_new_api_token(user) do
     token = create_user_api_token(user)
     {:ok, token}
+  end
+
+  def fetch_user_api_key_by_id(id) do
+    Repo.get(UserToken, id)
+  end
+
+  def delete_api_key(key) do
+    Repo.delete(key)
   end
 end
