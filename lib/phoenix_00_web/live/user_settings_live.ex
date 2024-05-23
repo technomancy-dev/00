@@ -9,24 +9,15 @@ defmodule Phoenix00Web.UserSettingsLive do
       Account Settings
       <:subtitle>Manage your account email address, API keys, and password settings</:subtitle>
     </.header>
-
     <div class="space-y-12 divide-base-200">
       <div>
         <p class="text-center">
           Before you can get started you will need an API key.
         </p>
         <p class="w-full text-center">You have  existing API keys</p>
-        <ul
-          :for={{_key, %{id: id, created_at: created_at}} <- @streams.api_keys}
-          class="w-full text-center"
-        >
-          <li phx-click="delete_api_key" phx-value-id={id} class="m-2">
-            Key <%= id %> created at <%= created_at %>
-          </li>
-        </ul>
         <.simple_form
           for={@token_form}
-          class="max-w-lg mx-auto"
+          class="float-right"
           id="token_form"
           phx-submit="generate_api_key"
         >
@@ -34,9 +25,21 @@ defmodule Phoenix00Web.UserSettingsLive do
             <.button class="btn-wide" phx-disable-with="Changing...">Create New Key</.button>
           </:actions>
         </.simple_form>
-        <div :if={@token} class="">
-          <p><%= @token %></p>
-        </div>
+        <.table id="emails" rows={@streams.api_keys}>
+          <:col :let={{_id, key}} label="Created at">
+            <span>
+              <%= key.created_at %>
+            </span>
+          </:col>
+          <:action :let={{id, key}}>
+            <.link
+              phx-click={JS.push("delete_api_key", value: %{id: key.id}) |> hide("##{id}")}
+              data-confirm="Are you sure?"
+            >
+              Delete
+            </.link>
+          </:action>
+        </.table>
       </div>
       <div class="mx-auto">
         <.simple_form
@@ -99,6 +102,14 @@ defmodule Phoenix00Web.UserSettingsLive do
         </.simple_form>
       </div>
     </div>
+    <.modal :if={@token} id="email-modal" show on_cancel={JS.navigate(~p"/users/settings")}>
+      <div>
+        <p class="p-2 text-center">
+          We will only show this once, please copy it and treat it like a password.
+        </p>
+        <p class="w-full p-10 text-center bg-base-200"><%= @token %></p>
+      </div>
+    </.modal>
     """
   end
 
@@ -132,11 +143,9 @@ defmodule Phoenix00Web.UserSettingsLive do
       |> assign(:trigger_submit, false)
 
     {:ok, socket}
-    # {:ok, stream(socket, :api_keys, [])}
   end
 
   def handle_params(params, _url, socket) do
-    IO.inspect(socket.assigns.live_action)
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
@@ -149,17 +158,14 @@ defmodule Phoenix00Web.UserSettingsLive do
         %{id: key.id, created_at: key.inserted_at}
       end)
 
-    IO.inspect(tokens)
-
     socket
-    |> stream(:api_keys, tokens, reset: true)
+    |> stream(:api_keys, tokens)
   end
 
   def handle_event("delete_api_key", %{"id" => id}, socket) do
     key = Accounts.fetch_user_api_key_by_id(id)
     Accounts.delete_api_key(key)
 
-    IO.inspect(key)
     {:noreply, stream_delete(socket, :api_keys, %{id: key.id, created_at: key.inserted_at})}
   end
 
