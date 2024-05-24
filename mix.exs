@@ -62,7 +62,9 @@ defmodule Phoenix00.MixProject do
       {:gettext, "~> 0.20"},
       {:jason, "~> 1.2"},
       {:dns_cluster, "~> 0.1.1"},
-      {:bandit, "~> 1.2"}
+      {:bandit, "~> 1.2"},
+      {:ecto_sqlite3, "~> 0.15"},
+      {:mdex, "~> 0.1"}
     ]
   end
 

@@ -37,3 +37,6 @@ phoenix_00-*.tar
 npm-debug.log
 /assets/node_modules/
 
+00.sqlite
+00.sqlite-shm
+00.sqlite-wal

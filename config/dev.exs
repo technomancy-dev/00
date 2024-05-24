@@ -1,14 +1,21 @@
 import Config
 
 # Configure your database
+config :phoenix_00,
+  ecto_repos: [Phoenix00.Repo]
+
 config :phoenix_00, Phoenix00.Repo,
-  username: "postgres",
-  password: "postgres",
-  hostname: "localhost",
-  database: "phoenix_00_dev",
-  stacktrace: true,
-  show_sensitive_data_on_connection_error: true,
-  pool_size: 10
+  adapter: Ecto.Adapters.SQLite3,
+  database: "00.sqlite"
+
+# config :phoenix_00, Phoenix00.Repo,
+#   username: "postgres",
+#   password: "postgres",
+#   hostname: "localhost",
+#   database: "phoenix_00_dev",
+#   stacktrace: true,
+#   show_sensitive_data_on_connection_error: true,
+#   pool_size: 10
 
 # For development, we disable any cache and enable
 # debugging and code reloading.
