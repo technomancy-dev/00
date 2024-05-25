@@ -44,4 +44,4 @@ npm-debug.log
 00.db-shm
 00.db-wal
 
-/rel
+#/rel
