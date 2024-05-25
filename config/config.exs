@@ -69,7 +69,7 @@ config :phoenix, :json_library, Jason
 
 config :phoenix_00, Oban,
   engine: Oban.Engines.Lite,
-  queues: [default: 10, mailers: 20],
+  queues: [default: 10, mailer: 20],
   repo: Phoenix00.Repo
 
 # Import environment specific config. This must remain at the bottom

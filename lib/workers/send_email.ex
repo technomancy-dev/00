@@ -1,5 +1,5 @@
 defmodule Phoenix00.Workers.SendEmail do
-  use Oban.Worker, queue: :default
+  use Oban.Worker, queue: :mailer
 
   alias Phoenix00.Mailer
 
