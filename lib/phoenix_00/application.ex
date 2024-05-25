@@ -7,6 +7,9 @@ defmodule Phoenix00.Application do
 
   @impl true
   def start(_type, _args) do
+    # Run migrations needed here for sqlite https://gist.github.com/Copser/af3bf28cf9ae4f42a358d7d0a19f8b5e#problem-2-release_command
+    Phoenix00.Release.migrate()
+
     children = [
       Phoenix00Web.Telemetry,
       Phoenix00.Repo,
@@ -24,6 +27,9 @@ defmodule Phoenix00.Application do
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: Phoenix00.Supervisor]
+    # Oban.Telemetry.attach_default_logger()
+
+    :telemetry.attach("oban-logger", [:oban, :job, :exception], &MicroLogger.handle_event/4, nil)
     Supervisor.start_link(children, opts)
   end
 

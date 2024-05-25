@@ -236,9 +236,6 @@ defmodule Phoenix00Web.UserSettingsLive do
     case Accounts.fetch_new_api_token(user) do
       {:ok, token} ->
         {:noreply, assign(socket, token: token)}
-
-      {:error} ->
-        {:noreply, socket}
     end
   end
 end

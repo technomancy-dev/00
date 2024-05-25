@@ -40,3 +40,8 @@ npm-debug.log
 00.sqlite
 00.sqlite-shm
 00.sqlite-wal
+00.db
+00.db-shm
+00.db-wal
+
+/rel

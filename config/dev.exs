@@ -4,9 +4,14 @@ import Config
 config :phoenix_00,
   ecto_repos: [Phoenix00.Repo]
 
+# config :phoenix_00, Phoenix00.Repo,
+#   adapter: Ecto.Adapters.SQLite3,
+#   database: "00.sqlite"
+
 config :phoenix_00, Phoenix00.Repo,
-  adapter: Ecto.Adapters.SQLite3,
-  database: "00.sqlite"
+  database: Path.expand("../00.db", Path.dirname(__ENV__.file)),
+  pool_size: 5,
+  show_sensitive_data_on_connection_error: true
 
 # config :phoenix_00, Phoenix00.Repo,
 #   username: "postgres",

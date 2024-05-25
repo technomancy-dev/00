@@ -31,12 +31,6 @@ config :phoenix_00, Phoenix00Web.Endpoint,
 # at the `config/runtime.exs`.
 # config :phoenix_00, Phoenix00.Mailer, adapter: Swoosh.Adapters.Local
 
-config :phoenix_00, Phoenix00.Mailer,
-  adapter: Swoosh.Adapters.AmazonSES,
-  region: System.get_env("AWS_REGION"),
-  access_key: System.get_env("AWS_ACCESS_KEY_ID"),
-  secret: System.get_env("AWS_SECRET_ACCESS_KEY")
-
 # Configure esbuild (the version is required)
 config :esbuild,
   version: "0.17.11",
@@ -71,6 +65,10 @@ config :phoenix_00, Oban,
   engine: Oban.Engines.Lite,
   queues: [default: 10, mailer: 20],
   repo: Phoenix00.Repo
+
+config :phoenix_00, Phoenix00.Repo,
+  adapter: Ecto.Adapters.SQLite3,
+  database: "00.sqlite"
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

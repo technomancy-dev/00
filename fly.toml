@@ -1,0 +1,41 @@
+# fly.toml app configuration file generated for phoenix-00 on 2024-05-25T16:23:54+02:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'phoenix-00'
+primary_region = 'mad'
+kill_signal = 'SIGTERM'
+
+[build]
+
+# [deploy]
+# release_command = '/app/bin/migrate'
+
+[env]
+DATABASE_PATH = '/mnt/phoenix_00/phoenix_00.db'
+PHX_HOST = 'phoenix-00.fly.dev'
+PORT = '8080'
+
+[http_service]
+internal_port = 8080
+force_https = true
+auto_stop_machines = true
+auto_start_machines = true
+min_machines_running = 0
+processes = ['app']
+
+[http_service.concurrency]
+type = 'connections'
+hard_limit = 1000
+soft_limit = 1000
+
+[[vm]]
+memory = '1gb'
+cpu_kind = 'shared'
+cpus = 1
+
+
+[mounts]
+source = "phoenix_00"           # name of the volume
+destination = "/mnt/phoenix_00"
