@@ -17,7 +17,7 @@ defmodule Phoenix00.Messages.Email do
   def changeset(email, attrs) do
     email
     |> cast(attrs, [:aws_message_id, :to, :from, :status, :email_id])
-    |> validate_required([:aws_message_id, :to, :from, :status, :email_id])
+    |> validate_required([:to, :from, :status])
     |> unique_constraint(:email_id)
   end
 end

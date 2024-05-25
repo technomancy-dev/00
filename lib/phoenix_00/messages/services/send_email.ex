@@ -18,12 +18,12 @@ defmodule Phoenix00.Messages.Services.SendEmail do
   end
 
   defp proccess_and_send_email(email_req) do
-    with {:ok, mail} <-
+    with {:ok, job} <-
            email_req
            |> Map.new(fn {k, v} -> {String.to_atom(k), v} end)
            |> MailMan.letter()
-           |> Mailer.deliver() do
-      EmailRepo.create_email(merge_aws_with_email(mail, email_req))
+           |> MailMan.enqueue_worker() do
+      EmailRepo.create_email(Map.merge(email_req, %{"status" => "pending"}))
     else
       _ -> :error
     end

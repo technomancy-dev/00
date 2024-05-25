@@ -64,6 +64,7 @@ defmodule Phoenix00.MixProject do
       {:dns_cluster, "~> 0.1.1"},
       {:bandit, "~> 1.2"},
       {:ecto_sqlite3, "~> 0.15"},
+      {:oban, "~> 2.17"},
       {:mdex, "~> 0.1"}
     ]
   end

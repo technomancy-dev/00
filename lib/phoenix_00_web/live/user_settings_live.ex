@@ -14,7 +14,6 @@ defmodule Phoenix00Web.UserSettingsLive do
         <p class="text-center">
           Before you can get started you will need an API key.
         </p>
-        <p class="w-full text-center">You have  existing API keys</p>
         <.simple_form
           for={@token_form}
           class="float-right"

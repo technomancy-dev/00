@@ -25,6 +25,14 @@ defmodule Phoenix00.MailMan do
     |> put_provider_option(:configuration_set_name, "default")
   end
 
+  def enqueue_worker(email) do
+    email_map = Phoenix00.Mailer.to_map(email)
+
+    %{email: email_map}
+    |> Phoenix00.Workers.SendEmail.new()
+    |> Oban.insert()
+  end
+
   # defp render_markdown(markdown) do
   #   %{html: render_markdown_to_html(markdown)}
   # end
