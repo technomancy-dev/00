@@ -4,7 +4,9 @@ We publish a docker image to the [registery](https://hub.docker.com/r/liltechnom
 
 Simply run `docker pull liltechnomancer/double-zero`
 
-Then run your docker container with the following environment variables set.
+Then run your docker container with the following environment variables set. Exposing port 4000.
+
+Example `docker run -it --env-file ./env -p 80:4000 "liltechnomancer/double-zero"`
 
 ```
 export AWS_SECRET_ACCESS_KEY=""
@@ -19,12 +21,41 @@ export DATABASE_PATH="" # Path to SQLite database Ex: 00.db
 export PHX_HOST="" #  URL or IP of where this service is running. Ex: example.com
 ```
 
+You also need a configuration set named "default" in AWS. See AWS setup below for more info.
+
+Now visit your url (whatever you set PHX_HOST to) and register your user.
+After registering click on settings to create an API key.
+Keep this key as you wont be able to see it again and treat it like a password.
+
+Now you can make API requests to send Email.
+
+## AWS setup.
+
+This assumes you know a bit about AWS SES and SNS.
+
+First, make an SES account if you do not have one, and set up your DNS stuff for your domain.
+
+Then generate an access key. (Click your user in top left, then Security Credentials)
+
+Now make a "configuration set" name it default.
+
+Add an "event destination" to your config set, pick the events you care about, select Amazon SNS, pick a name, make a topic.
+
+Add a subscription to the topic, select HTTPS for protocol, the endpoint should be where you host this, or some exposed endpoint for local testing (like with ngrok) `https://yourdomain.com/aws/sns`
+
+Change the Delivery policy (HTTP/S) and set the content type to `application/json; charset=UTF-8`
+
+00 will take care of confirming the subscription.
+
+Now you are ready to deploy.
+
 ## Pro + support open source.
 
 If you are eager to support this project you can pre-order a [pro version](https://buy.stripe.com/5kA3dV5W1aBgaUo28e?prefilled_promo_code=KOOKIES) for you to self host.
 
 Planned pro features include
 
+* Multiple Users
 * Teams
 * Advanced Analytics
 * Track email history
