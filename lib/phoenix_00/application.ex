@@ -27,9 +27,9 @@ defmodule Phoenix00.Application do
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: Phoenix00.Supervisor]
-    # Oban.Telemetry.attach_default_logger()
+    Oban.Telemetry.attach_default_logger()
 
-    :telemetry.attach("oban-logger", [:oban, :job, :exception], &MicroLogger.handle_event/4, nil)
+    # :telemetry.attach("oban-logger", [:oban, :job, :exception], &MicroLogger.handle_event/4, nil)
     Supervisor.start_link(children, opts)
   end
 
