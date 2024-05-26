@@ -1,22 +1,3 @@
-If you are eager to support this project you can pre-order a [pro version](https://buy.stripe.com/5kA3dV5W1aBgaUo28e?prefilled_promo_code=KOOKIES) for you to self host.
-
-Planned pro features include
-
-* Teams
-* Advanced Analytics
-* Track email history
-* Possibly more, we will see.
-
-# Double Zero is an email monitoring micro-service for the people!
-
-Amazon SES is a cost effective way to send a lot of emails, but it has a horrible user experience for most applications.
-
-Sending could be a simple API endpoint to send html or markdown to, and a simple dashboard for monitoring email status.
-
-Instead you need to send through an SMTP setup, and monitoring in the AWS dashboard is horrible, and arguably not even really possible resulting in you needing to make an endpoint and dashboard for SNS events.
-
-That is what 00 was made to solve. 00 is that dashboard, complete with an endpoint for sending your markdown or HTML emails.
-
 ## Getting started
 
 We publish a docker image to the [registery](https://hub.docker.com/r/liltechnomancer/double-zero)
@@ -37,6 +18,27 @@ export DATABASE_PATH="" # Path to SQLite database Ex: 00.db
 
 export PHX_HOST="" #  URL or IP of where this service is running. Ex: example.com
 ```
+
+## Pro + support open source.
+
+If you are eager to support this project you can pre-order a [pro version](https://buy.stripe.com/5kA3dV5W1aBgaUo28e?prefilled_promo_code=KOOKIES) for you to self host.
+
+Planned pro features include
+
+* Teams
+* Advanced Analytics
+* Track email history
+* Possibly more, we will see.
+
+# Double Zero is an email monitoring micro-service for the people!
+
+Amazon SES is a cost effective way to send a lot of emails, but it has a horrible user experience for most applications.
+
+Sending could be a simple API endpoint to send html or markdown to, and a simple dashboard for monitoring email status.
+
+Instead you need to send through an SMTP setup, and monitoring in the AWS dashboard is horrible, and arguably not even really possible resulting in you needing to make an endpoint and dashboard for SNS events.
+
+That is what 00 was made to solve. 00 is that dashboard, complete with an endpoint for sending your markdown or HTML emails.
 
 # Phoenix00
 
