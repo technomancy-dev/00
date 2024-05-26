@@ -44,9 +44,7 @@ erl_crash.dump
 /priv/static/assets/
 /priv/static/cache_manifest.json
 
-00.sqlite
-00.sqlite-shm
-00.sqlite-wal
+
 00.db
 00.db-shm
 00.db-wal
