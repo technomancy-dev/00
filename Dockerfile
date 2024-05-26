@@ -11,6 +11,7 @@
 #   - https://pkgs.org/ - resource for finding needed packages
 #   - Ex: hexpm/elixir:1.16.2-erlang-26.2.5-debian-bullseye-20240513-slim
 #
+#
 ARG ELIXIR_VERSION=1.16.2
 ARG OTP_VERSION=26.2.5
 ARG DEBIAN_VERSION=bullseye-20240513-slim
@@ -33,6 +34,8 @@ RUN mix local.hex --force && \
 
 # set build ENV
 ENV MIX_ENV="prod"
+# Without this it is breaking on cross platform builds again https://elixirforum.com/t/mix-deps-get-memory-explosion-when-doing-cross-platform-docker-build/57157/3
+ENV ERL_FLAGS="+JPperf true"
 # install mix dependencies
 COPY mix.exs mix.lock ./
 RUN mix deps.get --only $MIX_ENV
