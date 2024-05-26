@@ -32,10 +32,10 @@ export AWS_REGION="" # Ex: us-east-1
 
 export SYSTEM_EMAIL="" # For sending stuff like password resets. Ex: test@example.com should be able to send from SES.
 
-SECRET_KEY_BASE="" # A long secret. at least 64 characters. Can be made with mix phx.gen.secret or however you generate safe keys.
-DATABASE_PATH="" # Path to SQLite database Ex: 00.db
+export SECRET_KEY_BASE="" # A long secret. at least 64 characters. Can be made with mix phx.gen.secret or however you generate safe keys.
+export DATABASE_PATH="" # Path to SQLite database Ex: 00.db
 
-PHX_HOST="" #  URL or IP of where this service is running. Ex: example.com
+export PHX_HOST="" #  URL or IP of where this service is running. Ex: example.com
 ```
 
 # Phoenix00
