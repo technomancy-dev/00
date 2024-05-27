@@ -1,3 +1,5 @@
+![Dashboard displaying emails](00.png)
+
 ## Getting started
 
 We publish a docker image to the [registery](https://hub.docker.com/r/liltechnomancer/double-zero)
