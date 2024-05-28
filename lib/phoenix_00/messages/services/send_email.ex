@@ -1,5 +1,5 @@
 defmodule Phoenix00.Messages.Services.SendEmail do
-  alias Phoenix00.Messages.EmailRepo
+  # alias Phoenix00.Messages.EmailRepo
   alias Phoenix00.MailMan
   # alias Phoenix00.Mailer
   require Logger
@@ -23,7 +23,13 @@ defmodule Phoenix00.Messages.Services.SendEmail do
            |> Map.new(fn {k, v} -> {String.to_atom(k), v} end)
            |> MailMan.letter()
            |> MailMan.enqueue_worker() do
-      EmailRepo.create_email(Map.merge(email_req, %{"status" => "pending"}))
+      # This is causing duplicate emails, I no longer have an AWS ID because we queue the mail.
+      # I could generate an ID and save this initially, but all we currently get there is the "pending"
+      # status which is not very helpful anyway.
+      # Because of this, lets just let all the email creation & tracking get handled by recieve_sns
+      # until some reason to revisit.
+      # EmailRepo.create_email(Map.merge(email_req, %{"status" => "pending"}))
+      Logger.info("successfully queued email to: #{email_req["to"]}")
     else
       _ -> :error
     end
