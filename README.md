@@ -31,6 +31,8 @@ Keep this key as you wont be able to see it again and treat it like a password.
 
 Now you can make API requests to send Email.
 
+Stuck? Tell me about it on [Discord](https://discord.gg/6r7Qtf754K) and lets unstick you!
+
 ## AWS setup.
 
 This assumes you know a bit about AWS SES and SNS.
