@@ -13,6 +13,12 @@ config :phoenix_00, Phoenix00.Repo,
   pool_size: 5,
   show_sensitive_data_on_connection_error: true
 
+config :phoenix_00, Phoenix00.Mailer,
+  adapter: Swoosh.Adapters.AmazonSES,
+  region: System.get_env("AWS_REGION"),
+  access_key: System.get_env("AWS_ACCESS_KEY_ID"),
+  secret: System.get_env("AWS_SECRET_ACCESS_KEY")
+
 # config :phoenix_00, Phoenix00.Repo,
 #   username: "postgres",
 #   password: "postgres",
@@ -96,3 +102,4 @@ config :phoenix_live_view,
 # Disable swoosh api client as it is only required for production adapters.
 # config :swoosh, :api_client, false
 config :swoosh, :api_client, Swoosh.ApiClient.Hackney
+# config :swoosh, api_client: Swoosh.ApiClient.Finch, finch_name: Phoenix00.Finch
