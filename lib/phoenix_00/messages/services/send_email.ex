@@ -4,7 +4,7 @@ defmodule Phoenix00.Messages.Services.SendEmail do
   # alias Phoenix00.Mailer
   require Logger
 
-  def call(%{"from" => _, "to" => _, "subject" => _, "body" => _, "text" => _} = email_req),
+  def call(%{"from" => _, "to" => _, "subject" => _, "html" => _} = email_req),
     do: proccess_and_send_email(email_req)
 
   def call(%{"from" => _, "to" => _, "subject" => _, "markdown" => _} = email_req),
@@ -13,7 +13,7 @@ defmodule Phoenix00.Messages.Services.SendEmail do
   def call(req) do
     Logger.error("You are missing arguments to SendEmail called with:")
     Logger.error(req)
-    Logger.error("Expected %{to, from, subject, body, text} or %{to, from, subject, markdown}")
+    Logger.error("Expected %{to, from, subject, html} or %{to, from, subject, markdown}")
     :error
   end
 

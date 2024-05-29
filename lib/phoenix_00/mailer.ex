@@ -43,6 +43,11 @@ defmodule Phoenix00.Mailer do
     Enum.map(info, &map_to_contact/1)
   end
 
+
+  defp map_to_contact(info) when is_bitstring(info) do
+    {nil, info}
+  end
+
   defp map_to_contact(%{"name" => name, "email" => email}) do
     {name, email}
   end
