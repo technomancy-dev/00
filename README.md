@@ -1,3 +1,7 @@
+> [!CAUTION]
+> I have discovered an issue for sending emails to multiple recipients. I will be making a major change to all the tables to fix this and migration to the next update will not be possible. Just a heads up. PS. This issue exists in the closed source alternative to this library too.
+
+
 ![Dashboard displaying emails](00.png)
 
 ## Getting started
