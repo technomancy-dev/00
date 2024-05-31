@@ -10,8 +10,8 @@ defmodule Phoenix00.Messages.EmailRepo do
 
   def get_email!(id), do: Repo.get!(Email, id)
 
-  def get_email_by_aws_id(aws_message_id) do
-    Repo.get_by(Email, aws_message_id: aws_message_id)
+  def get_email_by_aws_id(aws_message_id, email) do
+    Repo.get_by(Email, sender_id: aws_message_id, to: email)
   end
 
   def email_count() do

@@ -80,6 +80,13 @@ defmodule Phoenix00Web.Router do
 
       live "/emails/:id", EmailLive.Show, :show
       # live "/emails/:id/show/edit", EmailLive.Show, :edit
+
+      live "/messages", MessageLive.Index, :index
+      live "/messages/new", MessageLive.Index, :new
+      live "/messages/:id/edit", MessageLive.Index, :edit
+
+      live "/messages/:id", MessageLive.Show, :show
+      live "/messages/:id/show/edit", MessageLive.Show, :edit
     end
   end
 

@@ -26,4 +26,18 @@ defmodule Phoenix00.MessagesFixtures do
 
     email
   end
+
+  @doc """
+  Generate a message.
+  """
+  def message_fixture(attrs \\ %{}) do
+    {:ok, message} =
+      attrs
+      |> Enum.into(%{
+        status: :pending
+      })
+      |> Phoenix00.Messages.create_message()
+
+    message
+  end
 end
