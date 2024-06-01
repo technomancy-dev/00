@@ -6,6 +6,9 @@ defmodule Phoenix00.Repo.Migrations.UpdateEmailsToIncludeSenderId do
       add :sender_id, :string
       add :batch, :string
       add :body, :string
+
+      modify :to, {:array, :string}
+
       remove :aws_message_id, :string
 
       create unique_index(:emails, [:to, :batch_id])

@@ -1,10 +1,10 @@
 <.header>
-  Listing Messages
-  <:actions>
+  All Emails
+  <%!-- <:actions>
     <.link patch={~p"/messages/new"}>
       <.button>New Message</.button>
     </.link>
-  </:actions>
+  </:actions> --%>
 </.header>
 
 <.table
@@ -12,7 +12,17 @@
   rows={@streams.messages}
   row_click={fn {_id, message} -> JS.navigate(~p"/messages/#{message}") end}
 >
-  <:col :let={{_id, message}} label="Status"><%= message.status %></:col>
+  <:col :let={{_id, message}} label="Status">
+    <span
+      data-status={message.status}
+      class="text-gray-500 data-[status='delivered']:text-success data-[status='bounced']:text-warning data-[status='complained']:text-error"
+    >
+      <%= message.status %>
+    </span>
+  </:col>
+  <:col :let={{_id, message}} label="Destination"><%= message.recipient %></:col>
+  <:col :let={{_id, message}} label="From"><%= message.transmission.from %></:col>
+  <:col :let={{_id, message}} label="Email ID"><%= message.transmission.id %></:col>
   <:action :let={{_id, message}}>
     <div class="sr-only">
       <.link navigate={~p"/messages/#{message}"}>Show</.link>
@@ -29,7 +39,12 @@
   </:action>
 </.table>
 
-<.modal :if={@live_action in [:new, :edit]} id="message-modal" show on_cancel={JS.patch(~p"/messages")}>
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id="message-modal"
+  show
+  on_cancel={JS.patch(~p"/messages")}
+>
   <.live_component
     module={Phoenix00Web.MessageLive.FormComponent}
     id={@message.id || :new}
