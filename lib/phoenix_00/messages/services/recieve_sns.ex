@@ -1,4 +1,6 @@
 defmodule Phoenix00.Messages.Services.RecieveSns do
+  alias Phoenix00.Messages.MessageRepo
+  alias Phoenix00.Contacts
   alias Phoenix00.Messages.EmailRepo
   require Logger
 
@@ -25,25 +27,18 @@ defmodule Phoenix00.Messages.Services.RecieveSns do
         "Message" => message
       }) do
     with {:ok, jason} <- Jason.decode(message),
-         {:ok, _response} <- handle_notification_message(jason) do
-      {:ok, %{success: true}}
+         email <- EmailRepo.get_email_by_aws_id(jason["mail"]["messageId"]),
+         recipients <- Enum.map(get_recipients(jason), fn recipient -> recipient.id end) do
+      update_messages(email.id, recipients, get_status_from_event_type(jason["eventType"]))
     end
   end
 
-  def handle_notification_message(%{"eventType" => "Send"} = message) do
-    # Send events are special, the user may not use the send API and use AWS SES directly
-    # within their app. Because of that we need to create the email record if it doesn't exist.
-    find_or_create_email_record(message)
-  end
-
-  def handle_notification_message(message) do
-    with {:ok, _} <-
-           EmailRepo.get_email_by_aws_id(message["mail"]["messageId"])
-           |> EmailRepo.update_email(%{
-             status: get_status_from_event_type(message["eventType"])
-           }) do
-      {:ok, %{success: true}}
-    end
+  def update_messages(transmission_id, recipients, status) do
+    MessageRepo.update_status_by_sender_id_and_destinations(
+      transmission_id,
+      recipients,
+      status
+    )
   end
 
   defp get_status_from_event_type(event_type) do
@@ -56,21 +51,34 @@ defmodule Phoenix00.Messages.Services.RecieveSns do
     end
   end
 
-  defp find_or_create_email_record(message) do
-    case EmailRepo.get_email_by_aws_id(message["mail"]["messageId"]) do
-      nil ->
-        EmailRepo.create_email(%{
-          aws_message_id: message["mail"]["messageId"],
-          to: Enum.at(message["mail"]["commonHeaders"]["to"], 0),
-          from: Enum.at(message["mail"]["commonHeaders"]["from"], 0),
-          status: get_status_from_event_type(message["eventType"]),
-          email_id: message["mail"]["messageId"]
-        })
+  defp get_recipients(sns) do
+    Contacts.get_recipients_by_destinations(
+      Enum.map(get_recipients_by_message(sns), fn email_map ->
+        case is_map(email_map) do
+          true -> email_map["emailAddress"]
+          false -> email_map
+        end
+      end)
+    )
+  end
 
-      email ->
-        EmailRepo.update_email(email, %{
-          status: get_status_from_event_type(message["eventType"])
-        })
-    end
+  defp get_recipients_by_message(%{"eventType" => "Complaint"} = message) do
+    message["complaint"]["complainedRecipients"]
+  end
+
+  defp get_recipients_by_message(%{"eventType" => "Delivery"} = message) do
+    message["delivery"]["recipients"]
+  end
+
+  defp get_recipients_by_message(%{"eventType" => "Send"} = message) do
+    message["mail"]["destination"]
+  end
+
+  defp get_recipients_by_message(%{"eventType" => "Bounce"} = message) do
+    message["bounce"]["bouncedRecipients"]
+  end
+
+  defp get_recipients_by_message(_message) do
+    []
   end
 end
