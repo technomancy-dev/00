@@ -37,6 +37,12 @@ defmodule Phoenix00.Contacts do
   """
   def get_recipient!(id), do: Repo.get!(Recipient, id)
 
+  def get_recipients_by_destinations(destinations),
+    do: Repo.all(get_recipient_by_destinations_query(destinations))
+
+  def get_recipient_by_destinations_query(destinations),
+    do: from(r in Recipient, where: r.destination in ^destinations)
+
   @doc """
   Creates a recipient.
 
@@ -71,6 +77,10 @@ defmodule Phoenix00.Contacts do
     recipient
     |> Recipient.changeset(attrs)
     |> Repo.update()
+  end
+
+  def update_recipients(recipients_query, attrs) do
+    Repo.update_all(recipients_query, attrs)
   end
 
   @doc """
