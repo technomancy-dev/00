@@ -18,6 +18,7 @@ defmodule Phoenix00.Application do
       {Phoenix.PubSub, name: Phoenix00.PubSub},
       # Start the Finch HTTP client for sending emails
       {Finch, name: Phoenix00.Finch},
+      {SQSBroadway, []},
       # Start a worker by calling: Phoenix00.Worker.start_link(arg)
       # {Phoenix00.Worker, arg},
       # Start to serve requests, typically the last entry

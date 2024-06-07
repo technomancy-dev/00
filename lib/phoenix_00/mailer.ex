@@ -28,7 +28,7 @@ defmodule Phoenix00.Mailer do
       html_body: html_body
     ]
 
-    Swoosh.Email.new(opts) |> Swoosh.Email.put_provider_option(:configuration_set_name, "default")
+    Swoosh.Email.new(opts)
   end
 
   defp contact_to_map(info) when is_list(info) do
@@ -42,7 +42,6 @@ defmodule Phoenix00.Mailer do
   defp map_to_contact(info) when is_list(info) do
     Enum.map(info, &map_to_contact/1)
   end
-
 
   defp map_to_contact(info) when is_bitstring(info) do
     {nil, info}

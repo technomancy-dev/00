@@ -26,7 +26,19 @@ export default $config({
             topicArn: topic.arn,
           },
           enabled: true,
-          matchingEventTypes: ["SEND"],
+          matchingEventTypes: [
+            "SEND",
+            "REJECT",
+            "BOUNCE",
+            "COMPLAINT",
+            "DELIVERY",
+            // TODO: I should handle all these.
+            // "OPEN",
+            // "CLICK",
+            // "RENDERING_FAILURE",
+            // "DELIVERY_DELAY",
+            // "SUBSCRIPTION",
+          ],
         },
       });
     const exampleEmailIdentity = new aws.sesv2.EmailIdentity("ZeroEmail", {

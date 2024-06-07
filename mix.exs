@@ -66,7 +66,9 @@ defmodule Phoenix00.MixProject do
       {:ecto_sqlite3, "~> 0.15"},
       {:oban, "~> 2.17"},
       {:mdex, "~> 0.1"},
-      {:scribe, "~> 0.10"}
+      {:scribe, "~> 0.10"},
+      {:broadway, "~> 1.0"},
+      {:broadway_sqs, "~> 0.7"}
     ]
   end
 
