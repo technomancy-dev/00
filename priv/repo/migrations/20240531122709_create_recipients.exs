@@ -7,5 +7,7 @@ defmodule Phoenix00.Repo.Migrations.CreateRecipients do
 
       timestamps(type: :utc_datetime)
     end
+
+    create unique_index(:recipients, :destination)
   end
 end
