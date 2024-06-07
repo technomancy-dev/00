@@ -62,6 +62,12 @@ defmodule Phoenix00.Contacts do
     |> Repo.insert()
   end
 
+  def create_or_find_recipient_by_destination(desitnations) when is_list(desitnations) do
+    Enum.map(desitnations, fn desitnation ->
+      create_or_find_recipient_by_destination(desitnation)
+    end)
+  end
+
   def create_or_find_recipient_by_destination(attrs) do
     query =
       from r in Recipient,

@@ -141,11 +141,22 @@ defmodule Phoenix00.Messages do
         "Message" => message
       }) do
     with {:ok, jason} <- Jason.decode(message),
-         email <- EmailRepo.get_email_by_aws_id(jason["mail"]["messageId"]),
+         email <- EmailRepo.find_or_create_email_record_by_ses_message(jason),
          recipients <- Enum.map(get_recipients(jason), fn recipient -> recipient.id end) do
       update_messages(email.id, recipients, get_status_from_event_type(jason["eventType"]))
     end
   end
+
+  # def handle_notification_message(%{"eventType" => "Send"} = message) do
+  #   # Send events are special, the user may not use the send API and use AWS SES directly
+  #   # within their app. Because of that we need to create the email record if it doesn't exist.
+  #   # find_or_create_email_record(message)
+  #   with {:ok, jason} <- Jason.decode(message),
+  #        email <- EmailRepo.get_email_by_aws_id(jason["mail"]["messageId"]),
+  #        recipients <- Enum.map(get_recipients(jason), fn recipient -> recipient.id end) do
+  #     update_messages(email.id, recipients, get_status_from_event_type(jason["eventType"]))
+  #   end
+  # end
 
   def update_messages(transmission_id, recipients, status) do
     MessageRepo.update_status_by_sender_id_and_destinations(
@@ -166,11 +177,11 @@ defmodule Phoenix00.Messages do
   end
 
   defp get_recipients(sns) do
-    Contacts.get_recipients_by_destinations(
+    Contacts.create_or_find_recipient_by_destination(
       Enum.map(get_recipients_by_message(sns), fn email_map ->
         case is_map(email_map) do
-          true -> email_map["emailAddress"]
-          false -> email_map
+          true -> %{destination: email_map["emailAddress"]}
+          false -> %{destination: email_map}
         end
       end)
     )
