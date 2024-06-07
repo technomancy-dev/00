@@ -13,5 +13,6 @@ defmodule Phoenix00.Contacts.Recipient do
     recipient
     |> cast(attrs, [:destination])
     |> validate_required([:destination])
+    |> unique_constraint(:destination)
   end
 end

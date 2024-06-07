@@ -6,7 +6,6 @@ defmodule SQSBroadway do
 
   def start_link(_opts) do
     sqs_map = Jason.decode!(Application.fetch_env!(:phoenix_00, :sqs_url))
-    IO.inspect(sqs_map)
 
     Broadway.start_link(__MODULE__,
       name: __MODULE__,
