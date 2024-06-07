@@ -37,8 +37,9 @@ defmodule Phoenix00.Contacts do
   """
   def get_recipient!(id), do: Repo.get!(Recipient, id)
 
-  def get_recipients_by_destinations(destinations),
-    do: Repo.all(get_recipient_by_destinations_query(destinations))
+  def get_recipients_by_destinations(destinations) do
+    Repo.all(get_recipient_by_destinations_query(destinations))
+  end
 
   def get_recipient_by_destinations_query(destinations),
     do: from(r in Recipient, where: r.destination in ^destinations)
@@ -59,6 +60,18 @@ defmodule Phoenix00.Contacts do
     %Recipient{}
     |> Recipient.changeset(attrs)
     |> Repo.insert()
+  end
+
+  def create_or_find_recipient_by_destination(attrs) do
+    query =
+      from r in Recipient,
+        where: r.destination == ^attrs.destination
+
+    if !Repo.one(query) do
+      create_recipient(attrs)
+    end
+
+    Repo.one(query)
   end
 
   @doc """
