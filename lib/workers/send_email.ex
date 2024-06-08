@@ -42,8 +42,12 @@ defmodule Phoenix00.Workers.SendEmail do
     destination
   end
 
-  defp parse_destination(destination) when is_binary(destination) do
+  defp parse_destination(destination) when is_bitstring(destination) do
     [destination]
+  end
+
+  defp parse_destination(destination) when is_nil(destination) do
+    []
   end
 
   defp create_email(email_args, metadata) do
