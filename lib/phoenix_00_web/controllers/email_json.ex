@@ -1,6 +1,4 @@
 defmodule Phoenix00Web.EmailJSON do
-  # alias Phoenix00.Messages.Email
-
   def index(%{email: email}) do
     %{data: data(email)}
   end
@@ -14,6 +12,6 @@ defmodule Phoenix00Web.EmailJSON do
   end
 
   defp data(_json) do
-    %{success: true}
+    %{success: true, message: "Your email has successfully been queued."}
   end
 end

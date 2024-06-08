@@ -107,10 +107,4 @@ defmodule Phoenix00Web.Router do
 
     post "/emails/send", EmailController, :send
   end
-
-  scope "/aws", Phoenix00Web do
-    pipe_through [:aws]
-
-    post "/sns", EmailController, :recieve_sns
-  end
 end
