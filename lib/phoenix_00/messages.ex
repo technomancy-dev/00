@@ -1,5 +1,6 @@
 defmodule Phoenix00.Messages do
   require Ecto.Query
+  import Ecto.Query, warn: false
   alias Phoenix00.Messages.Email
   alias Phoenix00.Contacts.Recipient
   alias Phoenix00.Messages.Message
@@ -36,7 +37,7 @@ defmodule Phoenix00.Messages do
       [%Message{}, ...]
 
   """
-  def list_messages do
+  def list_messages(order \\ [desc: :updated_at]) do
     Repo.all(
       Message
       |> Ecto.Query.join(:inner, [m], r in Recipient, on: m.recipient == r.id)
@@ -46,6 +47,7 @@ defmodule Phoenix00.Messages do
         | recipient: r.destination,
           transmission: email
       })
+      |> order_by(^order)
     )
   end
 

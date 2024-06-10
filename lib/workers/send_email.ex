@@ -20,9 +20,9 @@ defmodule Phoenix00.Workers.SendEmail do
   end
 
   defp get_destinations(email) do
-    to = parse_destination(email["to"])
-    cc = parse_destination(email["cc"])
-    bcc = parse_destination(email["bcc"])
+    to = List.wrap(email["to"])
+    cc = List.wrap(email["cc"])
+    bcc = List.wrap(email["bcc"])
 
     Enum.concat(to, cc) |> Enum.concat(bcc) |> Enum.filter(&(!is_nil(&1)))
   end

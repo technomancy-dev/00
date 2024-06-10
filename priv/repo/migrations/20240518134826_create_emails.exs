@@ -5,6 +5,9 @@ defmodule Phoenix00.Repo.Migrations.CreateEmails do
     create table(:emails) do
       add :sender_id, :string
       add :to, {:array, :string}
+      add :cc, {:array, :string}
+      add :bcc, {:array, :string}
+      add :reply_to, {:array, :string}
       add :from, :string
       add :status, :string
       add :email_id, :string
