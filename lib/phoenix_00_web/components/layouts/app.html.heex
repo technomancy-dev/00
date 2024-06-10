@@ -1,5 +1,5 @@
-<header class="px-4 sm:px-6 lg:px-8">
-  <div class="flex items-center justify-between border-b border-base-200 py-3 text-sm">
+<header class="px-4 sm:px-6 border-b border-base-300  lg:px-8">
+  <div class="flex items-center justify-between py-3 text-sm">
     <div class="flex items-center gap-4">
       <a class="font-black" href="/">
         00
@@ -44,9 +44,28 @@
     </div>
   </div>
 </header>
-<main class="px-4 py-20 sm:px-6 lg:px-8">
-  <div class="mx-auto max-w-6xl">
-    <.flash_group flash={@flash} />
-    <%= @inner_content %>
+<main class="flex h-full overflow-hidden">
+  <ul class="menu border-r-2 border-base-300 w-56 rounded-box pt-10 h-full">
+    <li>
+      <.link navigate={~p"/messages"}>
+        <.icon name="hero-inbox" /> Feed
+      </.link>
+    </li>
+    <li>
+      <.link navigate={~p"/emails"}>
+        <.icon name="hero-envelope" /> Emails
+      </.link>
+    </li>
+    <li>
+      <.link navigate={~p"/users/settings"}>
+        <.icon name="hero-cog-6-tooth" /> Settings
+      </.link>
+    </li>
+  </ul>
+  <div class="w-full overflow-scroll">
+    <div class="mx-auto max-w-6xl p-4">
+      <.flash_group flash={@flash} />
+      <%= @inner_content %>
+    </div>
   </div>
 </main>

@@ -52,7 +52,8 @@ defmodule Phoenix00Web do
   def live_view do
     quote do
       use Phoenix.LiveView,
-        layout: {Phoenix00Web.Layouts, :app}
+        layout: {Phoenix00Web.Layouts, :app},
+        container: {:div, class: "h-full flex flex-col justify-stretch"}
 
       unquote(html_helpers())
     end

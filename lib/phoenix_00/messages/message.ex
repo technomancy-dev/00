@@ -10,6 +10,14 @@ defmodule Phoenix00.Messages.Message do
     timestamps(type: :utc_datetime)
   end
 
+  use Fsmx.Struct,
+    state_field: :status,
+    transitions: %{
+      :pending => :*,
+      :sent => [:complained, :bounced, :delivered],
+      :* => [:bounced, :complained]
+    }
+
   @doc false
   def changeset(message, attrs) do
     message

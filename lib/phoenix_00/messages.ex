@@ -63,7 +63,19 @@ defmodule Phoenix00.Messages do
       ** (Ecto.NoResultsError)
 
   """
-  def get_message!(id), do: Repo.get!(Message, id)
+  def get_message!(id),
+    do:
+      Repo.get!(
+        Message
+        |> Ecto.Query.join(:inner, [m], r in Recipient, on: m.recipient == r.id)
+        |> Ecto.Query.join(:inner, [m], e in Email, on: m.transmission == e.id)
+        |> Ecto.Query.select([m, r, email], %{
+          m
+          | recipient: r.destination,
+            transmission: email
+        }),
+        id
+      )
 
   @doc """
   Creates a message.

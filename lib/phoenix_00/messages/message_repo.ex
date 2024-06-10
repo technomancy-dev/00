@@ -6,9 +6,14 @@ defmodule Phoenix00.Messages.MessageRepo do
   def update_status_by_sender_id_and_destinations(transmission_id, recipients, status) do
     Enum.each(recipients, fn recipient -> ensure_messgae_exists(transmission_id, recipient) end)
 
-    Repo.update_all(get_messages_by_sender_id_and_recipients_query(transmission_id, recipients),
-      set: [status: status]
-    )
+    updates =
+      Repo.all(get_messages_by_sender_id_and_recipients_query(transmission_id, recipients))
+      |> Enum.map(
+        &Fsmx.transition_changeset(&1, String.to_existing_atom(status), %{}, state_field: :status)
+      )
+      |> Enum.filter(fn changeset -> changeset.valid? end)
+
+    Repo.transaction(fn -> Enum.map(updates, &Repo.update(&1)) end)
   end
 
   defp ensure_messgae_exists(transmission_id, recipient) do
@@ -35,8 +40,7 @@ defmodule Phoenix00.Messages.MessageRepo do
   end
 
   defp get_messages_by_sender_id_and_recipients_query(transmission_id, recipients) do
-    from message in "messages",
-      where: message.transmission == ^transmission_id and message.recipient in ^recipients,
-      select: [:status]
+    from message in Message,
+      where: message.transmission == ^transmission_id and message.recipient in ^recipients
   end
 end

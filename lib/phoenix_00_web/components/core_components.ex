@@ -479,7 +479,7 @@ defmodule Phoenix00Web.CoreComponents do
       end
 
     ~H"""
-    <div class="overflow-y-auto px-4 sm:overflow-visible sm:px-0">
+    <div class="overflow-y-auto px-4 py-6 sm:overflow-visible sm:px-0">
       <table class="table table-sm table-zebra">
         <thead class="text-sm text-left leading-6">
           <tr>
@@ -559,7 +559,7 @@ defmodule Phoenix00Web.CoreComponents do
 
   def back(assigns) do
     ~H"""
-    <div class="mt-16">
+    <div class="mb-4">
       <.link navigate={@navigate} class="text-sm font-semibold leading-6">
         <.icon name="hero-arrow-left-solid" class="h-3 w-3" />
         <%= render_slot(@inner_block) %>

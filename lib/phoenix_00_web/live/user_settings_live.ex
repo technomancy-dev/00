@@ -14,31 +14,34 @@ defmodule Phoenix00Web.UserSettingsLive do
         <p class="text-center">
           Before you can get started you will need an API key.
         </p>
-        <.simple_form
-          for={@token_form}
-          class="float-right"
-          id="token_form"
-          phx-submit="generate_api_key"
-        >
-          <:actions>
-            <.button class="btn-wide" phx-disable-with="Changing...">Create New Key</.button>
-          </:actions>
-        </.simple_form>
-        <.table id="emails" rows={@streams.api_keys}>
-          <:col :let={{_id, key}} label="Created at">
-            <span>
-              <%= key.created_at %>
-            </span>
-          </:col>
-          <:action :let={{id, key}}>
-            <.link
-              phx-click={JS.push("delete_api_key", value: %{id: key.id}) |> hide("##{id}")}
-              data-confirm="Are you sure?"
-            >
-              Delete
-            </.link>
-          </:action>
-        </.table>
+        <div class="max-w-lg mx-auto py-8">
+          <.simple_form
+            for={@token_form}
+            class="float-right"
+            id="token_form"
+            phx-submit="generate_api_key"
+          >
+            <:actions>
+              <.button class="btn-wide" phx-disable-with="Changing...">Create New Key</.button>
+            </:actions>
+          </.simple_form>
+
+          <.table id="emails" rows={@streams.api_keys}>
+            <:col :let={{_id, key}} label="Created at">
+              <span>
+                <%= key.created_at %>
+              </span>
+            </:col>
+            <:action :let={{id, key}}>
+              <.link
+                phx-click={JS.push("delete_api_key", value: %{id: key.id}) |> hide("##{id}")}
+                data-confirm="Are you sure?"
+              >
+                Delete
+              </.link>
+            </:action>
+          </.table>
+        </div>
       </div>
       <div class="mx-auto">
         <.simple_form

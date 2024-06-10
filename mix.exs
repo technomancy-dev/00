@@ -68,7 +68,9 @@ defmodule Phoenix00.MixProject do
       {:mdex, "~> 0.1"},
       {:scribe, "~> 0.10"},
       {:broadway, "~> 1.0"},
-      {:broadway_sqs, "~> 0.7"}
+      {:broadway_sqs, "~> 0.7"},
+      {:fsmx, "~> 0.5.0"},
+      {:timex, "~> 3.0"}
     ]
   end
 
