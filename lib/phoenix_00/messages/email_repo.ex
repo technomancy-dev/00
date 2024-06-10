@@ -11,7 +11,7 @@ defmodule Phoenix00.Messages.EmailRepo do
   def get_email!(id), do: Repo.get!(Email, id)
 
   def get_email_by_aws_id(aws_message_id) do
-    Repo.get_by(Email, sender_id: aws_message_id)
+    IO.inspect(Repo.get_by(Email, sender_id: aws_message_id))
   end
 
   def email_count() do
@@ -36,6 +36,8 @@ defmodule Phoenix00.Messages.EmailRepo do
   # end
 
   def find_or_create_email_record_by_ses_message(message) do
+    IO.inspect(message["mail"])
+
     case get_email_by_aws_id(message["mail"]["messageId"]) do
       nil ->
         {:ok, email} =
@@ -44,7 +46,9 @@ defmodule Phoenix00.Messages.EmailRepo do
             to: List.flatten([Enum.at(message["mail"]["commonHeaders"]["to"], 0)]),
             from: Enum.at(message["mail"]["commonHeaders"]["from"], 0),
             status: get_status_from_event_type(message["eventType"]),
-            email_id: message["mail"]["messageId"]
+            email_id: message["mail"]["messageId"],
+            body:
+              "<h1>This message was not sent via 00, therefore we did not collect the body.</h1>"
           })
 
         email
