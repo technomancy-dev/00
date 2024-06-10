@@ -2,11 +2,6 @@
   <.back navigate={~p"/messages"}>Back to messages</.back>
   Message <%= @message.id %>
   <:subtitle>This is a message record from your database.</:subtitle>
-  <%!-- <:actions>
-    <.link patch={~p"/messages/#{@message}/show/edit"} phx-click={JS.push_focus()}>
-      <.button>Edit message</.button>
-    </.link>
-  </:actions> --%>
 </.header>
 
 <Timeline.view rows={[
@@ -29,8 +24,15 @@
 </.list>
 
 <div class="mockup-window border mt-20 border-base-300">
-  <div class="flex px-4 py-16 border-t border-base-300">
-    <%= raw(@message.transmission.body) %>
+  <div class="flex border-t border-base-300">
+    <iframe
+      id="inlineFrameExample"
+      title="Inline Frame Example"
+      width="100%"
+      style="min-height: 600px;"
+      srcdoc={raw(@message.transmission.body)}
+    >
+    </iframe>
   </div>
 </div>
 

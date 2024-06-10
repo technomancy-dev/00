@@ -38,23 +38,14 @@ defmodule Phoenix00.Workers.SendEmail do
     })
   end
 
-  defp parse_destination(destination) when is_list(destination) do
-    destination
-  end
-
-  defp parse_destination(destination) when is_bitstring(destination) do
-    [destination]
-  end
-
-  defp parse_destination(destination) when is_nil(destination) do
-    []
-  end
-
   defp create_email(email_args, metadata) do
     Messages.create_email(
       Map.merge(email_args, %{
         "sender_id" => metadata.id,
-        "to" => parse_destination(email_args["to"])
+        "to" => List.wrap(email_args["to"]),
+        "cc" => List.wrap(email_args["cc"]),
+        "bcc" => List.wrap(email_args["bcc"]),
+        "body" => email_args["html_body"]
       })
     )
   end
