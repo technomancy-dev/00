@@ -10,7 +10,7 @@
   <:item title="Status">
     <span
       data-status={@message.status}
-      class="text-gray-500 data-[status='delivered']:text-success data-[status='bounced']:text-warning data-[status='complained']:text-error"
+      class="capitalize text-gray-500 data-[status='delivered']:text-success data-[status='bounced']:text-warning data-[status='complained']:text-error"
     >
       <%= @message.status %>
     </span>

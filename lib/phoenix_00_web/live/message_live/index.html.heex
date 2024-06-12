@@ -16,7 +16,12 @@
   <:col :let={{_id, message}} label="Status">
     <span
       data-status={message.status}
-      class="text-gray-500 data-[status='delivered']:text-success data-[status='bounced']:text-warning data-[status='complained']:text-error"
+      class={[
+        "capitalize",
+        message.status == :delivered && "badge badge-success",
+        message.status == :bounced && "badge badge-warning",
+        message.status == :complained && "badge badge-error"
+      ]}
     >
       <%= message.status %>
     </span>
