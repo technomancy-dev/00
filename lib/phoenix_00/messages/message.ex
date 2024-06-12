@@ -6,6 +6,7 @@ defmodule Phoenix00.Messages.Message do
     field :status, Ecto.Enum, values: [:pending, :sent, :delivered, :bounced, :complained]
     field :recipient, :id
     field :transmission, :id
+    has_many :events, Phoenix00.Events.Event
 
     timestamps(type: :utc_datetime)
   end

@@ -1,6 +1,7 @@
 defmodule Phoenix00.Messages do
   require Ecto.Query
   import Ecto.Query, warn: false
+  alias Phoenix00.Events
   alias Phoenix00.Messages.Email
   alias Phoenix00.Contacts.Recipient
   alias Phoenix00.Messages.Message
@@ -37,7 +38,7 @@ defmodule Phoenix00.Messages do
       [%Message{}, ...]
 
   """
-  def list_messages(order \\ [desc: :updated_at]) do
+  def list_messages(order \\ [desc: :inserted_at]) do
     Repo.all(
       Message
       |> Ecto.Query.join(:inner, [m], r in Recipient, on: m.recipient == r.id)
@@ -69,11 +70,12 @@ defmodule Phoenix00.Messages do
     do:
       Repo.get!(
         Message
+        |> preload(:events)
         |> Ecto.Query.join(:inner, [m], r in Recipient, on: m.recipient == r.id)
         |> Ecto.Query.join(:inner, [m], e in Email, on: m.transmission == e.id)
-        |> Ecto.Query.select([m, r, email], %{
-          m
-          | recipient: r.destination,
+        |> Ecto.Query.select([message, recipient, email], %{
+          message
+          | recipient: recipient.destination,
             transmission: email
         }),
         id

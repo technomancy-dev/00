@@ -1,10 +1,16 @@
 defmodule Phoenix00.Messages.MessageRepo do
   import Ecto.Query, warn: false
+  alias Phoenix00.Events
   alias Phoenix00.Messages.Message
   alias Phoenix00.Repo
 
   def update_status_by_sender_id_and_destinations(transmission_id, recipients, status) do
-    Enum.each(recipients, fn recipient -> ensure_messgae_exists(transmission_id, recipient) end)
+    Enum.each(recipients, fn recipient ->
+      Events.create_event_for_message(
+        ensure_message_exists(transmission_id, recipient),
+        status
+      )
+    end)
 
     updates =
       Repo.all(get_messages_by_sender_id_and_recipients_query(transmission_id, recipients))
@@ -16,11 +22,10 @@ defmodule Phoenix00.Messages.MessageRepo do
     Repo.transaction(fn -> Enum.map(updates, &Repo.update(&1)) end)
   end
 
-  defp ensure_messgae_exists(transmission_id, recipient) do
+  defp ensure_message_exists(transmission_id, recipient) do
     query =
-      from message in "messages",
-        where: message.transmission == ^transmission_id and message.recipient == ^recipient,
-        select: [:status]
+      from message in Message,
+        where: message.transmission == ^transmission_id and message.recipient == ^recipient
 
     if !Repo.one(query) do
       create_message(%{

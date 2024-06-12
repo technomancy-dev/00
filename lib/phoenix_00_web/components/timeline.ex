@@ -9,16 +9,18 @@ defmodule Timeline do
     <ul class="timeline">
       <li :for={row <- @rows}>
         <hr />
-        <div class="timeline-start text-xs"><%= Timex.format!(Timex.now("America/Chicago"), "%b %d,  %H:%M%P", :strftime) %></div>
+        <div class="timeline-start text-xs">
+          <%= Timex.format!(row.inserted_at, "%b %d,  %H:%M%P", :strftime) %>
+        </div>
         <div class="timeline-middle">
           <CoreComponents.icon name="hero-check-circle" class="h-5 w-5" />
         </div>
         <div class="timeline-end timeline-box capitalize">
           <span
-            data-status={row.event}
+            data-status={row.status}
             class="text-gray-500 data-[status='delivered']:text-success data-[status='bounced']:text-warning data-[status='complained']:text-error"
           >
-            <%= row.event %>
+            <%= row.status %>
           </span>
         </div>
         <hr />

@@ -55,6 +55,11 @@ defmodule Phoenix00.Events do
     |> Repo.insert()
   end
 
+  def create_event_for_message(message, status) do
+    Ecto.build_assoc(message, :events, status: status)
+    |> Repo.insert()
+  end
+
   @doc """
   Updates a event.
 

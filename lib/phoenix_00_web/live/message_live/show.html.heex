@@ -4,11 +4,7 @@
   <:subtitle>This is a message record from your database.</:subtitle>
 </.header>
 
-<Timeline.view rows={[
-  %{time: "2024-06-09T00:35:00Z", event: "sent"},
-  %{time: "2024-06-09T00:35:00Z", event: "delivered"},
-  %{time: "2024-06-09T00:35:00Z", event: "bounced"}
-]} />
+<Timeline.view rows={sort_events(@message.events)} />
 
 <.list>
   <:item title="Status">

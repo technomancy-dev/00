@@ -4,7 +4,7 @@ defmodule Phoenix00.Events.Event do
 
   schema "events" do
     field :status, :string
-    field :recipient, :id
+    belongs_to :message, Phoenix00.Contacts.Recipient, foreign_key: :message_id
 
     timestamps(type: :utc_datetime)
   end
@@ -13,6 +13,8 @@ defmodule Phoenix00.Events.Event do
   def changeset(event, attrs) do
     event
     |> cast(attrs, [:status])
+    |> cast_assoc(:recipient_id, with: &Phoenix00.Contacts.Recipient.changeset/2)
+    |> validate_required([:status, :recipient_id])
     |> validate_required([:status])
   end
 end

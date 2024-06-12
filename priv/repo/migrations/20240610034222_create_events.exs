@@ -4,11 +4,11 @@ defmodule Phoenix00.Repo.Migrations.CreateEvents do
   def change do
     create table(:events) do
       add :status, :string
-      add :recipient, references(:recipients, on_delete: :nothing)
+      add :message_id, references(:messages, on_delete: :nothing)
 
       timestamps(type: :utc_datetime)
     end
 
-    create index(:events, [:recipient])
+    create index(:events, [:message_id])
   end
 end

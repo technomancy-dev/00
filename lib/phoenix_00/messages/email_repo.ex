@@ -11,7 +11,7 @@ defmodule Phoenix00.Messages.EmailRepo do
   def get_email!(id), do: Repo.get!(Email, id)
 
   def get_email_by_aws_id(aws_message_id) do
-    IO.inspect(Repo.get_by(Email, sender_id: aws_message_id))
+    Repo.get_by(Email, sender_id: aws_message_id)
   end
 
   def email_count() do
@@ -36,8 +36,6 @@ defmodule Phoenix00.Messages.EmailRepo do
   # end
 
   def find_or_create_email_record_by_ses_message(message) do
-    IO.inspect(message["mail"])
-
     case get_email_by_aws_id(message["mail"]["messageId"]) do
       nil ->
         {:ok, email} =
