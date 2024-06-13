@@ -46,10 +46,17 @@
 </header>
 <main class="flex h-full overflow-hidden">
   <ul class="menu border-r-2 border-base-300 w-56 rounded-box pt-10 h-full">
-    <li>
-      <.link navigate={~p"/messages"}>
-        <.icon name="hero-inbox" /> Messages
+    <li class="relative">
+      <.link class="flex" navigate={~p"/messages"}>
+      <.icon name="hero-inbox" /> Messages
+
       </.link>
+      <div
+        class="tooltip absolute tooltip-right tooltip-warning z-50"
+        data-tip="Emails may have multiple recipients. Messages is where you see every recipients message individually."
+      >
+        <.icon name="hero-information-circle" class="w-4 absolute top-2/3 -left-1 text-neutral-content/50 hover:text-content" />
+      </div>
     </li>
     <li>
       <.link navigate={~p"/emails"}>

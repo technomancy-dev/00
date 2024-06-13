@@ -1,12 +1,6 @@
 <.header>
-  Messages<div
-    class="tooltip tooltip-bottom tooltip-warning z-50"
-    data-tip="Emails may have multiple recipients. Messages is where you see every recipients message individually."
-  >
-    <.icon name="hero-information-circle" class=" -mt-1 w-4 text-warning" />
-  </div>
-
-  <:subtitle>View the status of messages sent to recipients.</:subtitle>
+  Messages
+  <:subtitle>View the status of messages sent to recipients. </:subtitle>
   <:actions>
     <%!-- <.link patch={~p"/messages/new"}>
       <.button>New Message</.button>
@@ -107,6 +101,7 @@
     </Flop.Phoenix.filter_fields>
   </.form>
 </div>
+
 <div class="pt-6">
   <Flop.Phoenix.table
     opts={Phoenix00.FlopConfig.table_opts()}
