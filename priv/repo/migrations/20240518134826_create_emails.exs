@@ -13,6 +13,7 @@ defmodule Phoenix00.Repo.Migrations.CreateEmails do
       add :email_id, :string
       add :batch, :string
       add :body, :string
+      add :subject, :string
       add :sent_by, references(:users, on_delete: :nothing)
 
       timestamps(type: :utc_datetime)

@@ -13,7 +13,7 @@ defmodule Phoenix00Web.MessageLive.Show do
     {:noreply,
      socket
      |> assign(:page_title, page_title(socket.assigns.live_action))
-     |> assign(:message, IO.inspect(Messages.get_message!(id)))}
+     |> assign(:message, Messages.get_message!(id))}
   end
 
   def sort_events(events) do

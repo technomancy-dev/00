@@ -25,12 +25,12 @@ defmodule Phoenix00.Messages.MessageRepo do
   defp ensure_message_exists(transmission_id, recipient) do
     query =
       from message in Message,
-        where: message.transmission == ^transmission_id and message.recipient == ^recipient
+        where: message.transmission == ^transmission_id and message.recipient_id == ^recipient
 
     if !Repo.one(query) do
       create_message(%{
         status: :sent,
-        recipient: recipient,
+        recipient_id: recipient,
         transmission: transmission_id
       })
     end
@@ -46,6 +46,6 @@ defmodule Phoenix00.Messages.MessageRepo do
 
   defp get_messages_by_sender_id_and_recipients_query(transmission_id, recipients) do
     from message in Message,
-      where: message.transmission == ^transmission_id and message.recipient in ^recipients
+      where: message.transmission == ^transmission_id and message.recipient_id in ^recipients
   end
 end

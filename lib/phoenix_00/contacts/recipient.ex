@@ -4,6 +4,7 @@ defmodule Phoenix00.Contacts.Recipient do
 
   schema "recipients" do
     field :destination, :string
+    has_many :messages, Phoenix00.Contacts.Recipient, foreign_key: :recipient_id
 
     timestamps(type: :utc_datetime)
   end

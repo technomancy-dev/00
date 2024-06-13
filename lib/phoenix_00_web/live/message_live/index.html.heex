@@ -1,14 +1,27 @@
 <.header>
-  Feed
+  Messages<div
+    class="tooltip tooltip-bottom tooltip-warning z-50"
+    data-tip="Emails may have multiple recipients. Messages is where you see every recipients message individually."
+  >
+    <.icon name="hero-information-circle" class=" -mt-1 w-4 text-warning" />
+  </div>
+
   <:subtitle>View the status of messages sent to recipients.</:subtitle>
-  <%!-- <:actions>
-    <.link patch={~p"/messages/new"}>
+  <:actions>
+    <%!-- <.link patch={~p"/messages/new"}>
       <.button>New Message</.button>
-    </.link>
-  </:actions> --%>
+    </.link> --%>
+    <div class="flex">
+      <Flop.Phoenix.pagination
+        opts={Phoenix00.FlopConfig.pagination_opts()}
+        meta={@meta}
+        path={~p"/messages"}
+      />
+    </div>
+  </:actions>
 </.header>
 
-<.table
+<%!-- <.table
   id="messages"
   rows={@streams.messages}
   row_click={fn {_id, message} -> JS.navigate(~p"/messages/#{message}") end}
@@ -34,7 +47,7 @@
       <.link navigate={~p"/messages/#{message}"}>Show</.link>
     </div>
     <%!-- <.link patch={~p"/messages/#{message}/edit"}>Edit</.link> --%>
-  </:action>
+<%!-- </:action>
   <:action :let={{id, message}}>
     <.link
       phx-click={JS.push("delete", value: %{id: message.id}) |> hide("##{id}")}
@@ -43,8 +56,101 @@
       Delete
     </.link>
   </:action>
-</.table>
+</.table> --%>
+<div class="pt-2">
+  <.form for={@form} class="flex gap-2" phx-change="update_filter" phx-submit="update_filter">
+    <Flop.Phoenix.filter_fields
+      :let={i}
+      form={@form}
+      fields={[
+        date_range: [
+          label: gettext("Timeframe"),
+          op: :>=,
+          type: "select",
+          options: [
+            {"All", ""},
+            {"7 Days", "+7 days"},
+            {"15 Days", "+15 days"},
+            {"30 Days", "+30 days"}
+          ]
+        ],
+        status: [
+          label: gettext("Status"),
+          op: :==,
+          type: "select",
+          options: [
+            {"All", ""},
+            {"Sent", :sent},
+            {"Delivered", :delivered},
+            {"Bounced", :bounced},
+            {"Complained", :complained}
+          ]
+        ],
+        destination: [
+          label: gettext("Destination"),
+          op: :like,
+          type: "text"
+        ],
+        from: [
+          label: gettext("From"),
+          op: :like,
+          type: "text"
+        ],
+        subject: [
+          label: gettext("Subject"),
+          op: :like,
+          type: "text"
+        ]
+      ]}
+    >
+      <.input field={i.field} label={i.label} type={i.type} {i.rest} />
+    </Flop.Phoenix.filter_fields>
+  </.form>
+</div>
+<div class="pt-6">
+  <Flop.Phoenix.table
+    opts={Phoenix00.FlopConfig.table_opts()}
+    items={@streams.messages}
+    meta={@meta}
+    path={~p"/messages"}
+    row_click={fn {_id, message} -> JS.navigate(~p"/messages/#{message.id}") end}
+  >
+    <%!-- <:col :let={pet} label="Name" field={:name}><%= pet.name %></:col> --%>
+    <%!-- <:col :let={pet} label="Age" field={:age}><%= pet.age %></:col> --%>
+    <:col :let={{_id, message}} label="Sent" field={:inserted_at}>
+      <%= Timex.Format.DateTime.Formatters.Relative.format!(
+        message.inserted_at,
+        "{relative}"
+      ) %>
+    </:col>
+    <:col :let={{_id, message}} field={:status} label="Status">
+      <span
+        data-status={message.status}
+        class={[
+          "capitalize w-full p-3 badge badge-outline",
+          message.status == :delivered && "badge-success",
+          message.status == :bounced && "badge-warning",
+          message.status == :complained && "badge-error"
+        ]}
+      >
+        <%= message.status %>
+      </span>
+    </:col>
 
+    <:col :let={{_id, message}} label="Destination" field={:destination}>
+      <%= message.recipient.destination %>
+    </:col>
+    <:col :let={{_id, message}} label="From" field={:from}><%= message.email.from %></:col>
+
+    <:col :let={{_id, message}} label="Subject" field={:subject}>
+      <div style="width:12rem;text-overflow: ellipsis ellipsis;" class="w-xl">
+        <%= message.email.subject %>
+      </div>
+    </:col>
+
+    <%!-- <:col :let={{_id, message}} label="Email ID"><%= message.transmission.id %></:col> --%>
+  </Flop.Phoenix.table>
+</div>
 <.modal
   :if={@live_action in [:new, :edit]}
   id="message-modal"

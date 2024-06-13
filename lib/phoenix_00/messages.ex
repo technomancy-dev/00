@@ -1,7 +1,7 @@
 defmodule Phoenix00.Messages do
   require Ecto.Query
   import Ecto.Query, warn: false
-  alias Phoenix00.Events
+
   alias Phoenix00.Messages.Email
   alias Phoenix00.Contacts.Recipient
   alias Phoenix00.Messages.Message
@@ -52,6 +52,15 @@ defmodule Phoenix00.Messages do
     )
   end
 
+  def list_messages_flop(params) do
+    Message
+    |> join(:left, [m], r in assoc(m, :recipient), as: :recipient)
+    |> join(:left, [m], e in assoc(m, :email), as: :email)
+    |> preload(:email)
+    |> preload(:recipient)
+    |> Flop.validate_and_run(params, for: Message)
+  end
+
   @doc """
   Gets a single message.
 
@@ -71,7 +80,7 @@ defmodule Phoenix00.Messages do
       Repo.get!(
         Message
         |> preload(:events)
-        |> Ecto.Query.join(:inner, [m], r in Recipient, on: m.recipient == r.id)
+        |> Ecto.Query.join(:inner, [m], r in Recipient, on: m.recipient_id == r.id)
         |> Ecto.Query.join(:inner, [m], e in Email, on: m.transmission == e.id)
         |> Ecto.Query.select([message, recipient, email], %{
           message

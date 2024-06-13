@@ -70,7 +70,9 @@ defmodule Phoenix00.MixProject do
       {:broadway, "~> 1.0"},
       {:broadway_sqs, "~> 0.7"},
       {:fsmx, "~> 0.5.0"},
-      {:timex, "~> 3.0"}
+      {:timex, "~> 3.0"},
+      {:flop, "~> 0.25.0"},
+      {:flop_phoenix, "~> 0.22.9"}
     ]
   end
 
