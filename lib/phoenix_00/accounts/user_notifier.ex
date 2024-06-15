@@ -19,18 +19,13 @@ defmodule Phoenix00.Accounts.UserNotifier do
   """
   def deliver_confirmation_instructions(user, url) do
     deliver(user.email, "Confirmation instructions", """
-
-    ==============================
-
-    Hi #{user.email},
+    # Hi #{user.email},
 
     You can confirm your account by visiting the URL below:
 
-    #{url}
+    [confirm email](#{url})
 
-    If you didn't create an account with us, please ignore this.
-
-    ==============================
+    If you didn't create an account with us, **please ignore this.**
     """)
   end
 
