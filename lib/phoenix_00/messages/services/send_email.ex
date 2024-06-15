@@ -9,7 +9,7 @@ defmodule Phoenix00.Messages.Services.SendEmail do
     do: proccess_and_send_email(email_req)
 
   def call(req) do
-    Logger.error("You are missing arguments to SendEmail called with:")
+    Logger.error("Incorrect arguments SendEmail called with:")
     Logger.error(req)
     Logger.error("Expected %{to, from, subject, html} or %{to, from, subject, markdown}")
     :error

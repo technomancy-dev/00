@@ -1,21 +1,16 @@
 defmodule Phoenix00.Accounts.UserNotifier do
-  import Swoosh.Email
-
-  alias Phoenix00.Mailer
+  alias Phoenix00.Messages
 
   # Delivers the email using the application mailer.
   defp deliver(recipient, subject, body) do
-    email =
-      new()
-      |> to(recipient)
-      |> from({"Phoenix00", System.get_env("SYSTEM_EMAIL")})
-      |> subject(subject)
-      |> text_body(body)
-
-    # |> put_provider_option(:configuration_set_name, "default")
-
-    with {:ok, _metadata} <- Mailer.deliver(email) do
-      {:ok, email}
+    with :ok <-
+           Messages.send_email(%{
+             "from" => "00 <#{System.get_env("SYSTEM_EMAIL")}>",
+             "to" => recipient,
+             "subject" => subject,
+             "markdown" => body
+           }) do
+      {:ok, %{}}
     end
   end
 
