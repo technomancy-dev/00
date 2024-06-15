@@ -25,8 +25,6 @@ defmodule Phoenix00.Messages.Email do
           binding: :messages,
           field: :status,
           ecto_type: :string
-          # path: [:messages, :status]
-          # ecto_type: {:array, :string}
         ]
       ]
     ]

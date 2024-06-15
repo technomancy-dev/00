@@ -1,4 +1,4 @@
-<header class="px-4 sm:px-6 border-b border-base-300  lg:px-8">
+<header :if={@current_user} class="px-4 sm:px-6 border-b border-base-300  lg:px-8">
   <div class="flex items-center justify-between py-3 text-sm">
     <div class="flex items-center gap-4">
       <a class="font-black" href="/">
@@ -14,11 +14,7 @@
           <li class="text-[0.8125rem] leading-6">
             <%= @current_user.email %>
           </li>
-          <li>
-            <.link href={~p"/users/settings"} class="text-[0.8125rem] leading-6 font-semibold">
-              Settings
-            </.link>
-          </li>
+
           <li>
             <.link
               href={~p"/users/log_out"}
@@ -45,10 +41,10 @@
   </div>
 </header>
 <main class="flex h-full overflow-hidden">
-  <ul class="menu border-r-2 border-base-300 w-56 rounded-box pt-10 h-full">
+  <ul :if={@current_user} class="menu border-r-2 border-base-300 w-56 rounded-box pt-10 h-full">
     <li class="relative">
       <.link class="flex" navigate={~p"/messages"}>
-      <.icon name="hero-inbox" /> Messages
+        <.icon name="hero-inbox" /> Messages
       </.link>
     </li>
     <li>
@@ -63,7 +59,7 @@
     </li>
   </ul>
   <div class="w-full overflow-scroll">
-    <div class="mx-auto max-w-6xl p-4">
+    <div class="mx-auto max-w-6xl p-4 h-full">
       <.flash_group flash={@flash} />
       <%= @inner_content %>
     </div>
