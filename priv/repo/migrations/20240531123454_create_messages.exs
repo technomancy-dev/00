@@ -12,5 +12,6 @@ defmodule Phoenix00.Repo.Migrations.CreateMessages do
 
     create index(:messages, [:recipient_id])
     create index(:messages, [:transmission])
+    create unique_index(:messages, [:recipient_id, :transmission])
   end
 end

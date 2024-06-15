@@ -2,6 +2,36 @@ defmodule Phoenix00.Messages.Email do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @derive {
+    Flop.Schema,
+    filterable: [:status, :from, :date_range, :subject],
+    sortable: [:status, :inserted_at],
+    max_limit: 100,
+    default_limit: 12,
+    default_order: %{
+      order_by: [:inserted_at],
+      order_directions: [:desc, :asc]
+    },
+    adapter_opts: [
+      custom_fields: [
+        date_range: [
+          filter: {CustomFilters, :date_range, [source: :inserted_at, timezone: "-7 days"]},
+          ecto_type: :string,
+          operators: [:>=]
+        ]
+      ],
+      join_fields: [
+        status: [
+          binding: :messages,
+          field: :status,
+          ecto_type: :string
+          # path: [:messages, :status]
+          # ecto_type: {:array, :string}
+        ]
+      ]
+    ]
+  }
+
   schema "emails" do
     field :status, Ecto.Enum, values: [:pending, :sent, :delivered, :bounced, :complained]
     field :to, {:array, :string}
@@ -16,7 +46,7 @@ defmodule Phoenix00.Messages.Email do
     field :sent_by, :id
 
     # has_many :recipients, Phoenix00.Contacts.Recipient
-    has_many :transmissions, Phoenix00.Messages.Message
+    has_many :messages, Phoenix00.Messages.Message, foreign_key: :transmission
 
     timestamps(type: :utc_datetime)
   end

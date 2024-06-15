@@ -63,5 +63,6 @@ defmodule Phoenix00.Messages.Message do
     message
     |> cast(attrs, [:status, :recipient_id, :transmission])
     |> validate_required([:status, :recipient_id, :transmission])
+    |> unique_constraint([:recipient_id, :transmission])
   end
 end

@@ -1,24 +1,45 @@
+<.back navigate={~p"/emails"}>Back to emails</.back>
 <.header>
   Email <%= @email.id %>
   <:subtitle>This is a email record from your database.</:subtitle>
 </.header>
 
 <.list>
-  <:item title="Aws message"><%= @email.sender_id %></:item>
-  <:item title="To"><%= @email.to %></:item>
-  <:item title="From"><%= @email.from %></:item>
   <:item title="Status">
-    <span
-      data-status={@email.status}
-      class="text-gray-500 data-[status='delivered']:text-success data-[status='bounced']:text-warning data-[status='complained']:text-error"
-    >
-      <%= @email.status %>
-    </span>
+    <div class="flex gap-1">
+      <.link
+        :for={message <- @email.messages}
+        href={~p"/messages/#{message.id}"}
+        data-status={message.status}
+      >
+        <%!-- <%= message.recipient.destination %> --%>
+        <Timeline.compact
+          rows={sort_events(message.events)}
+          destination={message.recipient.destination}
+        />
+      </.link>
+    </div>
   </:item>
-  <:item title="Email"><%= @email.email_id %></:item>
+  <%!-- <:item title="To"><%= Enum.join(@email.to, " ") %></:item> --%>
+  <:item title="From"><%= @email.from %></:item>
+  <:item title="Aws message"><%= @email.sender_id %></:item>
 </.list>
 
-<.back navigate={~p"/emails"}>Back to emails</.back>
+<div class="mockup-window border mt-20 border-base-300">
+  <p class="inline absolute top-3 left-24">
+    <span class="font-extralight badge-outline mr-2 badge text-xs">Subject:</span> <%= @email.subject %>
+  </p>
+  <div class="flex border-t border-base-300">
+    <iframe
+      id="inlineFrameExample"
+      title="Inline Frame Example"
+      width="100%"
+      style="min-height: 600px;"
+      srcdoc={raw(@email.body)}
+    >
+    </iframe>
+  </div>
+</div>
 
 <.modal
   :if={@live_action == :edit}

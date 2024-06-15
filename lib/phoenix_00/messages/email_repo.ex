@@ -8,7 +8,15 @@ defmodule Phoenix00.Messages.EmailRepo do
     Email |> limit(^lim) |> offset(^off) |> order_by(^order) |> Repo.all()
   end
 
-  def get_email!(id), do: Repo.get!(Email, id)
+  def get_email!(id),
+    do:
+      Repo.get!(
+        Email
+        |> preload(:messages)
+        |> preload(messages: :recipient)
+        |> preload(messages: :events),
+        id
+      )
 
   def get_email_by_aws_id(aws_message_id) do
     Repo.get_by(Email, sender_id: aws_message_id)

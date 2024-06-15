@@ -1,6 +1,6 @@
 <.header>
   Messages
-  <:subtitle>View the status of messages sent to recipients. </:subtitle>
+  <:subtitle>View the status of messages sent to recipients.</:subtitle>
   <:actions>
     <%!-- <.link patch={~p"/messages/new"}>
       <.button>New Message</.button>
@@ -15,65 +15,18 @@
   </:actions>
 </.header>
 
-<%!-- <.table
-  id="messages"
-  rows={@streams.messages}
-  row_click={fn {_id, message} -> JS.navigate(~p"/messages/#{message}") end}
->
-  <:col :let={{_id, message}} label="Status">
-    <span
-      data-status={message.status}
-      class={[
-        "capitalize",
-        message.status == :delivered && "badge badge-success",
-        message.status == :bounced && "badge badge-warning",
-        message.status == :complained && "badge badge-error"
-      ]}
-    >
-      <%= message.status %>
-    </span>
-  </:col>
-  <:col :let={{_id, message}} label="Destination"><%= message.recipient %></:col>
-  <:col :let={{_id, message}} label="From"><%= message.transmission.from %></:col>
-  <:col :let={{_id, message}} label="Email ID"><%= message.transmission.id %></:col>
-  <:action :let={{_id, message}}>
-    <div class="sr-only">
-      <.link navigate={~p"/messages/#{message}"}>Show</.link>
-    </div>
-    <%!-- <.link patch={~p"/messages/#{message}/edit"}>Edit</.link> --%>
-<%!-- </:action>
-  <:action :let={{id, message}}>
-    <.link
-      phx-click={JS.push("delete", value: %{id: message.id}) |> hide("##{id}")}
-      data-confirm="Are you sure?"
-    >
-      Delete
-    </.link>
-  </:action>
-</.table> --%>
 <div class="pt-2">
   <.form for={@form} class="flex gap-2" phx-change="update_filter" phx-submit="update_filter">
     <Flop.Phoenix.filter_fields
       :let={i}
       form={@form}
       fields={[
-        date_range: [
-          label: gettext("Timeframe"),
-          op: :>=,
-          type: "select",
-          options: [
-            {"All", ""},
-            {"7 Days", "+7 days"},
-            {"15 Days", "+15 days"},
-            {"30 Days", "+30 days"}
-          ]
-        ],
         status: [
           label: gettext("Status"),
           op: :==,
           type: "select",
           options: [
-            {"All", ""},
+            {"All", nil},
             {"Sent", :sent},
             {"Delivered", :delivered},
             {"Bounced", :bounced},
@@ -94,6 +47,17 @@
           label: gettext("Subject"),
           op: :like,
           type: "text"
+        ],
+        date_range: [
+          label: gettext("Timeframe"),
+          op: :>=,
+          type: "select",
+          options: [
+            {"All", ""},
+            {"7 Days", "+7 days"},
+            {"15 Days", "+15 days"},
+            {"30 Days", "+30 days"}
+          ]
         ]
       ]}
     >
@@ -112,12 +76,7 @@
   >
     <%!-- <:col :let={pet} label="Name" field={:name}><%= pet.name %></:col> --%>
     <%!-- <:col :let={pet} label="Age" field={:age}><%= pet.age %></:col> --%>
-    <:col :let={{_id, message}} label="Sent" field={:inserted_at}>
-      <%= Timex.Format.DateTime.Formatters.Relative.format!(
-        message.inserted_at,
-        "{relative}"
-      ) %>
-    </:col>
+
     <:col :let={{_id, message}} field={:status} label="Status">
       <span
         data-status={message.status}
@@ -143,6 +102,12 @@
       </div>
     </:col>
 
+    <:col :let={{_id, message}} label="Sent" field={:inserted_at}>
+      <%= Timex.Format.DateTime.Formatters.Relative.format!(
+        message.inserted_at,
+        "{relative}"
+      ) %>
+    </:col>
     <%!-- <:col :let={{_id, message}} label="Email ID"><%= message.transmission.id %></:col> --%>
   </Flop.Phoenix.table>
 </div>

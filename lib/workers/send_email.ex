@@ -32,8 +32,8 @@ defmodule Phoenix00.Workers.SendEmail do
       Contacts.create_or_find_recipient_by_destination(%{destination: destination})
 
     Messages.create_message(%{
-      status: :sent,
-      recipient: recipient.id,
+      status: :pending,
+      recipient_id: recipient.id,
       transmission: email.id
     })
   end

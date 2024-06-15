@@ -15,10 +15,6 @@ defmodule Phoenix00.Messages do
     Services.SendEmail.call(email_req)
   end
 
-  # def recieve_sns(sns) do
-  #   Services.RecieveSns.call(sns)
-  # end
-
   defdelegate list_emails(limit, offset), to: EmailRepo
   defdelegate get_email!(id), to: EmailRepo
   defdelegate email_count(), to: EmailRepo
@@ -59,6 +55,14 @@ defmodule Phoenix00.Messages do
     |> preload(:email)
     |> preload(:recipient)
     |> Flop.validate_and_run(params, for: Message)
+  end
+
+  def list_emails_flop(params) do
+    Email
+    |> distinct(true)
+    |> join(:left, [e], m in assoc(e, :messages), as: :messages)
+    |> preload(:messages)
+    |> Flop.validate_and_run(params, for: Email)
   end
 
   @doc """
@@ -171,17 +175,6 @@ defmodule Phoenix00.Messages do
       update_messages(email.id, recipients, get_status_from_event_type(jason["eventType"]))
     end
   end
-
-  # def handle_notification_message(%{"eventType" => "Send"} = message) do
-  #   # Send events are special, the user may not use the send API and use AWS SES directly
-  #   # within their app. Because of that we need to create the email record if it doesn't exist.
-  #   # find_or_create_email_record(message)
-  #   with {:ok, jason} <- Jason.decode(message),
-  #        email <- EmailRepo.get_email_by_aws_id(jason["mail"]["messageId"]),
-  #        recipients <- Enum.map(get_recipients(jason), fn recipient -> recipient.id end) do
-  #     update_messages(email.id, recipients, get_status_from_event_type(jason["eventType"]))
-  #   end
-  # end
 
   def update_messages(transmission_id, recipients, status) do
     MessageRepo.update_status_by_sender_id_and_destinations(

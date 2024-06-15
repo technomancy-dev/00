@@ -44,7 +44,6 @@ defmodule Phoenix00Web.MessageLive.Index do
         # This will reset invalid parameters. Alternatively, you can assign
         # only the meta and render the errors, or you can ignore the error
         # case entirely.
-        IO.inspect(meta)
         push_navigate(socket, to: ~p"/messages")
     end
   end

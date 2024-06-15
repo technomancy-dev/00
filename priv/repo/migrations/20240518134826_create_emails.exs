@@ -21,7 +21,6 @@ defmodule Phoenix00.Repo.Migrations.CreateEmails do
 
     create unique_index(:emails, [:email_id])
     create unique_index(:emails, [:sender_id])
-    create unique_index(:emails, [:to, :sender_id])
     create index(:emails, [:sent_by])
   end
 end

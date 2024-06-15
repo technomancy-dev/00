@@ -27,22 +27,28 @@ defmodule Phoenix00Web.EmailLive.Index do
   end
 
   defp apply_action(socket, :index, params) do
-    page = params["page"] || "0"
-
-    socket
-    |> assign(:page_title, "Listing Emails")
-    |> assign(:page, page |> String.to_integer())
-    |> assign(:max_page, div(Messages.email_count(), 10))
-    |> stream(
-      :emails,
-      Messages.list_emails(10, 10 * (page |> String.to_integer())),
-      reset: true
-    )
+    case Messages.list_emails_flop(params) do
+      {:ok, {emails, meta}} ->
+        socket
+        |> assign(:page_title, "Listing Emails")
+        |> assign(:form, Phoenix.Component.to_form(meta))
+        |> assign(:meta, meta)
+        |> stream(
+          :emails,
+          emails,
+          reset: true
+        )
+    end
   end
 
   @impl true
   def handle_info({Phoenix00Web.EmailLive.FormComponent, {:saved, email}}, socket) do
     {:noreply, stream_insert(socket, :emails, email)}
+  end
+
+  def handle_event("update_filter", params, socket) do
+    params = Map.delete(params, "_target")
+    {:noreply, push_patch(socket, to: ~p"/emails?#{params}")}
   end
 
   @impl true
