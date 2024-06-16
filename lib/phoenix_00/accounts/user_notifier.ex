@@ -4,14 +4,14 @@ defmodule Phoenix00.Accounts.UserNotifier do
 
   # Delivers the email using the application mailer.
   defp deliver(recipient, subject, body) do
-    with :ok <-
+    with email <-
            Messages.send_email(%{
              "from" => "00 <#{System.get_env("SYSTEM_EMAIL")}>",
              "to" => recipient,
              "subject" => subject,
              "markdown" => body
            }) do
-      {:ok, %{}}
+      {:ok, email}
     else
       error ->
         Logger.error("Error sending system emails.")

@@ -1,5 +1,5 @@
 defmodule Phoenix00.Logs.Log do
-  use Ecto.Schema
+  use Phoenix00.UUIDSchema
   import Ecto.Changeset
 
   @derive {
@@ -36,7 +36,7 @@ defmodule Phoenix00.Logs.Log do
     field :response, :map
     field :endpoint, :string
     field :method, Ecto.Enum, values: [:get, :head, :post, :put, :delete, :options, :patch]
-    field :token_id, :id
+    field :token_id, :string
     field :email, :id
 
     # has_one :users_token, Phoenix00.Accounts.UserToken, foreign_key: :token_id

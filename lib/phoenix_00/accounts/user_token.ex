@@ -1,5 +1,5 @@
 defmodule Phoenix00.Accounts.UserToken do
-  use Ecto.Schema
+  use Phoenix00.UUIDSchema
   import Ecto.Query
   alias Phoenix00.Accounts.UserToken
 

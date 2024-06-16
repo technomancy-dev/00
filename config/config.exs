@@ -7,6 +7,8 @@
 # General application configuration
 import Config
 
+config :phoenix_00, Phoenix00.Repo, migration_primary_key: [type: :uuid]
+
 config :phoenix_00,
   ecto_repos: [Phoenix00.Repo],
   generators: [timestamp_type: :utc_datetime]

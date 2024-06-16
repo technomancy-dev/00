@@ -1,5 +1,5 @@
 defmodule Phoenix00.Accounts.User do
-  use Ecto.Schema
+  use Phoenix00.UUIDSchema
   import Ecto.Changeset
 
   schema "users" do

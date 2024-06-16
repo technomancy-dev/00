@@ -1,5 +1,5 @@
 defmodule Phoenix00.Messages.Email do
-  use Ecto.Schema
+  use Phoenix00.UUIDSchema
   import Ecto.Changeset
 
   @derive {
