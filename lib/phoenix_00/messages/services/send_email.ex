@@ -1,5 +1,4 @@
 defmodule Phoenix00.Messages.Services.SendEmail do
-  alias Phoenix00.Logs
   alias Phoenix00.MailMan
   require Logger
 
@@ -17,16 +16,15 @@ defmodule Phoenix00.Messages.Services.SendEmail do
   end
 
   defp proccess_and_send_email(email_req) do
-    with {:ok, _job} <-
-           email_req
-           |> Map.new(fn {k, v} -> {String.to_atom(k), v} end)
-           |> MailMan.letter()
-           |> MailMan.enqueue_worker() do
+    with {:ok, email} <- MailMan.letter!(email_req),
+         {:ok, _job} <- MailMan.send_letter(email) do
       Logger.info("Successfully queued email to: #{email_req["to"]}")
+      email
     else
-      _ ->
+      error ->
         Logger.error("Failed to queue email to: #{email_req["to"]}")
-        :error
+        Logger.error(error)
+        {:error, error}
     end
   end
 end

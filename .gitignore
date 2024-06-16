@@ -43,3 +43,5 @@ npm-debug.log
 00.db-wal
 
 #/rel
+
+.DS_Store

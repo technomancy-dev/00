@@ -16,7 +16,8 @@
   <:item title="Method"><%= @log.method %></:item>
   <:item title="Response">
     <%= raw(
-      Autumn.highlight!("elixir", Jason.Formatter.pretty_print(Jason.encode!(@log.response)),
+      Autumn.highlight!(Jason.Formatter.pretty_print(Jason.encode!(@log.response)),
+        language: "json",
         pre_class: "p-4 w-full",
         theme: "dark_high_contrast"
       )
@@ -24,7 +25,8 @@
   </:item>
   <:item title="Request">
     <%= raw(
-      Autumn.highlight!("elixir", Jason.Formatter.pretty_print(Jason.encode!(@log.request)),
+      Autumn.highlight!(Jason.Formatter.pretty_print(Jason.encode!(@log.request)),
+        language: "json",
         pre_class: "p-4",
         theme: "dark_high_contrast"
       )

@@ -33,8 +33,6 @@ defmodule Phoenix00Web.LogLive.Index do
     user_api_keys =
       Enum.map(Accounts.fetch_user_api_tokens(user), fn token -> {token.name, token.id} end)
 
-    IO.inspect(user_api_keys)
-
     case Logs.list_logs_flop(params) do
       {:ok, {logs, meta}} ->
         socket

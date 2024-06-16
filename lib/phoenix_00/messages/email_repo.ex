@@ -18,6 +18,15 @@ defmodule Phoenix00.Messages.EmailRepo do
         id
       )
 
+  def get_email_by_email_id!(email_id) do
+    Repo.get_by!(Email, email_id: email_id)
+  end
+
+  def add_email_sender(%Email{} = email, attrs) do
+    change_send_email(email, attrs)
+    |> Repo.update()
+  end
+
   def get_email_by_aws_id(aws_message_id) do
     Repo.get_by(Email, sender_id: aws_message_id)
   end
@@ -31,17 +40,10 @@ defmodule Phoenix00.Messages.EmailRepo do
     |> Repo.insert()
   end
 
-  # def create_or_find_email(attrs) do
-  #   query =
-  #     from r in Recipient,
-  #       where: r.destination == ^attrs.destination
-
-  #   if !Repo.one(query) do
-  #     create_recipient(attrs)
-  #   end
-
-  #   Repo.one(query)
-  # end
+  def receive_email_request(attrs \\ %{}) do
+    change_receive_email_request(%Email{}, attrs)
+    |> Repo.insert()
+  end
 
   def find_or_create_email_record_by_ses_message(message) do
     case get_email_by_aws_id(message["mail"]["messageId"]) do
@@ -80,6 +82,14 @@ defmodule Phoenix00.Messages.EmailRepo do
 
   def change_email(%Email{} = email, attrs \\ %{}) do
     Email.changeset(email, attrs)
+  end
+
+  def change_send_email(%Email{} = email, attrs \\ %{}) do
+    Email.send_changeset(email, attrs)
+  end
+
+  def change_receive_email_request(%Email{} = email, attrs \\ {}) do
+    Email.receive_changeset(email, attrs)
   end
 
   defp get_status_from_event_type(event_type) do

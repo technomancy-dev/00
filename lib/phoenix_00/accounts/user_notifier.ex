@@ -1,4 +1,5 @@
 defmodule Phoenix00.Accounts.UserNotifier do
+  require Logger
   alias Phoenix00.Messages
 
   # Delivers the email using the application mailer.
@@ -11,6 +12,11 @@ defmodule Phoenix00.Accounts.UserNotifier do
              "markdown" => body
            }) do
       {:ok, %{}}
+    else
+      error ->
+        Logger.error("Error sending system emails.")
+        Logger.error(error)
+        :error
     end
   end
 

@@ -48,7 +48,6 @@ defmodule Phoenix00.Logs do
       | token_id: token
     })
     |> Flop.validate_and_run(params, for: Log)
-    |> IO.inspect()
   end
 
   @doc """

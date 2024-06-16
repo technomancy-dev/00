@@ -15,7 +15,7 @@ defmodule Phoenix00.Workers.SendEmail do
       Enum.each(recipients, fn recipient -> create_message(email, recipient) end)
       :ok
     else
-      _ -> :error
+      e -> {:ok, e}
     end
   end
 
@@ -39,14 +39,6 @@ defmodule Phoenix00.Workers.SendEmail do
   end
 
   defp create_email(email_args, metadata) do
-    Messages.create_email(
-      Map.merge(email_args, %{
-        "sender_id" => metadata.id,
-        "to" => List.wrap(email_args["to"]),
-        "cc" => List.wrap(email_args["cc"]),
-        "bcc" => List.wrap(email_args["bcc"]),
-        "body" => email_args["html_body"]
-      })
-    )
+    Messages.add_email_sender(email_args, %{sender_id: metadata.id})
   end
 end

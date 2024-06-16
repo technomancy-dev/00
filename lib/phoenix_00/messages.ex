@@ -20,10 +20,39 @@ defmodule Phoenix00.Messages do
   defdelegate email_count(), to: EmailRepo
   defdelegate change_email(attrs), to: EmailRepo
   defdelegate change_email(email, attrs), to: EmailRepo
-  defdelegate create_email(attrs), to: EmailRepo
+  # defdelegate create_email(attrs), to: EmailRepo
   defdelegate update_email(email), to: EmailRepo
   defdelegate update_email(email, attr), to: EmailRepo
   defdelegate delete_email(email), to: EmailRepo
+
+  def create_email(attrs, sender_metadata) do
+    EmailRepo.create_email(
+      Map.merge(attrs, %{
+        "sender_id" => sender_metadata.id,
+        "to" => List.wrap(attrs["to"]),
+        "cc" => List.wrap(attrs["cc"]),
+        "bcc" => List.wrap(attrs["bcc"]),
+        "body" => attrs["html_body"]
+      })
+    )
+  end
+
+  def create_email(attrs) do
+    EmailRepo.receive_email_request(
+      Map.merge(attrs, %{
+        "to" => List.wrap(attrs["to"]),
+        "cc" => List.wrap(attrs["cc"]),
+        "bcc" => List.wrap(attrs["bcc"]),
+        "body" => attrs["html_body"]
+      })
+    )
+  end
+
+  def add_email_sender(email, attrs) do
+    with email_record <- EmailRepo.get_email!(email["id"]) do
+      EmailRepo.add_email_sender(email_record, attrs)
+    end
+  end
 
   @doc """
   Returns the list of messages.
