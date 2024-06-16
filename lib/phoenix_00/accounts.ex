@@ -358,8 +358,8 @@ defmodule Phoenix00.Accounts do
   The token returned must be saved somewhere safe.
   This token cannot be recovered from the database.
   """
-  def create_user_api_token(user) do
-    {encoded_token, user_token} = UserToken.build_email_token(user, "api-token")
+  def create_user_api_token(user, name) do
+    {encoded_token, user_token} = UserToken.build_email_token(user, "api-token", name)
     Repo.insert!(user_token)
     encoded_token
   end
@@ -373,7 +373,7 @@ defmodule Phoenix00.Accounts do
   """
   def fetch_user_by_api_token(token) do
     with {:ok, query} <- UserToken.verify_email_token_query(token, "api-token"),
-         %User{} = user <- Repo.one(query) do
+         user <- Repo.one(query) do
       {:ok, user}
     else
       _ -> :error
@@ -384,8 +384,8 @@ defmodule Phoenix00.Accounts do
     Repo.all(UserToken.by_user_and_contexts_query(user, ["api-token"]))
   end
 
-  def fetch_new_api_token(user) do
-    token = create_user_api_token(user)
+  def fetch_new_api_token(user, name) do
+    token = create_user_api_token(user, name)
     {:ok, token}
   end
 

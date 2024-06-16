@@ -11,36 +11,48 @@ defmodule Phoenix00Web.UserSettingsLive do
     </.header>
     <div class="space-y-12 divide-base-200">
       <div>
-        <p class="text-center">
-          Before you can get started you will need an API key.
-        </p>
         <div class="max-w-lg mx-auto py-8">
-          <.simple_form
-            for={@token_form}
-            class="float-right"
-            id="token_form"
-            phx-submit="generate_api_key"
-          >
-            <:actions>
-              <.button class="btn-wide" phx-disable-with="Changing...">Create New Key</.button>
-            </:actions>
-          </.simple_form>
-
+          <p class="text-xl">
+            API Tokens
+          </p>
           <.table id="emails" rows={@streams.api_keys}>
             <:col :let={{_id, key}} label="Created at">
               <span>
-                <%= key.created_at %>
+                <%= Timex.format!(key.created_at, "%b %d,  %H:%M%P", :strftime) %>
+              </span>
+            </:col>
+            <:col :let={{_id, key}} label="Name">
+              <span>
+                <%= key.name %>
               </span>
             </:col>
             <:action :let={{id, key}}>
               <.link
                 phx-click={JS.push("delete_api_key", value: %{id: key.id}) |> hide("##{id}")}
-                data-confirm="Are you sure?"
+                data-confirm="Are you sure? This will immediately affect any system using this key."
               >
                 Delete
               </.link>
             </:action>
           </.table>
+          <.simple_form
+            for={@token_form}
+            class="max-w-lg mx-auto"
+            id="token_form"
+            phx-submit="generate_api_key"
+          >
+            <.input
+              field={@token_form[:name]}
+              name="name"
+              id="name_field"
+              type="text"
+              label="Token Name"
+              required
+            />
+            <:actions>
+              <.button class="w-full" phx-disable-with="Changing...">Create New API Token</.button>
+            </:actions>
+          </.simple_form>
         </div>
       </div>
       <div class="mx-auto">
@@ -140,7 +152,7 @@ defmodule Phoenix00Web.UserSettingsLive do
       |> assign(:current_email, user.email)
       |> assign(:email_form, to_form(email_changeset))
       |> assign(:password_form, to_form(password_changeset))
-      |> assign(:token_form, to_form(%{}))
+      |> assign(:token_form, to_form(%{"name" => ""}))
       |> assign(:token, false)
       |> assign(:trigger_submit, false)
 
@@ -157,7 +169,7 @@ defmodule Phoenix00Web.UserSettingsLive do
 
     tokens =
       Enum.map(user_api_keys, fn key ->
-        %{id: key.id, created_at: key.inserted_at}
+        %{id: key.id, created_at: key.inserted_at, name: key.name}
       end)
 
     socket
@@ -233,10 +245,10 @@ defmodule Phoenix00Web.UserSettingsLive do
     end
   end
 
-  def handle_event("generate_api_key", _params, socket) do
+  def handle_event("generate_api_key", %{"name" => name} = _params, socket) do
     user = socket.assigns.current_user
 
-    case Accounts.fetch_new_api_token(user) do
+    case Accounts.fetch_new_api_token(user, name) do
       {:ok, token} ->
         {:noreply, assign(socket, token: token)}
     end

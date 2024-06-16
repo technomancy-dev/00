@@ -6,6 +6,8 @@ defmodule Phoenix00Web.EmailController do
 
   def send(conn, email) do
     email |> Messages.send_email()
-    render(conn, :index, email: email)
+
+    token = conn.assigns[:token]
+    render(conn, :index, email: email, token: token)
   end
 end

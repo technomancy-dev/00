@@ -18,6 +18,7 @@ defmodule Phoenix00.Repo.Migrations.CreateUsersAuthTables do
       add :token, :binary, null: false
       add :context, :string, null: false
       add :sent_to, :string
+      add :name, :string
       timestamps(updated_at: false)
     end
 

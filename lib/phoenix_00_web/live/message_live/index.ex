@@ -30,7 +30,7 @@ defmodule Phoenix00Web.MessageLive.Index do
     case Messages.list_messages_flop(params) do
       {:ok, {messages, meta}} ->
         socket
-        |> assign(:page_title, "New Message")
+        |> assign(:page_title, "Listing Messages")
         |> stream(
           :messages,
           messages,
@@ -40,7 +40,7 @@ defmodule Phoenix00Web.MessageLive.Index do
         |> assign(:meta, meta)
         |> assign(:message, nil)
 
-      {:error, meta} ->
+      {:error, _meta} ->
         # This will reset invalid parameters. Alternatively, you can assign
         # only the meta and render the errors, or you can ignore the error
         # case entirely.

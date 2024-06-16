@@ -87,6 +87,13 @@ defmodule Phoenix00Web.Router do
 
       live "/messages/:id", MessageLive.Show, :show
       live "/messages/:id/show/edit", MessageLive.Show, :edit
+
+      live "/logs", LogLive.Index, :index
+      live "/logs/new", LogLive.Index, :new
+      live "/logs/:id/edit", LogLive.Index, :edit
+
+      live "/logs/:id", LogLive.Show, :show
+      live "/logs/:id/show/edit", LogLive.Show, :edit
     end
   end
 
@@ -105,6 +112,7 @@ defmodule Phoenix00Web.Router do
   scope "/api", Phoenix00Web do
     pipe_through [:api]
 
-    post "/emails/send", EmailController, :send
+    post "/emails", EmailController, :send
   end
+
 end

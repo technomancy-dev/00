@@ -1,0 +1,46 @@
+<.header>
+  <.back navigate={~p"/logs"}>Back to logs</.back>
+  Log <%= @log.id %>
+  <:subtitle>This is a log record from your database.</:subtitle>
+  <%!-- <:actions>
+    <.link patch={~p"/logs/#{@log}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit log</.button>
+    </.link>
+  </:actions> --%>
+</.header>
+
+<.list>
+  <:item title="Status"><%= @log.status %></:item>
+  <:item title="Endpoint"><%= @log.endpoint %></:item>
+  <:item title="Token name"><%= @log.token_id.name %></:item>
+  <:item title="Method"><%= @log.method %></:item>
+  <:item title="Response">
+    <%= raw(
+      Autumn.highlight!("elixir", Jason.Formatter.pretty_print(Jason.encode!(@log.response)),
+        pre_class: "p-4 w-full",
+        theme: "dark_high_contrast"
+      )
+    ) %>
+  </:item>
+  <:item title="Request">
+    <%= raw(
+      Autumn.highlight!("elixir", Jason.Formatter.pretty_print(Jason.encode!(@log.request)),
+        pre_class: "p-4",
+        theme: "dark_high_contrast"
+      )
+    ) %>
+  </:item>
+</.list>
+
+<%!-- <div class="my-4" /> --%>
+
+<.modal :if={@live_action == :edit} id="log-modal" show on_cancel={JS.patch(~p"/logs/#{@log}")}>
+  <.live_component
+    module={Phoenix00Web.LogLive.FormComponent}
+    id={@log.id}
+    title={@page_title}
+    action={@live_action}
+    log={@log}
+    patch={~p"/logs/#{@log}"}
+  />
+</.modal>

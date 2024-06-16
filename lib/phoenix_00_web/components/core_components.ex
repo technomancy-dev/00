@@ -534,7 +534,7 @@ defmodule Phoenix00Web.CoreComponents do
       <dl class="-my-4 divide-y divide-base-200">
         <div :for={item <- @item} class="flex gap-4 py-4 text-sm leading-6 sm:gap-8">
           <dt class="w-1/4 flex-none"><%= item.title %></dt>
-          <dd class=""><%= render_slot(item) %></dd>
+          <dd class="w-full"><%= render_slot(item) %></dd>
         </div>
       </dl>
     </div>

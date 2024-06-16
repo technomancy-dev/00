@@ -1,0 +1,167 @@
+<.header>
+  Listing Logs
+  <:subtitle>These requests have been sent to your API.</:subtitle>
+  <:actions>
+    <div class="flex">
+      <Flop.Phoenix.pagination
+        opts={Phoenix00.FlopConfig.pagination_opts()}
+        meta={@meta}
+        path={~p"/logs"}
+      />
+    </div>
+  </:actions>
+</.header>
+
+<div class="pt-2">
+  <.form for={@form} class="flex gap-2" phx-change="update_filter" phx-submit="update_filter">
+    <Flop.Phoenix.filter_fields
+      :let={i}
+      form={@form}
+      fields={[
+        status: [
+          label: gettext("Status"),
+          op: :==,
+          type: "select",
+          options: [
+            {"All", nil},
+            {"200", 200},
+            {"500", 500}
+          ]
+        ],
+        endpoint: [
+          label: gettext("Endpoint"),
+          op: :like,
+          type: "text"
+        ],
+        method: [
+          label: gettext("Method"),
+          op: :==,
+          type: "select",
+          options: [
+            {"All", nil},
+            {"GET", :get},
+            {"POST", :post},
+            {"PATCH", :patch}
+          ]
+        ],
+        token_id: [
+          label: gettext("Tokens"),
+          op: :==,
+          type: "select",
+          options: [{"All", ""} | @tokens]
+        ],
+        date_range: [
+          label: gettext("Timeframe"),
+          op: :>=,
+          type: "select",
+          options: [
+            {"All", ""},
+            {"7 Days", "+7 days"},
+            {"15 Days", "+15 days"},
+            {"30 Days", "+30 days"}
+          ]
+        ]
+      ]}
+    >
+      <.input field={i.field} label={i.label} type={i.type} {i.rest} />
+    </Flop.Phoenix.filter_fields>
+  </.form>
+</div>
+
+<div class="pt-6">
+  <Flop.Phoenix.table
+    opts={Phoenix00.FlopConfig.table_opts()}
+    items={@streams.logs}
+    meta={@meta}
+    path={~p"/logs"}
+    row_click={fn {_id, log} -> JS.navigate(~p"/logs/#{log.id}") end}
+  >
+    <:col :let={{_id, log}} label="Status"><%= log.status %></:col>
+    <:col :let={{_id, log}} label="Endpoint"><%= log.endpoint %></:col>
+    <:col :let={{_id, log}} label="Method">
+      <span class="uppercase"><%= log.method %></span>
+    </:col>
+    <%!-- <:col :let={{_id, log}} label="Response"><%= log.response %></:col> --%>
+    <%!-- <:col :let={{_id, log}} label="Request"><%= log.request %></:col> --%>
+    <%!-- <:col :let={{_id, log}} label="Token name"><%= log.token_id.name %></:col> --%>
+    <:col :let={{_id, log}} label="Created At">
+      <%= Timex.format!(log.inserted_at, "%b %d,  %H:%M%P", :strftime) %>
+    </:col>
+    <%!-- <:col :let={pet} label="Name" field={:name}><%= pet.name %></:col> --%>
+    <%!-- <:col :let={pet} label="Age" field={:age}><%= pet.age %></:col> --%>
+
+    <%!-- <:col :let={{_id, message}} field={:status} label="Status">
+      <span
+        data-status={message.status}
+        class={[
+          "capitalize w-full p-3 badge badge-outline",
+          message.status == :delivered && "badge-success",
+          message.status == :bounced && "badge-warning",
+          message.status == :complained && "badge-error"
+        ]}
+      >
+        <%= message.status %>
+      </span>
+    </:col>
+
+    <:col :let={{_id, message}} label="Destination" field={:destination}>
+      <%= message.recipient.destination %>
+    </:col>
+    <:col :let={{_id, message}} label="From" field={:from}><%= message.email.from %></:col>
+
+    <:col :let={{_id, message}} label="Subject" field={:subject}>
+      <div style="width:12rem;text-overflow: ellipsis ellipsis;" class="w-xl">
+        <%= message.email.subject %>
+      </div>
+    </:col>
+
+    <:col :let={{_id, message}} label="Sent" field={:inserted_at}>
+      <%= Timex.Format.DateTime.Formatters.Relative.format!(
+        message.inserted_at,
+        "{relative}"
+      ) %>
+    </:col> --%>
+    <%!-- <:col :let={{_id, message}} label="Email ID"><%= message.transmission.id %></:col> --%>
+  </Flop.Phoenix.table>
+</div>
+
+<%!-- <.table
+  id="logs"
+  rows={@streams.logs}
+  row_click={fn {_id, log} -> JS.navigate(~p"/logs/#{log}") end}
+> --%>
+<%!-- <:col :let={{_id, log}} label="Status"><%= log.status %></:col> --%>
+<%!-- <:col :let={{_id, log}} label="Endpoint"><%= log.endpoint %></:col> --%>
+<%!-- <:col :let={{_id, log}} label="Method"><%= log.method %></:col> --%>
+<%!-- <:col :let={{_id, log}} label="Response"><%= log.response %></:col> --%>
+<%!-- <:col :let={{_id, log}} label="Request"><%= log.request %></:col> --%>
+<%!-- <:col :let={{_id, log}} label="Token name"><%= log.token_id.name %></:col> --%>
+<%!-- <:col :let={{_id, log}} label="Created At"> --%>
+<%!-- <%= Timex.format!(log.inserted_at, "%b %d,  %H:%M%P", :strftime) %> --%>
+<%!-- </:col> --%>
+<%!-- <:action :let={{_id, log}}> --%>
+<%!-- <div class="sr-only"> --%>
+<%!-- <.link navigate={~p"/logs/#{log}"}>Show</.link> --%>
+<%!-- </div> --%>
+<%!-- <.link patch={~p"/logs/#{log}/edit"}>Edit</.link> --%>
+<%!-- </:action> --%>
+<%!-- <:action :let={{id, log}}> --%>
+<%!-- <.link --%>
+<%!-- phx-click={JS.push("delete", value: %{id: log.id}) |> hide("##{id}")} --%>
+<%!-- data-confirm="Are you sure?" --%>
+<%!-- > --%>
+<%!-- Delete --%>
+<%!-- </.link> --%>
+<%!-- </:action> --%>
+<%!-- </.table> --%>
+
+<.modal :if={@live_action in [:new, :edit]} id="log-modal" show on_cancel={JS.patch(~p"/logs")}>
+  <.live_component
+    module={Phoenix00Web.LogLive.FormComponent}
+    id={@log.id || :new}
+    title={@page_title}
+    action={@live_action}
+    log={@log}
+    patch={~p"/logs"}
+  />
+</.modal>

@@ -1,4 +1,5 @@
 defmodule Phoenix00.Messages.Services.SendEmail do
+  alias Phoenix00.Logs
   alias Phoenix00.MailMan
   require Logger
 
