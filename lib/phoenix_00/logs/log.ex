@@ -4,7 +4,7 @@ defmodule Phoenix00.Logs.Log do
 
   @derive {
     Flop.Schema,
-    filterable: [:status, :endpoint, :method, :date_range, :token_id],
+    filterable: [:status, :source, :method, :date_range, :token_id],
     sortable: [:status, :inserted_at],
     max_limit: 100,
     default_limit: 12,
@@ -34,20 +34,18 @@ defmodule Phoenix00.Logs.Log do
     field :status, :integer
     field :request, :map
     field :response, :map
-    field :endpoint, :string
+    field :source, :string
     field :method, Ecto.Enum, values: [:get, :head, :post, :put, :delete, :options, :patch]
     field :token_id, :string
-    field :email, :id
 
-    # has_one :users_token, Phoenix00.Accounts.UserToken, foreign_key: :token_id
-
+    belongs_to :email, Phoenix00.Messages.Email
     timestamps(type: :utc_datetime)
   end
 
   @doc false
   def changeset(log, attrs) do
     log
-    |> cast(attrs, [:status, :endpoint, :method, :response, :request, :token_id])
-    |> validate_required([:status, :endpoint, :method, :token_id])
+    |> cast(attrs, [:status, :source, :method, :response, :request, :token_id, :email_id])
+    |> validate_required([:status, :source, :method, :token_id])
   end
 end

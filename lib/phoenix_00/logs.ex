@@ -4,6 +4,7 @@ defmodule Phoenix00.Logs do
   """
 
   import Ecto.Query, warn: false
+
   alias Phoenix00.Accounts.UserToken
   alias Phoenix00.Repo
 
@@ -29,24 +30,9 @@ defmodule Phoenix00.Logs do
     )
   end
 
-  # def list_logs_flop do
-  #   Repo.all(
-  #     Log
-  #     |> Ecto.Query.join(:inner, [log], token in UserToken, on: log.token_id == token.id)
-  #     |> Ecto.Query.select([log, token], %{
-  #       log
-  #       | token_id: %{name: token.name, id: token.id}
-  #     })
-  #   )
-  # end
-
   def list_logs_flop(params) do
     Log
     |> Ecto.Query.join(:inner, [log], token in UserToken, on: log.token_id == token.id)
-    |> Ecto.Query.select([log, token], %{
-      log
-      | token_id: token
-    })
     |> Flop.validate_and_run(params, for: Log)
   end
 
@@ -69,7 +55,8 @@ defmodule Phoenix00.Logs do
       Repo.get!(
         Log
         |> Ecto.Query.join(:inner, [log], token in UserToken, on: log.token_id == token.id)
-        |> Ecto.Query.select([log, token], %{
+        |> preload(:email)
+        |> Ecto.Query.select([log, token, email], %{
           log
           | token_id: %{name: token.name, id: token.id}
         }),

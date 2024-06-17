@@ -3,26 +3,45 @@
   Email <%= @email.id %>
   <:subtitle>This is a email record from your database.</:subtitle>
 </.header>
-
+<p class="my-8">Status</p>
+<div class="grid grid-cols-3 gap-8 border-2 border-base-200 p-8 justify-center">
+  <.link
+    :for={message <- @email.messages}
+    href={~p"/messages/#{message.id}"}
+    data-status={message.status}
+  >
+    <%!-- <%= message.recipient.destination %> --%>
+    <Timeline.compact
+      rows={sort_events(message.events)}
+      destination={message.recipient.destination}
+    />
+  </.link>
+</div>
 <.list>
-  <:item title="Status">
-    <div class="flex gap-1">
-      <.link
-        :for={message <- @email.messages}
-        href={~p"/messages/#{message.id}"}
-        data-status={message.status}
-      >
-        <%!-- <%= message.recipient.destination %> --%>
-        <Timeline.compact
-          rows={sort_events(message.events)}
-          destination={message.recipient.destination}
-        />
-      </.link>
-    </div>
+  <%!-- <:item title="Status">
+
+  </:item> --%>
+  <:item title="To">
+    <ul class="flex gap-2 flex-wrap">
+      <li :for={to <- @email.to}>
+        <%= to %>
+      </li>
+    </ul>
   </:item>
-  <%!-- <:item title="To"><%= Enum.join(@email.to, " ") %></:item> --%>
+  <%!-- <:item title="To"><%= @email.to %></:item> --%>
   <:item title="From"><%= @email.from %></:item>
-  <:item title="Aws message"><%= @email.sender_id %></:item>
+  <:item title="CC"><%= @email.cc %></:item>
+  <:item title="BCC"><%= @email.bcc %></:item>
+  <:item title="AWS ID"><%= @email.sender_id %></:item>
+  <:item title="Logs">
+    <ul>
+      <li :for={log <- @email.logs}>
+        <.link class="uppercase underline text-success" href={~p"/logs/#{log.id}"}>
+          <%= log.method %>
+        </.link>
+      </li>
+    </ul>
+  </:item>
 </.list>
 
 <div class="mockup-window border mt-20 border-base-300">
@@ -34,8 +53,8 @@
       id="inlineFrameExample"
       title="Inline Frame Example"
       width="100%"
-      style="min-height: 600px;"
-      srcdoc={raw(@email.body)}
+      style="min-height: 600px;background-color:white;"
+      srcdoc={@email.body}
     >
     </iframe>
   </div>

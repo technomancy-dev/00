@@ -6,25 +6,42 @@ defmodule Phoenix00Web.EmailController do
   action_fallback Phoenix00.FallbackController
 
   def send(conn, email) do
-    record = email |> Messages.send_email()
     token = conn.assigns[:token]
 
-    response = %{
-      success: true,
-      message: "Your email has successfully been queued.",
-      id: record["id"]
-    }
+    case Map.merge(email, %{"token_id" => token.id}) |> Messages.send_email() do
+      {:error, reason} ->
+        IO.inspect(reason)
 
-    Logs.create_log(%{
-      status: 200,
-      endpoint: "/api/emails",
-      method: :post,
-      request: email,
-      response: response,
-      token_id: token.id,
-      email_id: record["id"]
-    })
+        Logs.create_log(%{
+          status: 500,
+          source: "api:/api/emails",
+          method: :post,
+          request: email,
+          response: %{error: reason},
+          token_id: token.id
+          # email_id: record["id"]
+        })
 
-    render(conn, :index, data: response)
+        render(conn, :index, data: %{error: reason})
+
+      record ->
+        response = %{
+          success: true,
+          message: "Your email has successfully been queued.",
+          id: record["id"]
+        }
+
+        Logs.create_log(%{
+          status: 200,
+          source: "api:/api/emails",
+          method: :post,
+          request: email,
+          response: response,
+          token_id: token.id,
+          email_id: record["id"]
+        })
+
+        render(conn, :index, data: response)
+    end
   end
 end

@@ -16,12 +16,12 @@ defmodule Phoenix00.Messages.Services.SendEmail do
   end
 
   defp proccess_and_send_email(email_req) do
-    with {:ok, email} <- MailMan.letter!(email_req),
+    with {:ok, email} <- MailMan.letter(email_req),
          {:ok, _job} <- MailMan.send_letter(email) do
       Logger.info("Successfully queued email to: #{email_req["to"]}")
       email
     else
-      error ->
+      {:error, error} ->
         Logger.error("Failed to queue email to: #{email_req["to"]}")
         Logger.error(error)
         {:error, error}

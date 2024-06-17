@@ -1,4 +1,5 @@
 defmodule Phoenix00.Workers.SendEmail do
+  alias Phoenix00.Logs
   use Oban.Worker, queue: :mailer
   alias Phoenix00.Contacts
   alias Phoenix00.Mailer
@@ -9,13 +10,37 @@ defmodule Phoenix00.Workers.SendEmail do
   def perform(%Oban.Job{args: %{"email" => email_args}}) do
     recipients = get_destinations(email_args)
 
-    with email <- Mailer.from_map(email_args),
+    with {:ok, email} <- Mailer.from_map(email_args),
          {:ok, metadata} <- Mailer.deliver(email),
          {:ok, email} <- create_email(email_args, metadata) do
       Enum.each(recipients, fn recipient -> create_message(email, recipient) end)
       :ok
     else
-      e -> {:ok, e}
+      {:error, e} ->
+        Logs.create_log(%{
+          status: 500,
+          source: "queue:send",
+          method: :post,
+          request: email_args,
+          response: %{error: e},
+          token_id: email_args["token_id"],
+          email_id: email_args["id"]
+        })
+
+        {:error, e}
+
+      e ->
+        Logs.create_log(%{
+          status: 500,
+          source: "queue:send",
+          method: :post,
+          request: email_args,
+          response: %{error: e},
+          token_id: email_args["token_id"],
+          email_id: email_args["id"]
+        })
+
+        {:error, e}
     end
   end
 

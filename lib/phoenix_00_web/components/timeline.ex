@@ -13,7 +13,17 @@ defmodule Timeline do
           <%= Timex.format!(row.inserted_at, "%b %d,  %H:%M%P", :strftime) %>
         </div>
         <div class="timeline-middle">
-          <CoreComponents.icon name="hero-check-circle" class="h-5 w-5" />
+          <CoreComponents.icon
+            name={
+              case row.status do
+                "delivered" -> "hero-check-circle text-success"
+                "sent" -> "hero-paper-airplane"
+                "bounced" -> "hero-exclamation-circle text-warning"
+                "complained" -> "hero-exclamation-triangle text-error"
+              end
+            }
+            class="h-5 w-5"
+          />
         </div>
         <div class="timeline-end timeline-box capitalize">
           <span
@@ -31,8 +41,8 @@ defmodule Timeline do
 
   def compact(assigns) do
     ~H"""
-    <div class="flex flex-col place-items-center">
-      <div class="timeline-start text-xs">
+    <div class="flex flex-col">
+      <div class="text-xs">
         <%= @destination %>
       </div>
       <ul class="timeline flex">
@@ -48,7 +58,7 @@ defmodule Timeline do
                   "complained" -> "hero-exclamation-triangle text-error"
                 end
               }
-              class="h-5 w-5"
+              class="h-5 w-5 -mt-1.5"
             />
           </div>
           <hr />

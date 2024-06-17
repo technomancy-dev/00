@@ -20,7 +20,7 @@ defmodule Phoenix00Web.LogLive.FormComponent do
         phx-submit="save"
       >
         <.input field={@form[:status]} type="number" label="Status" />
-        <.input field={@form[:endpoint]} type="text" label="Endpoint" />
+        <.input field={@form[:source]} type="text" label="Source" />
         <.input
           field={@form[:method]}
           type="select"

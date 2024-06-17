@@ -12,6 +12,7 @@ defmodule Phoenix00.Messages.EmailRepo do
     do:
       Repo.get!(
         Email
+        |> preload(:logs)
         |> preload(:messages)
         |> preload(messages: :recipient)
         |> preload(messages: :events),

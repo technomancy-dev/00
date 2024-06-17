@@ -28,8 +28,8 @@
             {"500", 500}
           ]
         ],
-        endpoint: [
-          label: gettext("Endpoint"),
+        source: [
+          label: gettext("Source"),
           op: :like,
           type: "text"
         ],
@@ -76,8 +76,17 @@
     path={~p"/logs"}
     row_click={fn {_id, log} -> JS.navigate(~p"/logs/#{log.id}") end}
   >
-    <:col :let={{_id, log}} label="Status"><%= log.status %></:col>
-    <:col :let={{_id, log}} label="Endpoint"><%= log.endpoint %></:col>
+    <:col :let={{_id, log}} label="Status">
+      <span class={[
+        "capitalize",
+        log.status == 200 && "text-success",
+        log.status == 400 && "text-warning",
+        log.status == 500 && "text-error"
+      ]}>
+        <%= log.status %>
+      </span>
+    </:col>
+    <:col :let={{_id, log}} label="Source"><%= log.source %></:col>
     <:col :let={{_id, log}} label="Method">
       <span class="uppercase"><%= log.method %></span>
     </:col>

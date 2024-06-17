@@ -45,7 +45,7 @@ defmodule Phoenix00.Messages.Email do
 
     # has_many :recipients, Phoenix00.Contacts.Recipient
     has_many :messages, Phoenix00.Messages.Message, foreign_key: :transmission
-
+    has_many :logs, Phoenix00.Logs.Log
     timestamps(type: :utc_datetime)
   end
 

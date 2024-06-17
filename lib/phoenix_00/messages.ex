@@ -32,6 +32,7 @@ defmodule Phoenix00.Messages do
         "to" => List.wrap(attrs["to"]),
         "cc" => List.wrap(attrs["cc"]),
         "bcc" => List.wrap(attrs["bcc"]),
+        "reply_to" => List.wrap(attrs["reply_to"]),
         "body" => attrs["html_body"]
       })
     )
@@ -43,6 +44,7 @@ defmodule Phoenix00.Messages do
         "to" => List.wrap(attrs["to"]),
         "cc" => List.wrap(attrs["cc"]),
         "bcc" => List.wrap(attrs["bcc"]),
+        "reply_to" => List.wrap(attrs["reply_to"]),
         "body" => attrs["html_body"]
       })
     )
@@ -113,13 +115,8 @@ defmodule Phoenix00.Messages do
       Repo.get!(
         Message
         |> preload(:events)
-        |> Ecto.Query.join(:inner, [m], r in Recipient, on: m.recipient_id == r.id)
-        |> Ecto.Query.join(:inner, [m], e in Email, on: m.transmission == e.id)
-        |> Ecto.Query.select([message, recipient, email], %{
-          message
-          | recipient: recipient.destination,
-            transmission: email
-        }),
+        |> preload(:email)
+        |> preload(:recipient),
         id
       )
 

@@ -10,8 +10,24 @@
 </.header>
 
 <.list>
-  <:item title="Status"><%= @log.status %></:item>
-  <:item title="Endpoint"><%= @log.endpoint %></:item>
+  <:item title="Status">
+    <span class={[
+      "capitalize",
+      @log.status == 200 && "text-success",
+      @log.status == 400 && "text-warning",
+      @log.status == 500 && "text-error"
+    ]}>
+      <%= @log.status %>
+    </span>
+  </:item>
+  <:item :if={@log.email} title="Email">
+    <.link class="text-success underline" href={~p"/emails/#{@log.email.id}"}>
+      <%= @log.email.id %>
+    </.link>
+  </:item>
+  <:item title="Source">
+    <%= @log.source %>
+  </:item>
   <:item title="Token name"><%= @log.token_id.name %></:item>
   <:item title="Method"><%= @log.method %></:item>
   <:item title="Response">

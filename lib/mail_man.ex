@@ -1,14 +1,21 @@
 defmodule Phoenix00.MailMan do
   alias Phoenix00.Messages
+  alias Phoenix00.Mailer
+
   require Phoenix.Component
 
   import Phoenix.HTML
 
-  def letter!(email) do
+  def letter(email) do
     email_map = make_map(email)
-    {:ok, email_record} = save_email_record(email_map)
-    email_with_id = Map.merge(email_map, %{"id" => email_record.id})
-    {:ok, email_with_id}
+
+    with {:ok, _map} <- Mailer.from_map(email_map) do
+      {:ok, email_record} = save_email_record(email_map)
+      email_with_id = Map.merge(email_map, %{"id" => email_record.id})
+      {:ok, email_with_id}
+    else
+      {:error, _error} = error_tuple -> error_tuple
+    end
   end
 
   def make_map(
