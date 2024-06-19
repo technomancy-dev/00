@@ -1,10 +1,26 @@
-> [!CAUTION]
-> I have discovered an issue for sending emails to multiple recipients. I will be making a major change to all the tables to fix this and migration to the next update will not be possible. Just a heads up. PS. This issue exists in the closed source alternative to this library too.
+# 00 is a self hostable SES monitor for sending and monitoring emails with AWS.
 
+SES is an incredibly affordable way to build an email heavy application.
+
+However monitoring the emails is a bit of a nightmare, and often requires custom infrastructure. Even setting up the SES -> SNS -> SQS pipeline is a headache for developers unfamiliar with AWS. And when that is done your still left with hooking in or building custom some dashboard for viewing bounces and all the vital information you care about.
+
+00 provides an SST configuration step to set up the SES -> SNS -> SQS pipeline,
+so you can just run a command and let SST do the rest.
+
+Then 00 provides you that dashboard for viewing the information you care about.
 
 ![Dashboard displaying emails](00.png)
 
 ## Getting started
+
+The quickest way to get started is to clone this repo and run `sst deploy` in it.
+
+Using SST is easy, and you can find the steps to do so [here](https://ion.sst.dev/docs/reference/cli) and learn how to configure your credentials [here](https://docs.sst.dev/advanced/iam-credentials#loading-from-a-file)
+
+If you would like to avoid using SST you must manually configure AWS.
+You need to set up a configuration set to write to an SQS queue via SNS. You can configure it however you want, but the more events you send to the queue the more 00 will be able to track (obviously).
+
+Either option will give you an SQS url which we need, along with several other environment variables.
 
 We publish a docker image to the [registery](https://hub.docker.com/r/liltechnomancer/double-zero)
 
@@ -15,51 +31,30 @@ Then run your docker container with the following environment variables set. Exp
 Example `docker run -it --env-file ./env -p 80:4000 "liltechnomancer/double-zero"`
 
 ```
-export AWS_SECRET_ACCESS_KEY=""
-export AWS_ACCESS_KEY_ID=""
-export AWS_REGION="" # Ex: us-east-1
+AWS_SECRET_ACCESS_KEY=
+AWS_ACCESS_KEY_ID=
+AWS_REGION= # Ex: us-east-1
+SQS_URL=  # Ex: https://sqs.us-east-1.amazonaws.com/${id}
 
-export SYSTEM_EMAIL="" # For sending stuff like password resets. Ex: test@example.com should be able to send from SES.
+SYSTEM_EMAIL= # For sending stuff like password resets. Ex: test@example.com should be able to send from SES.
 
-export SECRET_KEY_BASE="" # A long secret. at least 64 characters. Can be made with mix phx.gen.secret or however you generate safe keys.
-export DATABASE_PATH="" # Path to SQLite database Ex: 00.db
+SECRET_KEY_BASE= # A long secret. at least 64 characters. Can be made with mix phx.gen.secret or however you generate safe keys.
 
-export PHX_HOST="" #  URL or IP of where this service is running. Ex: example.com
+DATABASE_PATH= # Path to SQLite database Ex: 00.db
+PHX_HOST= #  URL or IP of where this service is running. Ex: example.com
 ```
-
-You also need a configuration set named "default" in AWS. See AWS setup below for more info.
 
 Now visit your url (whatever you set PHX_HOST to) and register your user.
 After registering click on settings to create an API key.
 Keep this key as you wont be able to see it again and treat it like a password.
 
-Now you can make API requests to send Email.
+Now you can make API requests to send email.
 
 Stuck? Tell me about it on [Discord](https://discord.gg/6r7Qtf754K) and lets unstick you!
 
-## AWS setup.
-
-This assumes you know a bit about AWS SES and SNS.
-
-First, make an SES account if you do not have one, and set up your DNS stuff for your domain.
-
-Then generate an access key. (Click your user in top left, then Security Credentials)
-
-Now make a "configuration set" name it default.
-
-Add an "event destination" to your config set, pick the events you care about, select Amazon SNS, pick a name, make a topic.
-
-Add a subscription to the topic, select HTTPS for protocol, the endpoint should be where you host this, or some exposed endpoint for local testing (like with ngrok) `https://yourdomain.com/aws/sns`
-
-Change the Delivery policy (HTTP/S) and set the content type to `application/json; charset=UTF-8`
-
-00 will take care of confirming the subscription.
-
-Now you are ready to deploy.
-
 ## Pro + support open source.
 
-If you are eager to support this project you can pre-order a [pro version](https://buy.stripe.com/5kA3dV5W1aBgaUo28e?prefilled_promo_code=KOOKIES) for you to self host.
+If you are eager to support this project you can pre-order a [pro version](https://buy.stripe.com/5kA3dV5W1aBgaUo28e?prefilled_promo_code=EARLYBIRD) for you to self host.
 
 Planned pro features include
 
@@ -69,17 +64,7 @@ Planned pro features include
 * Track email history
 * Possibly more, we will see.
 
-# Double Zero is an email monitoring micro-service for the people!
-
-Amazon SES is a cost effective way to send a lot of emails, but it has a horrible user experience for most applications.
-
-Sending could be a simple API endpoint to send html or markdown to, and a simple dashboard for monitoring email status.
-
-Instead you need to send through an SMTP setup, and monitoring in the AWS dashboard is horrible, and arguably not even really possible resulting in you needing to make an endpoint and dashboard for SNS events.
-
-That is what 00 was made to solve. 00 is that dashboard, complete with an endpoint for sending your markdown or HTML emails.
-
-# Phoenix00
+## This is a Phoenix app! To work on it start with:
 
 To start your Phoenix server:
 
