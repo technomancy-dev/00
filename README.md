@@ -1,4 +1,4 @@
-# 00 is a self hostable SES monitor for sending and monitoring emails with AWS.
+# 00 is a self hostable SES dashboard for sending and monitoring emails with AWS.
 
 SES is an incredibly affordable way to build an email heavy application.
 
@@ -9,7 +9,7 @@ so you can just run a command and let SST do the rest.
 
 Then 00 provides you that dashboard for viewing the information you care about.
 
-![Dashboard displaying emails](00.png)
+![Dashboard displaying emails](00-messages.png)
 
 ## Getting started
 
