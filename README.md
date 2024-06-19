@@ -48,7 +48,55 @@ Now visit your url (whatever you set PHX_HOST to) and register your user.
 After registering click on settings to create an API key.
 Keep this key as you wont be able to see it again and treat it like a password.
 
-Now you can make API requests to send email.
+Now you can make API requests to send email to `yourdomain.com/api/emails`.
+
+Here is an example.
+
+```json
+{
+  "markdown": "# Language Syntax Highlight Demo\n\n## Erlang\n\n```erlang\n-module(tut14).\n\n-export([start/0, say_something/2]).\n\nsay_something(What, 0) ->\n    done;\nsay_something(What, Times) ->\n    io:format('~p~n', [What]),\n    say_something(What, Times - 1).\n\nstart() ->\n    spawn(tut14, say_something, [hello, 3]),\n    spawn(tut14, say_something, [goodbye, 3]).\n```",
+  "subject": "Can your email service track multiple recipients?",
+  "from": "levi@fidoforms.com",
+  "to": ["levi@technomancy.dev", "complaint@simulator.amazonses.com"]
+}
+```
+
+Or replace markdown with html
+
+```json
+{
+  "html": "<h1>Hello world!</h1>",
+  "subject": "Can your email service track multiple recipients?",
+  "from": "levi@fidoforms.com",
+  "to": ["levi@technomancy.dev", "complaint@simulator.amazonses.com"]
+}
+```
+
+Add attachments or provider options.
+
+```json
+{
+  "markdown": "# Hey",
+  "subject": "Hark, who goes there?",
+  "from": "levi@jamstack.consulting",
+  "to": "levi@technomancy.dev",
+  "headers": {
+     "X-Entity-Ref-ID": "00"
+   },
+  "provider_options": {
+    "tags": [{
+      "name": "tag-name",
+      "value": "some-value"
+    }]
+  },
+  "attatchments": [
+    {
+      "filename": "invoice.txt",
+      "content": "pewp"
+    }
+  ]
+}
+```
 
 Stuck? Tell me about it on [Discord](https://discord.gg/6r7Qtf754K) and lets unstick you!
 
