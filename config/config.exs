@@ -7,6 +7,8 @@
 # General application configuration
 import Config
 
+config :phoenix_00, Phoenix00.Repo, migration_primary_key: [type: :uuid]
+
 config :phoenix_00,
   ecto_repos: [Phoenix00.Repo],
   generators: [timestamp_type: :utc_datetime]
@@ -70,6 +72,7 @@ config :phoenix_00, Phoenix00.Repo,
   adapter: Ecto.Adapters.SQLite3,
   database: "00.sqlite"
 
+config :flop, repo: Phoenix00.Repo
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"

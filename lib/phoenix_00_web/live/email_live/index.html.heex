@@ -1,58 +1,137 @@
-<.header class="pb-8">
-  <p>All Emails</p>
+<.header>
+  All Emails
+  <:subtitle>View the emails you have sent.</:subtitle>
   <:actions>
-    <!-- <.link patch={~p"/emails/new"}>
-      <.button>New Email</.button>
-    </.link> -->
-    <div class="join">
-      <.link
-        class="join-item btn flex place-items-center"
-        patch={~p"/emails?page=#{max(0, @page - 1)}"}
-      >
-        Previous
-      </.link>
-      <div class="join-item bg-base-200 flex place-items-center p-2"><%= @page + 1 %></div>
-      <.link
-        class="join-item btn flex place-items-center"
-        patch={~p"/emails?page=#{min(@max_page, @page + 1)}"}
-      >
-        Next
-      </.link>
+    <div class="flex">
+      <Flop.Phoenix.pagination
+        opts={Phoenix00.FlopConfig.pagination_opts()}
+        meta={@meta}
+        path={~p"/emails"}
+      />
     </div>
   </:actions>
 </.header>
 
-<.table
-  id="emails"
-  rows={@streams.emails}
-  row_click={fn {_id, email} -> JS.navigate(~p"/emails/#{email}") end}
->
-  <:col :let={{_id, email}} label="Status">
-    <span
-      data-status={email.status}
-      class="text-gray-500 data-[status='delivered']:text-success data-[status='bounced']:text-warning data-[status='complained']:text-error"
+<div class="pt-2">
+  <.form for={@form} class="flex gap-2" phx-change="update_filter" phx-submit="update_filter">
+    <Flop.Phoenix.filter_fields
+      :let={i}
+      form={@form}
+      fields={[
+        status: [
+          label: gettext("Status"),
+          op: :like,
+          type: "select",
+          options: [
+            {"All", ""},
+            {"Sent", :sent},
+            {"Delivered", :delivered},
+            {"Bounced", :bounced},
+            {"Complained", :complained}
+          ]
+        ],
+        from: [
+          label: gettext("From"),
+          op: :like,
+          type: "text"
+        ],
+        subject: [
+          label: gettext("Subject"),
+          op: :like,
+          type: "text"
+        ],
+        date_range: [
+          label: gettext("Timeframe"),
+          op: :>=,
+          type: "select",
+          options: [
+            {"All", nil},
+            {"7 Days", "+7 days"},
+            {"15 Days", "+15 days"},
+            {"30 Days", "+30 days"}
+          ]
+        ]
+      ]}
     >
-      <%= email.status %>
-    </span>
-  </:col>
-  <:col :let={{_id, email}} label="To"><%= email.to %></:col>
-  <:col :let={{_id, email}} label="From"><%= email.from %></:col>
-  <:col :let={{_id, email}} label="Sent"><%= email.inserted_at %></:col>
-  <%!-- <:action :let={{_id, email}}>
-    <div class="sr-only">
-      <.link navigate={~p"/emails/#{email}"}>Show</.link>
-    </div>
-    <!-- <.link patch={~p"/emails/#{email}/edit"}>Edit</.link> -->
-  </:action> --%>
-  <:action :let={{id, email}}>
-    <.link
-      phx-click={JS.push("delete", value: %{id: email.id}) |> hide("##{id}")}
-      data-confirm="Are you sure?"
-    >
-      Delete
-    </.link>
-  </:action>
-</.table>
+      <.input field={i.field} label={i.label} type={i.type} {i.rest} />
+    </Flop.Phoenix.filter_fields>
+  </.form>
+</div>
+
+<div class="pt-6">
+  <Flop.Phoenix.table
+    opts={Phoenix00.FlopConfig.table_opts()}
+    items={@streams.emails}
+    meta={@meta}
+    path={~p"/emails"}
+    row_click={fn {_id, email} -> JS.navigate(~p"/emails/#{email.id}") end}
+  >
+    <:col :let={{_id, email}} field={:status} label="Status">
+      <div class="flex gap-1">
+        <span
+          :for={message <- email.messages}
+          data-status={message.status}
+          class={[
+            "capitalize w-1 h-1 block rounded-full",
+            message.status == :delivered && "bg-success",
+            message.status == :bounced && "bg-warning",
+            message.status == :complained && "bg-error"
+          ]}
+        >
+        </span>
+      </div>
+    </:col>
+    <:col :let={{_id, email}} label="From" field={:from}>
+      <%= email.from %>
+    </:col>
+    <:col :let={{_id, email}} label="To" field={:to}>
+      <div class="flex gap-2">
+        <%= Enum.at(email.to, 0) %><span
+          :if={length(email.to) > 1}
+          data-tip={Enum.join(email.to, "\n")}
+          class="tooltip text-xs tooltip-right badge bg-base-200 text-success"
+        >+<%= length(email.to) - 1 %></span>
+      </div>
+    </:col>
+    <:col :let={{_id, email}} label="Subject" field={:subject}>
+      <div style="width:12rem;text-overflow: ellipsis ellipsis;" class="w-xl">
+        <%= email.subject %>
+      </div>
+    </:col>
+    <:col :let={{_id, email}} label="Sent" field={:inserted_at}>
+      <%= Timex.Format.DateTime.Formatters.Relative.format!(
+        email.inserted_at,
+        "{relative}"
+      ) %>
+    </:col>
+    <%!-- <:col :let={{_id, message}} field={:status} label="Status">
+      <span
+        data-status={message.status}
+        class={[
+          "capitalize w-full p-3 badge badge-outline",
+          message.status == :delivered && "badge-success",
+          message.status == :bounced && "badge-warning",
+          message.status == :complained && "badge-error"
+        ]}
+      >
+        <%= message.status %>
+      </span>
+    </:col> --%>
+    <%!--
+    <:col :let={{_id, message}} label="Destination" field={:destination}>
+      <%= message.recipient.destination %>
+    </:col>
+    <:col :let={{_id, message}} label="From" field={:from}><%= message.email.from %></:col>
+
+    <:col :let={{_id, message}} label="Subject" field={:subject}>
+      <div style="width:12rem;text-overflow: ellipsis ellipsis;" class="w-xl">
+        <%= message.email.subject %>
+      </div>
+    </:col> --%>
+
+    <%!-- <:col :let={{_id, message}} label="Email ID"><%= message.transmission.id %></:col> --%>
+  </Flop.Phoenix.table>
+</div>
 
 <.modal
   :if={@live_action in [:new, :edit]}

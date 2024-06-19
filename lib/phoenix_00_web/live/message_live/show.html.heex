@@ -1,0 +1,64 @@
+<.header>
+  <.back navigate={~p"/messages"}>Back to messages</.back>
+  Message <%= @message.id %>
+  <:subtitle>This is a message record from your database.</:subtitle>
+</.header>
+
+<Timeline.view rows={sort_events(@message.events)} />
+
+<.list>
+  <:item title="Status">
+    <span
+      data-status={@message.status}
+      class="capitalize text-gray-500 data-[status='delivered']:text-success data-[status='bounced']:text-warning data-[status='complained']:text-error"
+    >
+      <%= @message.status %>
+    </span>
+  </:item>
+  <:item title="Sent">
+    <%= Timex.Format.DateTime.Formatters.Relative.format!(
+      @message.inserted_at,
+      "{relative}"
+    ) %>
+  </:item>
+  <:item title="Email">
+    <.link class="text-success underline" href={~p"/emails/#{@message.email.id}"}>
+      <%= @message.email.id %>
+    </.link>
+  </:item>
+  <:item title="Recipient"><%= @message.recipient.destination %></:item>
+  <:item title="From"><%= @message.email.from %></:item>
+  <%!-- <:item title="From"><%= @message.transmission.from %></:item> --%>
+</.list>
+
+<div class="mockup-window border mt-20 border-base-300">
+  <p class="inline absolute top-3 left-24">
+    <span class="font-extralight badge-outline mr-2 badge text-xs">Subject:</span> <%= @message.email.subject %>
+  </p>
+  <div class="flex border-t border-base-300">
+    <iframe
+      id="inlineFrameExample"
+      title="Inline Frame Example"
+      width="100%"
+      style="min-height: 600px;"
+      srcdoc={raw(@message.email.body)}
+    >
+    </iframe>
+  </div>
+</div>
+
+<.modal
+  :if={@live_action == :edit}
+  id="message-modal"
+  show
+  on_cancel={JS.patch(~p"/messages/#{@message}")}
+>
+  <.live_component
+    module={Phoenix00Web.MessageLive.FormComponent}
+    id={@message.id}
+    title={@page_title}
+    action={@live_action}
+    message={@message}
+    patch={~p"/messages/#{@message}"}
+  />
+</.modal>

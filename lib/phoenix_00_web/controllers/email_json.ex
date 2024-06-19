@@ -1,19 +1,26 @@
 defmodule Phoenix00Web.EmailJSON do
-  # alias Phoenix00.Messages.Email
+  # alias Phoenix00.Logs
 
-  def index(%{email: email}) do
-    %{data: data(email)}
+  def index(%{data: data}) do
+    %{data: data}
   end
 
-  def index(json) do
-    %{data: data(json)}
-  end
+  # def send(%{email: email, token: token}) do
+  #   %{data: data(email, token)}
+  # end
 
-  def send(%{email: email}) do
-    %{data: data(email)}
-  end
+  # defp data(email, token) do
+  #   response = %{success: true, message: "Your email has successfully been queued."}
 
-  defp data(_json) do
-    %{success: true}
-  end
+  #   Logs.create_log(%{
+  #     status: 200,
+  #     endpoint: "/api/emails",
+  #     method: :post,
+  #     request: email,
+  #     response: response,
+  #     token_id: token.id
+  #   })
+
+  #   response
+  # end
 end

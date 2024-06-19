@@ -334,16 +334,10 @@ defmodule Phoenix00Web.CoreComponents do
 
   def input(%{type: "select"} = assigns) do
     ~H"""
-    <div phx-feedback-for={@name}>
+    <div class="w-full max-w-[10rem]" phx-feedback-for={@name}>
       <.label for={@id}><%= @label %></.label>
-      <select
-        id={@id}
-        name={@name}
-        class="mt-2 block w-full rounded-md border border-gray-300 bg-white shadow-sm focus:border-zinc-400 focus:ring-0 sm:text-sm"
-        multiple={@multiple}
-        {@rest}
-      >
-        <option :if={@prompt} value=""><%= @prompt %></option>
+      <select id={@id} name={@name} class="select w-full select-bordered" multiple={@multiple} {@rest}>
+        <option :if={@prompt} class="capitalize" value=""><%= @prompt %></option>
         <%= Phoenix.HTML.Form.options_for_select(@options, @value) %>
       </select>
       <.error :for={msg <- @errors}><%= msg %></.error>
@@ -374,7 +368,7 @@ defmodule Phoenix00Web.CoreComponents do
   # All other inputs text, datetime-local, url, password, etc. are handled here...
   def input(assigns) do
     ~H"""
-    <div phx-feedback-for={@name}>
+    <div class="w-full" phx-feedback-for={@name}>
       <.label for={@id}><%= @label %></.label>
       <input
         type={@type}
@@ -479,7 +473,7 @@ defmodule Phoenix00Web.CoreComponents do
       end
 
     ~H"""
-    <div class="overflow-y-auto px-4 sm:overflow-visible sm:px-0">
+    <div class="overflow-y-auto px-4 py-6 sm:overflow-visible sm:px-0">
       <table class="table table-sm table-zebra">
         <thead class="text-sm text-left leading-6">
           <tr>
@@ -540,7 +534,7 @@ defmodule Phoenix00Web.CoreComponents do
       <dl class="-my-4 divide-y divide-base-200">
         <div :for={item <- @item} class="flex gap-4 py-4 text-sm leading-6 sm:gap-8">
           <dt class="w-1/4 flex-none"><%= item.title %></dt>
-          <dd class=""><%= render_slot(item) %></dd>
+          <dd class="w-full"><%= render_slot(item) %></dd>
         </div>
       </dl>
     </div>
@@ -559,7 +553,7 @@ defmodule Phoenix00Web.CoreComponents do
 
   def back(assigns) do
     ~H"""
-    <div class="mt-16">
+    <div class="mb-4">
       <.link navigate={@navigate} class="text-sm font-semibold leading-6">
         <.icon name="hero-arrow-left-solid" class="h-3 w-3" />
         <%= render_slot(@inner_block) %>

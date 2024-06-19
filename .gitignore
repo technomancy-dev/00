@@ -1,5 +1,7 @@
 .env
-
+.env.docker
+.sst
+.tmp
 # The directory Mix will write compiled artifacts to.
 /_build/
 
@@ -43,3 +45,5 @@ npm-debug.log
 00.db-wal
 
 #/rel
+
+.DS_Store

@@ -18,4 +18,10 @@ defmodule Phoenix00Web.EmailLive.Show do
 
   defp page_title(:show), do: "Show Email"
   defp page_title(:edit), do: "Edit Email"
+
+  defp sort_events(events) do
+    order = ["pending", "sent", "delivered", "bounced", "complained"]
+    order_idx = order |> Enum.zip(1..5) |> Map.new()
+    Enum.sort_by(events, &order_idx[&1.status])
+  end
 end

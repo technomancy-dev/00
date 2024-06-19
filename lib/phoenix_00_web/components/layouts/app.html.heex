@@ -1,5 +1,5 @@
-<header class="px-4 sm:px-6 lg:px-8">
-  <div class="flex items-center justify-between border-b border-base-200 py-3 text-sm">
+<header :if={@current_user} class="px-4 sm:px-6 border-b border-base-300  lg:px-8">
+  <div class="flex items-center justify-between py-3 text-sm">
     <div class="flex items-center gap-4">
       <a class="font-black" href="/">
         00
@@ -14,11 +14,7 @@
           <li class="text-[0.8125rem] leading-6">
             <%= @current_user.email %>
           </li>
-          <li>
-            <.link href={~p"/users/settings"} class="text-[0.8125rem] leading-6 font-semibold">
-              Settings
-            </.link>
-          </li>
+
           <li>
             <.link
               href={~p"/users/log_out"}
@@ -44,9 +40,33 @@
     </div>
   </div>
 </header>
-<main class="px-4 py-20 sm:px-6 lg:px-8">
-  <div class="mx-auto max-w-6xl">
-    <.flash_group flash={@flash} />
-    <%= @inner_content %>
+<main class="flex h-full overflow-hidden">
+  <ul :if={@current_user} class="menu border-r-2 border-base-300 w-56 rounded-box pt-10 h-full">
+    <li class="relative">
+      <.link class="flex" navigate={~p"/messages"}>
+        <.icon name="hero-inbox" /> Messages
+      </.link>
+    </li>
+    <li>
+      <.link navigate={~p"/emails"}>
+        <.icon name="hero-envelope" /> Emails
+      </.link>
+    </li>
+    <li>
+      <.link navigate={~p"/logs"}>
+        <.icon name="hero-queue-list" /> Logs
+      </.link>
+    </li>
+    <li>
+      <.link navigate={~p"/users/settings"}>
+        <.icon name="hero-cog-6-tooth" /> Settings
+      </.link>
+    </li>
+  </ul>
+  <div class="w-full overflow-scroll">
+    <div class="mx-auto max-w-6xl p-4 h-full">
+      <.flash_group flash={@flash} />
+      <%= @inner_content %>
+    </div>
   </div>
 </main>

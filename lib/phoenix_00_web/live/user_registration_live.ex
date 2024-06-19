@@ -6,38 +6,50 @@ defmodule Phoenix00Web.UserRegistrationLive do
 
   def render(assigns) do
     ~H"""
-    <div class="mx-auto max-w-sm">
-      <.header class="text-center">
-        Register for an account
-        <:subtitle>
+    <div class="mx-auto max-w-sm h-full place-items-center flex">
+      <div class="w-full">
+        <.header class="text-center">
+          Register your <span class="underline text-warning">single</span>
+          account.
+          <:subtitle>
+            If you need more than one account please<br />
+            <a
+              class="text-success capitalize underline font-bold"
+              href="https://buy.stripe.com/5kA3dV5W1aBgaUo28e?prefilled_promo_code=KOOKIES"
+            >
+              upgrade to pro.
+            </a>
+          </:subtitle>
+          <%!-- <:subtitle>
           Already registered?
           <.link navigate={~p"/users/log_in"} class="font-semibold text-brand hover:underline">
             Log in
           </.link>
           to your account now.
-        </:subtitle>
-      </.header>
+        </:subtitle> --%>
+        </.header>
 
-      <.simple_form
-        for={@form}
-        id="registration_form"
-        phx-submit="save"
-        phx-change="validate"
-        phx-trigger-action={@trigger_submit}
-        action={~p"/users/log_in?_action=registered"}
-        method="post"
-      >
-        <.error :if={@check_errors}>
-          Oops, something went wrong! Please check the errors below.
-        </.error>
+        <.simple_form
+          for={@form}
+          id="registration_form"
+          phx-submit="save"
+          phx-change="validate"
+          phx-trigger-action={@trigger_submit}
+          action={~p"/users/log_in?_action=registered"}
+          method="post"
+        >
+          <.error :if={@check_errors}>
+            Oops, something went wrong! Please check the errors below.
+          </.error>
 
-        <.input field={@form[:email]} type="email" label="Email" required />
-        <.input field={@form[:password]} type="password" label="Password" required />
+          <.input field={@form[:email]} type="email" label="Email" required />
+          <.input field={@form[:password]} type="password" label="Password" required />
 
-        <:actions>
-          <.button phx-disable-with="Creating account..." class="w-full">Create an account</.button>
-        </:actions>
-      </.simple_form>
+          <:actions>
+            <.button phx-disable-with="Creating account..." class="w-full">Create an account</.button>
+          </:actions>
+        </.simple_form>
+      </div>
     </div>
     """
   end

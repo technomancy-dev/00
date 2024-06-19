@@ -1,4 +1,5 @@
 defmodule Phoenix00Web.EmailLive.FormComponent do
+  require Logger
   use Phoenix00Web, :live_component
 
   alias Phoenix00.Messages
@@ -77,19 +78,20 @@ defmodule Phoenix00Web.EmailLive.FormComponent do
     end
   end
 
-  defp save_email(socket, :new, email_params) do
-    case Messages.create_email(email_params) do
-      {:ok, email} ->
-        notify_parent({:saved, email})
+  defp save_email(_socket, :new, _email_params) do
+    Logger.warning("Create Email UI is not implemented.")
+    # case Messages.create_email(email_params) do
+    #   {:ok, email} ->
+    #     notify_parent({:saved, email})
 
-        {:noreply,
-         socket
-         |> put_flash(:info, "Email created successfully")
-         |> push_patch(to: socket.assigns.patch)}
+    #     {:noreply,
+    #      socket
+    #      |> put_flash(:info, "Email created successfully")
+    #      |> push_patch(to: socket.assigns.patch)}
 
-      {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign_form(socket, changeset)}
-    end
+    #   {:error, %Ecto.Changeset{} = changeset} ->
+    #     {:noreply, assign_form(socket, changeset)}
+    # end
   end
 
   defp assign_form(socket, %Ecto.Changeset{} = changeset) do

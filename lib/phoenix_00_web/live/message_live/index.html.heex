@@ -1,0 +1,128 @@
+<.header>
+  Messages
+  <:subtitle>View the status of messages sent to recipients.</:subtitle>
+  <:actions>
+    <%!-- <.link patch={~p"/messages/new"}>
+      <.button>New Message</.button>
+    </.link> --%>
+    <div class="flex">
+      <Flop.Phoenix.pagination
+        opts={Phoenix00.FlopConfig.pagination_opts()}
+        meta={@meta}
+        path={~p"/messages"}
+      />
+    </div>
+  </:actions>
+</.header>
+
+<div class="pt-2">
+  <.form for={@form} class="flex gap-2" phx-change="update_filter" phx-submit="update_filter">
+    <Flop.Phoenix.filter_fields
+      :let={i}
+      form={@form}
+      fields={[
+        status: [
+          label: gettext("Status"),
+          op: :==,
+          type: "select",
+          options: [
+            {"All", nil},
+            {"Sent", :sent},
+            {"Delivered", :delivered},
+            {"Bounced", :bounced},
+            {"Complained", :complained}
+          ]
+        ],
+        destination: [
+          label: gettext("Destination"),
+          op: :like,
+          type: "text"
+        ],
+        from: [
+          label: gettext("From"),
+          op: :like,
+          type: "text"
+        ],
+        subject: [
+          label: gettext("Subject"),
+          op: :like,
+          type: "text"
+        ],
+        date_range: [
+          label: gettext("Timeframe"),
+          op: :>=,
+          type: "select",
+          options: [
+            {"All", ""},
+            {"7 Days", "+7 days"},
+            {"15 Days", "+15 days"},
+            {"30 Days", "+30 days"}
+          ]
+        ]
+      ]}
+    >
+      <.input field={i.field} label={i.label} type={i.type} {i.rest} />
+    </Flop.Phoenix.filter_fields>
+  </.form>
+</div>
+
+<div class="pt-6">
+  <Flop.Phoenix.table
+    opts={Phoenix00.FlopConfig.table_opts()}
+    items={@streams.messages}
+    meta={@meta}
+    path={~p"/messages"}
+    row_click={fn {_id, message} -> JS.navigate(~p"/messages/#{message.id}") end}
+  >
+    <%!-- <:col :let={pet} label="Name" field={:name}><%= pet.name %></:col> --%>
+    <%!-- <:col :let={pet} label="Age" field={:age}><%= pet.age %></:col> --%>
+
+    <:col :let={{_id, message}} field={:status} label="Status">
+      <span
+        data-status={message.status}
+        class={[
+          "capitalize w-full p-3 badge badge-outline",
+          message.status == :delivered && "badge-success",
+          message.status == :bounced && "badge-warning",
+          message.status == :complained && "badge-error"
+        ]}
+      >
+        <%= message.status %>
+      </span>
+    </:col>
+
+    <:col :let={{_id, message}} label="Destination" field={:destination}>
+      <%= message.recipient.destination %>
+    </:col>
+    <:col :let={{_id, message}} label="From" field={:from}><%= message.email.from %></:col>
+
+    <:col :let={{_id, message}} label="Subject" field={:subject}>
+      <div style="width:12rem;text-overflow: ellipsis ellipsis;" class="w-xl">
+        <%= message.email.subject %>
+      </div>
+    </:col>
+
+    <:col :let={{_id, message}} label="Sent" field={:inserted_at}>
+      <%= Timex.Format.DateTime.Formatters.Relative.format!(
+        message.inserted_at,
+        "{relative}"
+      ) %>
+    </:col>
+    <%!-- <:col :let={{_id, message}} label="Email ID"><%= message.transmission.id %></:col> --%>
+  </Flop.Phoenix.table>
+</div>
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id="message-modal"
+  show
+  on_cancel={JS.patch(~p"/messages")}
+>
+  <.live_component
+    module={Phoenix00Web.MessageLive.FormComponent}
+    id={@message.id || :new}
+    title={@page_title}
+    action={@live_action}
+    message={@message}
+    patch={~p"/messages"}
+  />
+</.modal>

@@ -1,20 +1,22 @@
 defmodule Phoenix00.Accounts.UserNotifier do
-  import Swoosh.Email
-
-  alias Phoenix00.Mailer
+  require Logger
+  alias Phoenix00.Messages
 
   # Delivers the email using the application mailer.
   defp deliver(recipient, subject, body) do
-    email =
-      new()
-      |> to(recipient)
-      |> from({"Phoenix00", System.get_env("SYSTEM_EMAIL")})
-      |> subject(subject)
-      |> text_body(body)
-      |> put_provider_option(:configuration_set_name, "default")
-
-    with {:ok, _metadata} <- Mailer.deliver(email) do
+    with email <-
+           Messages.send_email(%{
+             "from" => "00 <#{System.get_env("SYSTEM_EMAIL")}>",
+             "to" => recipient,
+             "subject" => subject,
+             "markdown" => body
+           }) do
       {:ok, email}
+    else
+      error ->
+        Logger.error("Error sending system emails.")
+        Logger.error(error)
+        :error
     end
   end
 
@@ -23,18 +25,13 @@ defmodule Phoenix00.Accounts.UserNotifier do
   """
   def deliver_confirmation_instructions(user, url) do
     deliver(user.email, "Confirmation instructions", """
-
-    ==============================
-
-    Hi #{user.email},
+    # Hi #{user.email},
 
     You can confirm your account by visiting the URL below:
 
-    #{url}
+    [confirm email](#{url})
 
-    If you didn't create an account with us, please ignore this.
-
-    ==============================
+    If you didn't create an account with us, **please ignore this.**
     """)
   end
 
