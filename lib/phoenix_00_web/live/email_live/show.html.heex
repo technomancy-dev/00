@@ -26,21 +26,21 @@
       </li>
     </ul>
   </:item>
-  <:item :if={length(@email.cc) != 0} title="CC">
+  <:item :if={length(List.wrap(@email.cc)) != 0} title="CC">
     <ul class="flex gap-2 flex-wrap">
       <li :for={to <- @email.cc}>
         <%= to %>
       </li>
     </ul>
   </:item>
-  <:item :if={length(@email.bcc) != 0} title="BCC">
+  <:item :if={length(List.wrap(@email.bcc)) != 0} title="BCC">
     <ul class="flex gap-2 flex-wrap">
       <li :for={to <- @email.bcc}>
         <%= to %>
       </li>
     </ul>
   </:item>
-  <:item :if={length(@email.reply_to) != 0} title="Reply To">
+  <:item :if={length(List.wrap(@email.reply_to)) != 0} title="Reply To">
     <ul class="flex gap-2 flex-wrap">
       <li :for={to <- @email.reply_to}>
         <%= to %>

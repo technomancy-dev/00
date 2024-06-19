@@ -73,7 +73,8 @@ defmodule Phoenix00.MixProject do
       {:timex, "~> 3.0"},
       {:flop, "~> 0.25.0"},
       {:flop_phoenix, "~> 0.22.9"},
-      {:autumn, "~> 0.2.3"}
+      {:autumn, "~> 0.2.3"},
+      {:pandex, "~> 0.2.0"}
     ]
   end
 

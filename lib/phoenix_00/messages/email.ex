@@ -37,6 +37,7 @@ defmodule Phoenix00.Messages.Email do
     field :bcc, {:array, :string}
     field :reply_to, {:array, :string}
     field :body, :string
+    field :text, :string
     field :subject, :string
     field :from, :string
     field :email_id, :string
@@ -59,8 +60,8 @@ defmodule Phoenix00.Messages.Email do
 
   def receive_changeset(email, attrs) do
     email
-    |> cast(attrs, [:to, :from, :body, :cc, :bcc, :reply_to, :subject])
-    |> validate_required([:to, :from, :body])
+    |> cast(attrs, [:to, :from, :body, :text, :cc, :bcc, :reply_to, :subject])
+    |> validate_required([:to, :from, :body, :text])
   end
 
   def send_changeset(email, attrs) do

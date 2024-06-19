@@ -89,7 +89,7 @@ defmodule Phoenix00.Messages.EmailRepo do
     Email.send_changeset(email, attrs)
   end
 
-  def change_receive_email_request(%Email{} = email, attrs \\ {}) do
+  def change_receive_email_request(%Email{} = email, attrs \\ %{}) do
     Email.receive_changeset(email, attrs)
   end
 

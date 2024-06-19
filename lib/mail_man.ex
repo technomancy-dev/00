@@ -4,7 +4,7 @@ defmodule Phoenix00.MailMan do
 
   require Phoenix.Component
 
-  import Phoenix.HTML
+
 
   def letter(email) do
     email_map = make_map(email)
@@ -22,15 +22,15 @@ defmodule Phoenix00.MailMan do
         %{"to" => _to, "from" => _from, "subject" => _subject, "html" => html, "text" => text} =
           email
       ) do
-    # CREATE_EMAIL_RECORD AND PASS ALONG ID
+
     Map.merge(email, %{"html_body" => html, "text_body" => text})
   end
 
   def make_map(%{"to" => _to, "from" => _from, "subject" => _subject, "html" => html} = email) do
-    # CREATE_EMAIL_RECORD AND PASS ALONG ID
+
     Map.merge(email, %{
       "html_body" => html,
-      "text_body" => html |> html_escape() |> safe_to_string()
+      "text_body" => html |> render_html_to_plain_text()
     })
   end
 
@@ -38,10 +38,10 @@ defmodule Phoenix00.MailMan do
         %{"to" => _to, "from" => _from, "subject" => _subject, "markdown" => markdown} = email
       ) do
     html = render_markdown_to_html(markdown)
-    # CREATE_EMAIL_RECORD AND PASS ALONG ID
+
     Map.merge(email, %{
       "html_body" => html,
-      "text_body" => html |> html_escape() |> safe_to_string()
+      "text_body" => html |> render_html_to_plain_text()
     })
   end
 
@@ -69,4 +69,13 @@ defmodule Phoenix00.MailMan do
   defp render_markdown_to_html(markdown) do
     MDEx.to_html(markdown)
   end
+
+
+  defp render_html_to_plain_text(html) do
+    case Pandex.html_to_plain(html) do
+      {:ok, plain} -> plain
+      error -> error
+    end
+  end
+
 end

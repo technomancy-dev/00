@@ -33,7 +33,8 @@ defmodule Phoenix00.Messages do
         "cc" => List.wrap(attrs["cc"]),
         "bcc" => List.wrap(attrs["bcc"]),
         "reply_to" => List.wrap(attrs["reply_to"]),
-        "body" => attrs["html_body"]
+        "body" => attrs["html_body"],
+        "text" => attrs["text_body"]
       })
     )
   end
@@ -45,7 +46,8 @@ defmodule Phoenix00.Messages do
         "cc" => List.wrap(attrs["cc"]),
         "bcc" => List.wrap(attrs["bcc"]),
         "reply_to" => List.wrap(attrs["reply_to"]),
-        "body" => attrs["html_body"]
+        "body" => attrs["html_body"],
+        "text" => attrs["text_body"]
       })
     )
   end
