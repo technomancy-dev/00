@@ -61,8 +61,6 @@ defmodule Phoenix00.Messages.Email do
     email
     |> cast(attrs, [:to, :from, :body, :cc, :bcc, :reply_to, :subject])
     |> validate_required([:to, :from, :body])
-
-    # |> unique_constraint(:email_id)
   end
 
   def send_changeset(email, attrs) do

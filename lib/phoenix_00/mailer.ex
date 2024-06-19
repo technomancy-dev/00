@@ -78,14 +78,6 @@ defmodule Phoenix00.Mailer do
     end
   end
 
-  defp contact_to_map(info) when is_list(info) do
-    Enum.map(info, &contact_to_map/1)
-  end
-
-  defp contact_to_map({name, email}) do
-    %{"name" => name, "email" => email}
-  end
-
   defp map_to_contact(info) when is_list(info) do
     Enum.map(info, &map_to_contact/1)
   end

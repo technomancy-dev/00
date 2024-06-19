@@ -10,8 +10,6 @@ defmodule Phoenix00Web.EmailController do
 
     case Map.merge(email, %{"token_id" => token.id}) |> Messages.send_email() do
       {:error, reason} ->
-        IO.inspect(reason)
-
         Logs.create_log(%{
           status: 500,
           source: "api:/api/emails",

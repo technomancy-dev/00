@@ -9,6 +9,11 @@ export default $config({
     };
   },
   async run() {
+    if (!process.env.EMAIL_IDENTITY) {
+      const message = "Need to set EMAIL_IDENTITY env variable.";
+      console.error(message);
+      throw Error(message);
+    }
     const topic = new sst.aws.SnsTopic("ZeroEmailSNS");
     const queue = new sst.aws.Queue("ZeroEmailSQS");
     topic.subscribeQueue(queue.arn);
@@ -32,7 +37,7 @@ export default $config({
             "BOUNCE",
             "COMPLAINT",
             "DELIVERY",
-            // TODO: I should handle all these.
+            // TODO: Handle all these.
             // "OPEN",
             // "CLICK",
             // "RENDERING_FAILURE",
@@ -41,9 +46,12 @@ export default $config({
           ],
         },
       });
+
     const exampleEmailIdentity = new aws.sesv2.EmailIdentity("ZeroEmail", {
-      emailIdentity: "fidoforms.com",
+      emailIdentity: process.env.EMAIL_IDENTITY || "",
       configurationSetName: configSet.configurationSetName,
     });
+
+    return { queue: queue.url };
   },
 });

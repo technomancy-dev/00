@@ -84,7 +84,16 @@
     <:col :let={{_id, email}} label="From" field={:from}>
       <%= email.from %>
     </:col>
-    <:col :let={{_id, email}} label="Subject" field={:from}>
+    <:col :let={{_id, email}} label="To" field={:to}>
+      <div class="flex gap-2">
+        <%= Enum.at(email.to, 0) %><span
+          :if={length(email.to) > 1}
+          data-tip={Enum.join(email.to, "\n")}
+          class="tooltip text-xs tooltip-right badge bg-base-200 text-success"
+        >+<%= length(email.to) - 1 %></span>
+      </div>
+    </:col>
+    <:col :let={{_id, email}} label="Subject" field={:subject}>
       <div style="width:12rem;text-overflow: ellipsis ellipsis;" class="w-xl">
         <%= email.subject %>
       </div>

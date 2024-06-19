@@ -5,12 +5,12 @@ defmodule SQSBroadway do
   alias Broadway.Message
 
   def start_link(_opts) do
-    sqs_map = Jason.decode!(Application.fetch_env!(:phoenix_00, :sqs_url))
+    sqs_url = System.get_env("SQS_URL")
 
     Broadway.start_link(__MODULE__,
       name: __MODULE__,
       producer: [
-        module: {BroadwaySQS.Producer, queue_url: sqs_map["url"]}
+        module: {BroadwaySQS.Producer, queue_url: sqs_url}
       ],
       processors: [
         default: [concurrency: 50]

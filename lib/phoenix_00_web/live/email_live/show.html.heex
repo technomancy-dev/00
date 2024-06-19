@@ -18,9 +18,7 @@
   </.link>
 </div>
 <.list>
-  <%!-- <:item title="Status">
-
-  </:item> --%>
+  <:item title="From"><%= @email.from %></:item>
   <:item title="To">
     <ul class="flex gap-2 flex-wrap">
       <li :for={to <- @email.to}>
@@ -28,16 +26,41 @@
       </li>
     </ul>
   </:item>
-  <%!-- <:item title="To"><%= @email.to %></:item> --%>
-  <:item title="From"><%= @email.from %></:item>
-  <:item title="CC"><%= @email.cc %></:item>
-  <:item title="BCC"><%= @email.bcc %></:item>
+  <:item :if={length(@email.cc) != 0} title="CC">
+    <ul class="flex gap-2 flex-wrap">
+      <li :for={to <- @email.cc}>
+        <%= to %>
+      </li>
+    </ul>
+  </:item>
+  <:item :if={length(@email.bcc) != 0} title="BCC">
+    <ul class="flex gap-2 flex-wrap">
+      <li :for={to <- @email.bcc}>
+        <%= to %>
+      </li>
+    </ul>
+  </:item>
+  <:item :if={length(@email.reply_to) != 0} title="Reply To">
+    <ul class="flex gap-2 flex-wrap">
+      <li :for={to <- @email.reply_to}>
+        <%= to %>
+      </li>
+    </ul>
+  </:item>
   <:item title="AWS ID"><%= @email.sender_id %></:item>
   <:item title="Logs">
-    <ul>
+    <ul class="flex gap-2 flex-wrap">
       <li :for={log <- @email.logs}>
-        <.link class="uppercase underline text-success" href={~p"/logs/#{log.id}"}>
-          <%= log.method %>
+        <.link
+          class={[
+            "uppercase underline",
+            log.status == 200 && "text-success",
+            log.status == 400 && "text-warning",
+            log.status == 500 && "text-error"
+          ]}
+          href={~p"/logs/#{log.id}"}
+        >
+          <%= log.status %>
         </.link>
       </li>
     </ul>
