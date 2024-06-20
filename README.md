@@ -11,6 +11,14 @@ Then 00 provides you that dashboard for viewing the information you care about.
 
 ![Dashboard displaying emails](00-messages.png)
 
+Some key features include:
+
+- The ability to send emails by sending a `POST` request to `/api/emails`.
+- Monitor email status (with multi-recipient tracking).
+- Search emails and messages (a message is created for every recipient).
+- View email body.
+- Log tracking for requests and queue.
+
 ## Getting started
 
 The quickest way to get started is to clone this repo and run `sst deploy` in it. Make sure to set the `EMAIL_IDENTITY` env variable first, this will be the email or domain you wish to send from.
