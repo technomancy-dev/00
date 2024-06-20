@@ -89,7 +89,7 @@ Add attachments or provider options.
       "value": "some-value"
     }]
   },
-  "attatchments": [
+  "attachments": [
     {
       "filename": "invoice.txt",
       "content": "pewp"
