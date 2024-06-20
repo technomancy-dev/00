@@ -13,6 +13,7 @@ Then 00 provides you that dashboard for viewing the information you care about.
 
 Some key features include:
 
+- Run SST to configure AWS for you.
 - The ability to send emails by sending a `POST` request to `/api/emails`.
 - Monitor email status (with multi-recipient tracking).
 - Search emails and messages (a message is created for every recipient).
