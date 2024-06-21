@@ -22,6 +22,8 @@ Some key features include:
 
 ## Getting started
 
+If you like video walkthroughs [Web Dev Cody](https://www.youtube.com/watch?v=d9JrOgLE8DE) made a fantastic one.
+
 The quickest way to get started is to clone this repo and run `sst deploy` in it. Make sure to set the `EMAIL_IDENTITY` env variable first, this will be the email or domain you wish to send from.
 
 Using SST is easy, and you can find the steps to do so [here](https://ion.sst.dev/docs/reference/cli) and learn how to configure your credentials [here](https://docs.sst.dev/advanced/iam-credentials#loading-from-a-file)
