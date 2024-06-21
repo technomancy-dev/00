@@ -31,6 +31,10 @@ You need to set up a configuration set to write to an SQS queue via SNS. You can
 
 Either option will give you an SQS url which we need, along with several other environment variables.
 
+Currently SST does NOT deploy the container for you. It just sets up the needed SES pipeline.
+
+In the near future you will pass a variable to SST to tell it wether it should host the container for you.
+
 We publish a docker image to the [registery](https://hub.docker.com/r/liltechnomancer/double-zero)
 
 Simply run `docker pull liltechnomancer/double-zero`
