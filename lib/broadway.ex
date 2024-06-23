@@ -10,7 +10,12 @@ defmodule SQSBroadway do
     Broadway.start_link(__MODULE__,
       name: __MODULE__,
       producer: [
-        module: {BroadwaySQS.Producer, queue_url: sqs_url}
+        module:
+          {BroadwaySQS.Producer,
+           queue_url: sqs_url,
+           config: [
+             region: System.get_env("AWS_REGION")
+           ]}
       ],
       processors: [
         default: [concurrency: 50]
