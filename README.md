@@ -45,7 +45,7 @@ Simply run `docker pull liltechnomancer/double-zero`
 
 Then run your docker container with the following environment variables set. Exposing port 4000.
 
-Example `docker run -it --env-file ./env -p 80:4000 "liltechnomancer/double-zero"`
+Example `docker run -it --env-file .env -p 4000:4000 "liltechnomancer/double-zero"`
 
 ```
 AWS_SECRET_ACCESS_KEY=
