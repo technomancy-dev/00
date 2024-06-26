@@ -14,8 +14,54 @@ export default $config({
       console.error(message);
       throw Error(message);
     }
-    const topic = new sst.aws.SnsTopic("ZeroEmailSNS");
+
     const queue = new sst.aws.Queue("ZeroEmailSQS");
+
+    let service;
+    if (
+      process.env.SST_DEPLOY &&
+      process.env.PHX_HOST &&
+      process.env.DATABASE_PATH
+    ) {
+      const vpc = new sst.aws.Vpc("ZeroEmailVpc");
+
+      const cluster = new sst.aws.Cluster("ZeroEmailCluster", { vpc });
+
+      const bucket = new sst.aws.Bucket("ZeroSQLiteBucket", {
+        public: true,
+      });
+
+      service = cluster.addService("ZeroEmailService", {
+        public: {
+          domain: {
+            name: process.env.PHX_HOST,
+          },
+          ports: [
+            { listen: "80/http", forward: "4000/http" },
+            { listen: "443/https", forward: "4000/http" },
+          ],
+        },
+        environment: {
+          REPLICA_URL: $interpolate`s3://${bucket.name}/db`,
+          BUCKETNAME: bucket.name,
+          AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY!,
+          AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID!,
+          AWS_REGION: process.env.AWS_REGION!,
+          DATABASE_PATH: process.env.DATABASE_PATH!,
+          SYSTEM_EMAIL: process.env.SYSTEM_EMAIL!,
+          SQS_URL: queue.url,
+          SECRET_KEY_BASE: process.env.SECRET_KEY_BASE!,
+          PHX_HOST: process.env.PHX_HOST!,
+        },
+        image: {
+          dockerfile: "litestream.Dockerfile",
+        },
+        link: [bucket],
+      });
+    }
+
+    const topic = new sst.aws.SnsTopic("ZeroEmailSNS");
+
     topic.subscribeQueue(queue.arn);
 
     const configSet = new aws.sesv2.ConfigurationSet("ZeroEmailConfigSet", {
@@ -38,11 +84,11 @@ export default $config({
             "COMPLAINT",
             "DELIVERY",
             // TODO: Handle all these.
-            // "OPEN",
-            // "CLICK",
-            // "RENDERING_FAILURE",
-            // "DELIVERY_DELAY",
-            // "SUBSCRIPTION",
+            "OPEN",
+            "CLICK",
+            "RENDERING_FAILURE",
+            "DELIVERY_DELAY",
+            "SUBSCRIPTION",
           ],
         },
       });
@@ -52,6 +98,6 @@ export default $config({
       configurationSetName: configSet.configurationSetName,
     });
 
-    return { queue: queue.url };
+    return { queue: queue.url, service: service?.url };
   },
 });
