@@ -84,11 +84,11 @@ export default $config({
             "COMPLAINT",
             "DELIVERY",
             // TODO: Handle all these.
-            "OPEN",
-            "CLICK",
-            "RENDERING_FAILURE",
-            "DELIVERY_DELAY",
-            "SUBSCRIPTION",
+            // "OPEN",
+            // "CLICK",
+            // "RENDERING_FAILURE",
+            // "DELIVERY_DELAY",
+            // "SUBSCRIPTION",
           ],
         },
       });
