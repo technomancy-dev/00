@@ -15,6 +15,8 @@ export default $config({
       throw Error(message);
     }
 
+    const queue = new sst.aws.Queue("ZeroEmailSQS");
+
     let service;
     if (
       process.env.SST_DEPLOY &&
@@ -26,7 +28,7 @@ export default $config({
       const cluster = new sst.aws.Cluster("ZeroEmailCluster", { vpc });
 
       const bucket = new sst.aws.Bucket("ZeroSQLiteBucket", {
-        public: false,
+        public: true,
       });
 
       service = cluster.addService("ZeroEmailService", {
@@ -34,28 +36,32 @@ export default $config({
           domain: {
             name: process.env.PHX_HOST,
           },
-          ports: [{ listen: "80/http" }],
+          ports: [
+            { listen: "80/http", forward: "4000/http" },
+            { listen: "443/https", forward: "4000/http" },
+          ],
+        },
+        environment: {
+          REPLICA_URL: $interpolate`s3://${bucket.name}/db`,
+          BUCKETNAME: bucket.name,
+          AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY!,
+          AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID!,
+          AWS_REGION: process.env.AWS_REGION!,
+          DATABASE_PATH: process.env.DATABASE_PATH!,
+          SYSTEM_EMAIL: process.env.SYSTEM_EMAIL!,
+          SQS_URL: queue.url,
+          SECRET_KEY_BASE: process.env.SECRET_KEY_BASE!,
+          PHX_HOST: process.env.PHX_HOST!,
         },
         image: {
           dockerfile: "litestream.Dockerfile",
-          args: {
-            REPLICA_URL: `s3://${bucket.name}/${process.env.DATABASE_PATH}`,
-            AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY!,
-            AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID!,
-            AWS_REGION: process.env.AWS_REGION!,
-            DATABASE_PATH: process.env.DATABASE_PATH!,
-            SYSTEM_EMAIL: process.env.SYSTEM_EMAIL!,
-            SQS_URL: process.env.SQS_URL!,
-            SECRET_KEY_BASE: process.env.SECRET_KEY_BASE!,
-            PHX_HOST: process.env.PHX_HOST!,
-          },
         },
         link: [bucket],
       });
     }
 
     const topic = new sst.aws.SnsTopic("ZeroEmailSNS");
-    const queue = new sst.aws.Queue("ZeroEmailSQS");
+
     topic.subscribeQueue(queue.arn);
 
     const configSet = new aws.sesv2.ConfigurationSet("ZeroEmailConfigSet", {
@@ -78,11 +84,11 @@ export default $config({
             "COMPLAINT",
             "DELIVERY",
             // TODO: Handle all these.
-            // "OPEN",
-            // "CLICK",
-            // "RENDERING_FAILURE",
-            // "DELIVERY_DELAY",
-            // "SUBSCRIPTION",
+            "OPEN",
+            "CLICK",
+            "RENDERING_FAILURE",
+            "DELIVERY_DELAY",
+            "SUBSCRIPTION",
           ],
         },
       });
@@ -92,6 +98,6 @@ export default $config({
       configurationSetName: configSet.configurationSetName,
     });
 
-    return { queue: queue.url, service: service.url };
+    return { queue: queue.url, service: service?.url };
   },
 });

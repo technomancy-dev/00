@@ -103,10 +103,12 @@ ENV MIX_ENV="prod"
 COPY --from=builder --chown=nobody:root /app/_build/${MIX_ENV}/rel/phoenix_00 ./
 COPY --from=builder --chown=nobody:root /usr/local/bin/litestream /usr/local/bin/litestream
 
-COPY  etc/litestream.yml /etc/litestream.yml
+# COPY  etc/litestream.yml /etc/litestream.yml
 COPY  scripts/litestream-docker.sh /scripts/litestream-docker.sh
 
 USER nobody
+
+EXPOSE 4000
 
 # If using an environment that doesn't automatically reap zombie processes, it is
 # advised to add an init process such as tini via `apt-get install`
@@ -115,4 +117,4 @@ USER nobody
 # Copy Litestream configuration file & startup script.
 
 
-CMD [ "/scripts/run.sh" ]
+CMD [ "/scripts/litestream-docker.sh" ]
