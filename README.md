@@ -7,6 +7,8 @@ However monitoring the emails is a bit of a nightmare, and often requires custom
 00 provides an SST configuration step to set up the SES -> SNS -> SQS pipeline,
 so you can just run a command and let SST do the rest.
 
+If you would also like to deploy the container with SST follow this [guide](https://github.com/technomancy-dev/00/wiki/Hosting-on-AWS-with-SST).
+
 Then 00 provides you that dashboard for viewing the information you care about.
 
 ![Dashboard displaying emails](00-messages.png)
@@ -126,22 +128,3 @@ Planned pro features include
 * Advanced Analytics
 * Track email history
 * Possibly more, we will see.
-
-## This is a Phoenix app! To work on it start with:
-
-To start your Phoenix server:
-
-  * Run `mix setup` to install and setup dependencies
-  * Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
-
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
-
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
-
-## Learn more
-
-  * Official website: https://www.phoenixframework.org/
-  * Guides: https://hexdocs.pm/phoenix/overview.html
-  * Docs: https://hexdocs.pm/phoenix
-  * Forum: https://elixirforum.com/c/phoenix-forum
-  * Source: https://github.com/phoenixframework/phoenix
