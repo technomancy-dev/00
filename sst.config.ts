@@ -28,7 +28,7 @@ export default $config({
       const cluster = new sst.aws.Cluster("ZeroEmailCluster", { vpc });
 
       const bucket = new sst.aws.Bucket("ZeroSQLiteBucket", {
-        public: true,
+        public: false,
       });
 
       service = cluster.addService("ZeroEmailService", {
