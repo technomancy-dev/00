@@ -17,7 +17,6 @@ defmodule Phoenix00Web.EmailController do
           request: email,
           response: %{error: reason},
           token_id: token.id
-          # email_id: record["id"]
         })
 
         render(conn, :index, data: %{error: reason})
@@ -41,5 +40,47 @@ defmodule Phoenix00Web.EmailController do
 
         render(conn, :index, data: response)
     end
+  end
+
+  def broadcast(conn, email) do
+    token = conn.assigns[:token]
+
+    recipients = List.wrap(email["recipients"])
+
+    results =
+      Enum.map(recipients, fn recipient ->
+        Map.merge(email, %{"token_id" => token.id, "to" => recipient}) |> Messages.send_email()
+      end)
+
+    {failed, successful} = Enum.split_with(results, &match?({:error, _}, &1))
+
+    response = %{
+      success: Enum.count(failed) == 0,
+      successful:
+        Enum.map(successful, fn record ->
+          %{
+            success: true,
+            message: "Your email has successfully been queued.",
+            id: record["id"]
+          }
+        end),
+      errors: Enum.map(failed, fn {:error, message} -> %{error: message} end)
+    }
+
+    Logs.create_log(%{
+      status:
+        if Enum.count(failed) == 0 do
+          200
+        else
+          500
+        end,
+      source: "api:/api/broadcasts",
+      method: :post,
+      request: email,
+      response: response,
+      token_id: token.id
+    })
+
+    render(conn, :index, data: response)
   end
 end
