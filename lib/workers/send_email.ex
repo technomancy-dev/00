@@ -6,8 +6,28 @@ defmodule Phoenix00.Workers.SendEmail do
   alias Phoenix00.Messages
   require Logger
 
+  @client AWS.Client.create(
+            System.get_env("AWS_ACCESS_KEY_ID"),
+            System.get_env("AWS_SECRET_ACCESS_KEY"),
+            System.get_env("AWS_REGION")
+          )
+
   @impl Oban.Worker
   def perform(%Oban.Job{args: %{"email" => email_args}}) do
+    {:ok, account, _} = AWS.SESv2.get_account(@client)
+
+    max_send_rate = account["SendQuota"]["MaxSendRate"]
+    daily_send_rate = account["SendQuota"]["Max24HourSend"]
+
+    with {:ok, _} <- ExRated.check_rate("send-email-per-day", 86_400_000, daily_send_rate),
+         {:ok, _} <- ExRated.check_rate("send-email-per-second", 1_000, max_send_rate) do
+      send_email(email_args)
+    else
+      {:error, _} -> {:snooze, 10}
+    end
+  end
+
+  defp send_email(email_args) do
     recipients = get_destinations(email_args)
 
     with {:ok, email} <- Mailer.from_map(email_args),

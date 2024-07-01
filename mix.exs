@@ -74,7 +74,9 @@ defmodule Phoenix00.MixProject do
       {:flop, "~> 0.25.0"},
       {:flop_phoenix, "~> 0.22.9"},
       {:autumn, "~> 0.2.3"},
-      {:pandex, "~> 0.2.0"}
+      {:pandex, "~> 0.2.0"},
+      {:ex_rated, "~> 2.1"},
+      {:aws, "~> 1.0.0"}
     ]
   end
 
