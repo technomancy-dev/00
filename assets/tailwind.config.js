@@ -100,7 +100,15 @@ module.exports = {
   ],
   daisyui: {
     themes: [
-      "lofi",
+      // "lofi",
+      {
+        lofi: {
+          ...require("daisyui/src/theming/themes")["lofi"],
+          warning: "#f4bf50",
+          success: "#2cd4bf",
+          error: "#fb6f85",
+        },
+      },
       {
         black: {
           ...require("daisyui/src/theming/themes")["black"],

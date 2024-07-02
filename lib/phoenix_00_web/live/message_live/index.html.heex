@@ -81,7 +81,7 @@
       <span
         data-status={message.status}
         class={[
-          "capitalize w-full p-3 badge badge-outline",
+          "capitalize w-full p-3 badge font-black dark:badge-outline",
           message.status == :delivered && "badge-success",
           message.status == :bounced && "badge-warning",
           message.status == :complained && "badge-error"

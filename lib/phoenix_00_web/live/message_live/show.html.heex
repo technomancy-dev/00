@@ -10,7 +10,7 @@
   <:item title="Status">
     <span
       data-status={@message.status}
-      class="capitalize text-gray-500 data-[status='delivered']:text-success data-[status='bounced']:text-warning data-[status='complained']:text-error"
+      class="capitalize font-black text-gray-500 data-[status='delivered']:text-success data-[status='bounced']:text-warning data-[status='complained']:text-error"
     >
       <%= @message.status %>
     </span>
@@ -33,7 +33,7 @@
 
 <div class="mockup-window border mt-20 border-base-300">
   <p class="inline absolute top-3 left-24">
-    <span class="font-extralight badge-outline mr-2 badge text-xs">Subject:</span> <%= @message.email.subject %>
+    <span class="font-extralight dark:badge-outline mr-2 badge text-xs">Subject:</span> <%= @message.email.subject %>
   </p>
   <div class="flex border-t border-base-300">
     <iframe
