@@ -113,6 +113,7 @@ defmodule Phoenix00Web.Router do
     pipe_through [:api]
 
     post "/emails", EmailController, :send
-    post "/broadcasts", EmailController, :broadcast
+    post "/emails/broadcasts", EmailController, :broadcast
+    post "/emails/broadcasts/template", EmailController, :broadcast_template
   end
 end

@@ -76,7 +76,8 @@ defmodule Phoenix00.MixProject do
       {:autumn, "~> 0.2.3"},
       {:pandex, "~> 0.2.0"},
       {:ex_rated, "~> 2.1"},
-      {:aws, "~> 1.0.0"}
+      {:aws, "~> 1.0.0"},
+      {:solid, "~> 0.15.2"}
     ]
   end
 

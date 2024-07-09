@@ -6,18 +6,24 @@ defmodule Phoenix00.Workers.SendEmail do
   alias Phoenix00.Messages
   require Logger
 
-  @client AWS.Client.create(
-            System.get_env("AWS_ACCESS_KEY_ID"),
-            System.get_env("AWS_SECRET_ACCESS_KEY"),
-            System.get_env("AWS_REGION")
-          )
-
   @impl Oban.Worker
   def perform(%Oban.Job{args: %{"email" => email_args}}) do
-    {:ok, account, _} = AWS.SESv2.get_account(@client)
+    client =
+      AWS.Client.create(
+        System.get_env("AWS_ACCESS_KEY_ID"),
+        System.get_env("AWS_SECRET_ACCESS_KEY"),
+        System.get_env("AWS_REGION")
+      )
+
+    {:ok, account, _} = AWS.SESv2.get_account(client)
 
     max_send_rate = account["SendQuota"]["MaxSendRate"]
     daily_send_rate = account["SendQuota"]["Max24HourSend"]
+
+    # TODO: The daily check likely only works if they kept this service running on a single machine, which
+    # depends on how they are hosting this. A more robust solution would be cool.
+    # Would be tricky without hosting something else or writing this to SQLite.
+    # Could possibly query sent by date and get count.
 
     with {:ok, _} <- ExRated.check_rate("send-email-per-day", 86_400_000, daily_send_rate),
          {:ok, _} <- ExRated.check_rate("send-email-per-second", 1_000, max_send_rate) do

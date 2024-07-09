@@ -1,4 +1,5 @@
 defmodule Phoenix00Web.EmailController do
+  alias Phoenix00.MailMan
   alias Phoenix00.Logs
   alias Phoenix00.Messages
   use Phoenix00Web, :controller
@@ -50,6 +51,50 @@ defmodule Phoenix00Web.EmailController do
     results =
       Enum.map(recipients, fn recipient ->
         Map.merge(email, %{"token_id" => token.id, "to" => recipient}) |> Messages.send_email()
+      end)
+
+    {failed, successful} = Enum.split_with(results, &match?({:error, _}, &1))
+
+    response = %{
+      success: Enum.count(failed) == 0,
+      successful:
+        Enum.map(successful, fn record ->
+          %{
+            success: true,
+            message: "Your email has successfully been queued.",
+            id: record["id"]
+          }
+        end),
+      errors: Enum.map(failed, fn {:error, message} -> %{error: message} end)
+    }
+
+    Logs.create_log(%{
+      status:
+        if Enum.count(failed) == 0 do
+          200
+        else
+          500
+        end,
+      source: "api:/api/broadcasts",
+      method: :post,
+      request: email,
+      response: response,
+      token_id: token.id
+    })
+
+    render(conn, :index, data: response)
+  end
+
+  def broadcast_template(conn, email) do
+    token = conn.assigns[:token]
+
+    recipients = List.wrap(email["recipients"])
+
+    results =
+      Enum.map(recipients, fn recipient ->
+        Map.merge(email, %{"token_id" => token.id, "to" => recipient})
+        |> MailMan.fill_template(%{"email" => recipient})
+        |> Messages.send_email()
       end)
 
     {failed, successful} = Enum.split_with(results, &match?({:error, _}, &1))
