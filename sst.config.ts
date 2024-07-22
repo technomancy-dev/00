@@ -88,6 +88,8 @@ export default $config({
             // "CLICK",
             // "RENDERING_FAILURE",
             // "DELIVERY_DELAY",
+            //
+            // Wont handle as we have internal list management.
             // "SUBSCRIPTION",
           ],
         },
@@ -98,6 +100,30 @@ export default $config({
       configurationSetName: configSet.configurationSetName,
     });
 
-    return { queue: queue.url, service: service?.url };
+    if (process.env.UNSUBSCRIBE_EMAIL) {
+      const unsubscribe_rule_set = new aws.ses.ReceiptRuleSet(
+        "ZeroUnsubscribeSet",
+        { ruleSetName: "zero-unsubscribe-rule-set" },
+      );
+      const unsubscribe_rule = new aws.ses.ReceiptRule("ZeroUnsubscribeRule", {
+        name: "unsubscribe",
+        ruleSetName: unsubscribe_rule_set.ruleSetName,
+        recipients: [process.env.UNSUBSCRIBE_EMAIL],
+        enabled: true,
+        snsActions: [
+          {
+            position: 0,
+            topicArn: topic.arn,
+          },
+        ],
+      });
+
+      const main = new aws.ses.ActiveReceiptRuleSet(
+        "ZeroUnsubscribeRuleActive",
+        { ruleSetName: unsubscribe_rule_set.ruleSetName },
+      );
+    }
+
+    return { queue: queue.url, url: service?.url };
   },
 });
