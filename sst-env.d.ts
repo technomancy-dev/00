@@ -11,14 +11,6 @@ declare module "sst" {
       type: "sst.aws.Queue"
       url: string
     }
-    ZeroEmailService: {
-      type: "sst.aws.Service"
-      url: string
-    }
-    ZeroSQLiteBucket: {
-      name: string
-      type: "sst.aws.Bucket"
-    }
   }
 }
 export {}
