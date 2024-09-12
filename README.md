@@ -123,9 +123,11 @@ The request body has to be json with these parameters
 |subject|string|no|The email`s subject field|`{"subject":"Some Subject"}`|
 |from|string|yes|The email address from which the email is sent.<br>Must be something@yourdomain.com.<br> The the domain has to be added to SES and be verified.|`{"from":"noreply@yourdomain.com"}`|
 |to|string/string[]|yes|The emails recipient(s)|`{"to":"joe@somedomain.com"}` or `{"to": ["joe@somedomain.com", "jane@somedomain.com"]}`|
+|cc|string|no|"The email address to which a copy of the email will be sent.".|`{"cc":"cc_address@yourdomain.com"}`|
+|reply_to|string|no|The email address from which the reply will be sent.|`{"reply_to":"reply@yourdomain.com"}`|
 |headers|object|no|An object containing key/value pairs of headers|`{"headers": {"X-Entity-Ref-ID": "00"}}`|
 |provider_options|object|no|An object containing key/value pairs of provider options|`{"provider_options": {"tags": [{"name": "tag-name", "value": "some-value"}]}}`|
-|attachments|array|no|An array containing attachments|`{"attachments": [{"filename": "invoice.txt", "content": "pewp"}]}`|
+|attachments|array|no|An array containing attachments|`{"attachments": [{"filename": "invoice.txt", "content": "pewp", "content_type": "text/plain"}]}`|
 
 ### Example
 

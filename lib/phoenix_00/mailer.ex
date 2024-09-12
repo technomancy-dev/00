@@ -68,15 +68,37 @@ defmodule Phoenix00.Mailer do
         {:error, "Missing content type on attachment."}
 
       content_type ->
+      # Validate if the content is a Base64 string and decode if necessary
+      content =
+        case is_base64?(attachment["content"]) do
+          true -> 
+            Base.decode64!(attachment["content"]) # Decode Base64
+          false -> 
+            attachment["content"] # It keeps the content as is.
+        end
+
         swoosh
         |> Swoosh.Email.attachment(
-          Swoosh.Attachment.new({:data, attachment["content"]},
+          Swoosh.Attachment.new({:data, content},
             filename: attachment["filename"],
             content_type: content_type
           )
         )
     end
   end
+
+  # Function to validate string Base64
+  defp is_base64?(string) when is_bitstring(string) do
+    case Base.decode64(string, ignore: :whitespace) do
+      {:ok, decoded} -> 
+        # If encoding it again gives us the original string, it is valid Base64
+        Base.encode64(decoded) == String.replace(string, ~r/\s+/, "")
+      :error -> 
+        false
+    end
+  end
+
+  defp is_base64?(_), do: false
 
   defp map_to_contact(info) when is_list(info) do
     Enum.map(info, &map_to_contact/1)
