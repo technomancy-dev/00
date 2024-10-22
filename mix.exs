@@ -52,7 +52,7 @@ defmodule Phoenix00.MixProject do
        compile: false,
        depth: 1},
       {:swoosh, "~> 1.5"},
-      {:gen_smtp, "~> 1.0"},
+      {:gen_smtp, "~> 0.15.0"},
       {:ex_aws, "~> 2.0"},
       {:ex_aws_sns, "~> 2.0"},
       {:hackney, "~> 1.20"},
@@ -74,7 +74,7 @@ defmodule Phoenix00.MixProject do
       {:flop, "~> 0.25.0"},
       {:flop_phoenix, "~> 0.22.9"},
       {:autumn, "~> 0.2.3"},
-      {:pandex, "~> 0.2.0"}
+      {:pique, "~> 0.1.0"},
     ]
   end
 

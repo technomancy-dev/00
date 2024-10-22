@@ -73,6 +73,18 @@ config :phoenix_00, Phoenix00.Repo,
   database: "00.sqlite"
 
 config :flop, repo: Phoenix00.Repo
+
+
+# Stop having tzdata complain (TODO: Should probably fix the issue, but it isn't currently applicable)
+config :tzdata, :autoupdate, :disabled
+#Pique SMTP settings
+
+config :pique,
+  mail_handler: Phoenix00.MailHander
+
+config :pique,
+  sender: Phoenix00.SESSender
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"
